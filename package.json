@@ -1,0 +1,11 @@
+{
+  "name": "ab-engine",
+  "version": "1.0.0",
+  "description": "AB Testing engine for modern applications",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Valentin Prugnaud <valentin@whatdafox.com>",
+  "license": "SEE LICENCE IN <LICENSE>"
+}
