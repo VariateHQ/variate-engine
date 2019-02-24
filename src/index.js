@@ -133,11 +133,8 @@ class Testing {
             _.objectValue('view', custom)
         );
 
-        const visitor = Object.assign({}, _.objectValue('visitor', custom));
-
         // Viewport information
         const viewport = {
-            mainBucket: this.getMainTrafficBucket(),
             forcedQueryParams: this.extractQueryParams(view),
             doNotTrack: _.inBrowser && this.checkDoNotTrackSetting() || false,
             width: _.inBrowser && window.innerWidth || 0,
@@ -145,7 +142,11 @@ class Testing {
             userAgent: _.UA
         };
 
-        this.env = { view, visitor, viewport };
+        const targeting = Object.assign({
+            mainBucket: this.getMainTrafficBucket(),
+        }, _.objectValue('targeting', custom));
+
+        this.env = { view, viewport, targeting };
     }
 
     /**

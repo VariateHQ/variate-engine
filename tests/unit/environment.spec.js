@@ -52,12 +52,11 @@ describe('Environment', function () {
         expect(Test.env.viewport.width).toBeDefined();
         expect(Test.env.viewport.height).toBeDefined();
         expect(Test.env.viewport.userAgent).toBeDefined();
-        expect(Test.env.viewport.mainBucket).toBeDefined();
         expect(Test.env.viewport.forcedQueryParams).toBeDefined();
         expect(Test.env.viewport.doNotTrack).toBeDefined();
     });
 
-    it('Environment contains visitor info', function () {
+    it('Environment contains targeting info', function () {
         const Test = new Testing({
             debug: false,
             config: {}
@@ -65,23 +64,25 @@ describe('Environment', function () {
         Test.setupEnvironment();
 
         expect(Test.env).toBeDefined();
-        expect(Test.env.visitor).toBeDefined();
+        expect(Test.env.targeting).toBeDefined();
+        expect(Test.env.targeting.mainBucket).toBeDefined();
     });
 
-    it('Environment can contain custom visitor info', function () {
+    it('Environment can contain targeting visitor info', function () {
         const Test = new Testing({
             debug: false,
             config: {}
         });
         Test.setupEnvironment({
-            visitor: {
+            targeting: {
                 hello: 'world'
             }
         });
 
         expect(Test.env).toBeDefined();
-        expect(Test.env.visitor).toBeDefined();
-        expect(Test.env.visitor.hello).toBeDefined();
-        expect(Test.env.visitor.hello).toBe('world');
+        expect(Test.env.targeting).toBeDefined();
+        expect(Test.env.targeting.mainBucket).toBeDefined();
+        expect(Test.env.targeting.hello).toBeDefined();
+        expect(Test.env.targeting.hello).toBe('world');
     });
 });
