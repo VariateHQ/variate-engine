@@ -127,7 +127,7 @@ class Testing {
     setupEnvironment(custom) {
         this.options.debug && console.debug(debug.SETUP_ENVIRONMENT);
 
-        // Current view
+        // View information
         const view = _.inBrowser && window.location || Object.assign(
             { href: '', search: '' },
             _.objectValue('view', custom)
@@ -135,16 +135,16 @@ class Testing {
 
         // Viewport information
         const viewport = {
+            mainBucket: this.getMainTrafficBucket(),
             forcedQueryParams: this.extractQueryParams(view),
             doNotTrack: _.inBrowser && this.checkDoNotTrackSetting() || false,
             width: _.inBrowser && window.innerWidth || 0,
             height: _.inBrowser && window.innerHeight || 0,
-            userAgent: _.UA
+            userAgent: _.UA,
         };
 
-        const targeting = Object.assign({
-            mainBucket: this.getMainTrafficBucket(),
-        }, _.objectValue('targeting', custom));
+        // Targeting information
+        const targeting = Object.assign({}, {}, _.objectValue('targeting', custom));
 
         this.env = { view, viewport, targeting };
     }

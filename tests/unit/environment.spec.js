@@ -49,40 +49,34 @@ describe('Environment', function () {
 
         expect(Test.env).toBeDefined();
         expect(Test.env.viewport).toBeDefined();
+        expect(Test.env.viewport.mainBucket).toBeDefined();
+        expect(Test.env.viewport.forcedQueryParams).toBeDefined();
+        expect(Test.env.viewport.doNotTrack).toBeDefined();
         expect(Test.env.viewport.width).toBeDefined();
         expect(Test.env.viewport.height).toBeDefined();
         expect(Test.env.viewport.userAgent).toBeDefined();
-        expect(Test.env.viewport.forcedQueryParams).toBeDefined();
-        expect(Test.env.viewport.doNotTrack).toBeDefined();
     });
 
-    it('Environment contains targeting info', function () {
-        const Test = new Testing({
-            debug: false,
-            config: {}
-        });
-        Test.setupEnvironment();
-
-        expect(Test.env).toBeDefined();
-        expect(Test.env.targeting).toBeDefined();
-        expect(Test.env.targeting.mainBucket).toBeDefined();
-    });
-
-    it('Environment can contain targeting visitor info', function () {
+    it('Environment can contain custom targeting info', function () {
         const Test = new Testing({
             debug: false,
             config: {}
         });
         Test.setupEnvironment({
             targeting: {
-                hello: 'world'
+                location: 'Canada',
+                viewport: '<250',
+                platform: 'ios'
             }
         });
 
         expect(Test.env).toBeDefined();
         expect(Test.env.targeting).toBeDefined();
-        expect(Test.env.targeting.mainBucket).toBeDefined();
-        expect(Test.env.targeting.hello).toBeDefined();
-        expect(Test.env.targeting.hello).toBe('world');
+        expect(Test.env.targeting.location).toBeDefined();
+        expect(Test.env.targeting.location).toBe('Canada');
+        expect(Test.env.targeting.viewport).toBeDefined();
+        expect(Test.env.targeting.viewport).toBe('<250');
+        expect(Test.env.targeting.platform).toBeDefined();
+        expect(Test.env.targeting.platform).toBe('ios');
     });
 });
