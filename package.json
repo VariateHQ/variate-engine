@@ -4,7 +4,7 @@
   "description": "AB Testing engine for modern applications",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jasmine JASMINE_CONFIG_PATH=tests/support/jasmine.json --reporter=jasmine-console-reporter"
   },
   "repository": {
     "type": "git",
@@ -18,5 +18,12 @@
   "bugs": {
     "url": "https://github.com/foxted/AB-Engine/issues"
   },
-  "homepage": "https://github.com/foxted/AB-Engine#readme"
+  "homepage": "https://github.com/foxted/AB-Engine#readme",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "jasmine": "^3.3.1",
+    "jasmine-console-reporter": "^3.1.0",
+    "mocha": "^6.0.1"
+  },
+  "dependencies": {}
 }
