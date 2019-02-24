@@ -97,12 +97,36 @@ class Testing {
         this._env = Object.assign({}, this._env, value);
     }
 
+    /**
+     * Get active experiments
+     * @returns {*|Array}
+     */
+    get experiments() {
+        return this._experiments;
+    }
+
+    /**
+     * Set active experiments
+     * @param value
+     */
+    set experiments(value) {
+        this._experiments = value || [];
+    }
+
+    /**
+     * Initialize testing:
+     * use this when loading the page for the first time
+     */
     initialize() {
         this.setupEnvironment();
         this.qualify();
         this.isReady = true;
     }
 
+    /**
+     * Refresh testing:
+     * use this after navigation (page URL/query params update)
+     */
     refresh() {
         this.isReady = false;
         this.setupEnvironment();
@@ -144,7 +168,7 @@ class Testing {
         };
 
         // Targeting information
-        const targeting = Object.assign({}, {}, _.objectValue('targeting', custom));
+        const targeting = Object.assign({}, _.objectValue('targeting', custom));
 
         this.env = { view, viewport, targeting };
     }
@@ -154,58 +178,109 @@ class Testing {
      */
     qualify() {
         // 1. Get experiments based on bucket
-        let experiments = this.filterExperimentsWithBucket();
+        let experiments = this.loadExperiments();
 
-        // 2. Check targeting (views)
-        experiments = experiments.filter((experiment) => this.checkViewAndAudienceTargeting(experiment));
-        // console.log(experiments);
+        // 2. Check view targeting (URL)
+        experiments = experiments.filter((experiment) => this.filterWithView(experiment));
 
-        // 3. Generate/retrieve buckets if qualified
+        // 3. Check audience targeting
+        experiments = experiments.filter((experiment) => this.filterWithAudience(experiment));
 
-        // Override with query params info if necessary
-        // this.loadQueryParamsOverrides();
+        // 3. Reduce to 1 variation per experiment to prepare for display
+        experiments = experiments.filter((experiment) => this.filterVariationsWithBucket(experiment));
 
+        this.experiments = experiments;
         this.isQualified = true;
     }
 
-    filterExperimentsWithBucket() {
+    /**
+     * Go through experiments and load only the relevant experiments
+     * based on visitor main bucket and if query params are present
+     * @returns {Array}
+     */
+    loadExperiments() {
         this.options.debug && console.debug(debug.LOADING_EXPERIMENTS);
 
         let experiments = [];
 
-        // Target live experiments
-        experiments.push(_.arrayValue(['live', 'experiments'], this.config));
+        // Load live main experiments
+        experiments.push(_.arrayValue('live.experiments', this.config));
 
-        // Check bucketed experiments
-        experiments.push(...this.getBucketedExperiments(this.config.live));
+        // Load live bucketed experiments if relevant
+        experiments.push(...this.getBucketedExperiments(_.objectValue('live', this.config)));
 
-        // Target draft experiments if query params forced
+        // Load draft experiments if query params forced
         if (this.shouldForceQueryParams()) {
-            experiments.push(...this.config.draft.experiments);
+            // Load draft main experiments
+            experiments.push(..._.arrayValue('draft.experiments', this.config));
 
-            experiments.push(...this.getBucketedExperiments(this.config.draft));
+            // Load draft bucketed experiments if relevant
+            experiments.push(...this.getBucketedExperiments(_.objectValue('draft', this.config)));
         }
 
         return experiments;
     }
 
-    checkViewAndAudienceTargeting(experiment) {
-        let isQualifiedForView = false;
-        let isQualifiedForAudience = true;
+    /**
+     * Retrieve bucketed experiments
+     * @param group
+     * @returns {*}
+     */
+    getBucketedExperiments(group) {
+        if (this.getMainTrafficBucket() <= _.arrayValue('bucketed.max', group)) {
+            for (let bucket of _.arrayValue('bucketed.buckets', group)) {
+                if (this.getMainTrafficBucket() >= _.value('max', bucket) && this.getMainTrafficBucket() <= _.value('max', bucket)) {
+                    return _.arrayValue('experiments', bucket);
+                }
+            }
+        }
+
+        return [];
+    }
+
+    /**
+     * Go through each experiment and filters their variation to
+     * reduce to 1 based on visitor bucket
+     */
+    filterVariationsWithBucket() {
+
+    }
+
+    /**
+     * Check visitor view options and check if qualified for given experiment
+     * @param experiment
+     * @returns {boolean}
+     */
+    filterWithView(experiment) {
+        let isQualifiedForView = this.qualifyView(experiment);
 
         this.options.debug && console.debug(debug.TARGETING_VIEW_CHECK);
-
-        isQualifiedForView = this.qualifyView(experiment);
-
         this.options.debug && console.debug(isQualifiedForView ? debug.TARGETING_VIEW_QUALIFIED : debug.TARGETING_VIEW_NOT_QUALIFIED);
+
+        return isQualifiedForView;
+    }
+
+    /**
+     * Check visitor audience options and check if qualified for given experiment
+     * @param experiment
+     * @returns {boolean}
+     */
+    filterWithAudience(experiment) {
+        let isQualifiedForAudience = this.qualifyAudience(experiment);
 
         this.options.debug && console.debug(debug.TARGETING_AUDIENCE_CHECK);
 
-        return isQualifiedForView && isQualifiedForAudience;
+        return isQualifiedForAudience;
     }
 
+    /**
+     * Qualify visitor for given experiment based on current view (URL)
+     * @param experiment
+     * @returns {boolean}
+     */
     qualifyView(experiment) {
         const excludes = _.arrayValue('targeting.views.exclude', experiment);
+
         for (let i in excludes) {
             if (this.env.view.href.match(excludes[i]).toString()) {
                 return false;
@@ -231,16 +306,12 @@ class Testing {
         return false;
     }
 
-    getBucketedExperiments(group) {
-        if (this.getMainTrafficBucket() <= _.arrayValue('bucketed.max', group)) {
-            for (let bucket of _.arrayValue('bucketed.buckets', group)) {
-                if (this.getMainTrafficBucket() >= _.value('max', bucket) && this.getMainTrafficBucket() <= _.value('max', bucket)) {
-                    return _.arrayValue('experiments', bucket);
-                }
-            }
-        }
-
-        return [];
+    /**
+     * Qualify visitor for given experiment based on audience
+     * @returns {boolean}
+     */
+    qualifyAudience(experiment) {
+        return false;
     }
 
     /**
