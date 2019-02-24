@@ -128,28 +128,24 @@ class Testing {
         this.options.debug && console.debug(debug.SETUP_ENVIRONMENT);
 
         // Current view
-        const view = _.inBrowser && window.location || { href: '', search: '' };
+        const view = _.inBrowser && window.location || Object.assign(
+            { href: '', search: '' },
+            _.objectValue('view', custom)
+        );
 
-        // Visitor information
-        const visitor = {
-            // Generate/retrieve main traffic bucket
-            mainBucket: this.getMainTrafficBucket(),
-
-            // If the user visit the page with forced query params
-            forcedQueryParams: this.extractQueryParams(view),
-
-            // Do not track setting
-            doNotTrack: _.inBrowser && this.checkDoNotTrackSetting() || false,
-        };
+        const visitor = Object.assign({}, _.objectValue('visitor', custom));
 
         // Viewport information
         const viewport = {
+            mainBucket: this.getMainTrafficBucket(),
+            forcedQueryParams: this.extractQueryParams(view),
+            doNotTrack: _.inBrowser && this.checkDoNotTrackSetting() || false,
             width: _.inBrowser && window.innerWidth || 0,
             height: _.inBrowser && window.innerHeight || 0,
             userAgent: _.UA
         };
 
-        this.env = Object.assign({ view, visitor, viewport }, custom);
+        this.env = { view, visitor, viewport };
     }
 
     /**
@@ -287,7 +283,7 @@ class Testing {
      * @returns {boolean}
      */
     shouldForceQueryParams() {
-        if (Object.keys(this.env.visitor.forcedQueryParams).length && this.env.visitor.forcedQueryParams.force) {
+        if (Object.keys(this.env.viewport.forcedQueryParams).length && this.env.viewport.forcedQueryParams.force) {
             this.options.debug && console.debug(debug.QUERY_PARAMS);
 
             return true;

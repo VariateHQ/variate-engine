@@ -52,23 +52,9 @@ describe('Environment', function () {
         expect(Test.env.viewport.width).toBeDefined();
         expect(Test.env.viewport.height).toBeDefined();
         expect(Test.env.viewport.userAgent).toBeDefined();
-    });
-
-    it('Environment can contain custom viewport info', function () {
-        const Test = new Testing({
-            debug: false,
-            config: {}
-        });
-        Test.setupEnvironment({
-            viewport: {
-                hello: 'world'
-            }
-        });
-
-        expect(Test.env).toBeDefined();
-        expect(Test.env.viewport).toBeDefined();
-        expect(Test.env.viewport.hello).toBeDefined();
-        expect(Test.env.viewport.hello).toBe('world');
+        expect(Test.env.viewport.mainBucket).toBeDefined();
+        expect(Test.env.viewport.forcedQueryParams).toBeDefined();
+        expect(Test.env.viewport.doNotTrack).toBeDefined();
     });
 
     it('Environment contains visitor info', function () {
@@ -80,9 +66,6 @@ describe('Environment', function () {
 
         expect(Test.env).toBeDefined();
         expect(Test.env.visitor).toBeDefined();
-        expect(Test.env.visitor.mainBucket).toBeDefined();
-        expect(Test.env.visitor.forcedQueryParams).toBeDefined();
-        expect(Test.env.visitor.doNotTrack).toBeDefined();
     });
 
     it('Environment can contain custom visitor info', function () {
@@ -100,22 +83,5 @@ describe('Environment', function () {
         expect(Test.env.visitor).toBeDefined();
         expect(Test.env.visitor.hello).toBeDefined();
         expect(Test.env.visitor.hello).toBe('world');
-    });
-
-    it('Environment can contain other custom info', function () {
-        const Test = new Testing({
-            debug: false,
-            config: {}
-        });
-        Test.setupEnvironment({
-            custom: {
-                hello: 'world',
-            }
-        });
-
-        expect(Test.env).toBeDefined();
-        expect(Test.env.custom).toBeDefined();
-        expect(Test.env.custom.hello).toBeDefined();
-        expect(Test.env.custom.hello).toBe('world');
     });
 });
