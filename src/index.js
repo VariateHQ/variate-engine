@@ -1,11 +1,11 @@
-import * as debug from './debug';
-import * as errors from './errors';
-import bucketing from './utilities/bucketing';
+import * as debug from './lang/debug';
+import * as errors from './lang/errors';
+import * as bucketing from './utilities/bucketing';
 
 const LOCAL_STORAGE_MAIN_TRAFFIC_BUCKET_KEY = 'testing-tool-main-bucket';
 const LOCAL_STORAGE_TRAFFIC_BUCKETS_KEY = 'testing-tool-buckets';
 
-export default class Testing {
+class Testing {
     constructor(options) {
         this.setupOptions(options);
     }
@@ -257,14 +257,6 @@ export default class Testing {
     }
 
     /**
-     * Bucket number generator from 0 to 100
-     * @returns {number}
-     */
-    generateTrafficBucket() {
-        return Math.floor((Math.random() * 100));
-    }
-
-    /**
      * Retrieve or generate main traffic bucket for visitor
      * @returns {number}
      */
@@ -316,3 +308,7 @@ export default class Testing {
         return params;
     }
 }
+
+Object.assign(Testing.prototype, ...bucketing);
+
+export default Testing;

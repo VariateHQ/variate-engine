@@ -1,0 +1,1 @@
+const prefix = '[AB][WARNING]';

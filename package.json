@@ -6,6 +6,17 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/foxted/AB-Engine.git"
+  },
+  "keywords": [
+    "ab-testing"
+  ],
   "author": "Valentin Prugnaud <valentin@whatdafox.com>",
-  "license": "SEE LICENCE IN <LICENSE>"
+  "license": "SEE LICENCE IN <LICENSE>",
+  "bugs": {
+    "url": "https://github.com/foxted/AB-Engine/issues"
+  },
+  "homepage": "https://github.com/foxted/AB-Engine#readme"
 }
