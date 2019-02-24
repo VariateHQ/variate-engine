@@ -1,0 +1,160 @@
+{
+    "live": {
+        "bucketed": {
+            "min": 0,
+            "max": 40,
+            "buckets": [
+                {
+                    "min": 0,
+                    "max": 20,
+                    "experiments": []
+                },
+                {
+                    "min": 21,
+                    "max": 40,
+                    "experiments": []
+                }
+            ]
+        },
+        "experiments": [
+            {
+                "id": 0,
+                "name": "Live-Home",
+                "targeting": {
+                    "views": {
+                        "exclude": [],
+                        "include": []
+                    },
+                    "audiences": {
+                        "parameters": ["location", "platform"],
+                        "include": [
+                            {
+                                "id": 0,
+                                "parameters": {
+                                    "location": ["Canada", "USA"],
+                                    "platform": "Android"
+                                }
+                            },
+                            {
+                                "id": 1,
+                                "parameters": {
+                                    "location": "France",
+                                    "platform": ["iOS", "Android"]
+                                }
+                            },
+                            {
+                                "id": 3,
+                                "parameters": {
+                                    "range": {
+                                        "min": 1,
+                                        "max": 100
+                                    }
+                                }
+                            }
+                        ],
+                        "exclude": [
+                            {
+                                "id": 2,
+                                "parameters": {
+                                    "viewport": "<280px"
+                                }
+                            }
+                        ]
+                    }
+                },
+                "variations": [
+                    {
+                        "traffic_allocation": {
+                            "min": 0,
+                            "max": 50
+                        },
+                        "components": {
+                            "Example": {
+                                "id": 0,
+                                "attributes": {
+                                    "color": "red",
+                                    "backgroundColor": "red"
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    "draft": {
+        "bucketed": {
+            "min": 0,
+            "max": 40,
+            "buckets": [
+                {
+                    "min": 0,
+                    "max": 20,
+                    "experiments": []
+                },
+                {
+                    "min": 21,
+                    "max": 40,
+                    "experiments": []
+                }
+            ]
+        },
+
+        "experiments": [
+            {
+                "id": 1,
+                "name": "Draft-About",
+                "targeting": {
+                    "views": {
+                        "exclude": [],
+                        "include": ["about"]
+                    },
+                    "audiences": {
+                        "parameters": ["location", "platform", "viewport"],
+                        "include": [
+                            {
+                                "id": 0,
+                                "parameters": {
+                                    "location": "Canada",
+                                    "platform": "Android"
+                                }
+                            },
+                            {
+                                "id": 1,
+                                "parameters": {
+                                    "location": "Germany",
+                                    "platform": "iOS"
+                                }
+                            }
+                        ],
+                        "exclude": [
+                            {
+                                "id": 2,
+                                "parameters": {
+                                    "viewport": "<280px"
+                                }
+                            }
+                        ]
+                    }
+                },
+                "variations": [
+                    {
+                        "traffic_allocation": {
+                            "min": 0,
+                            "max": 50
+                        },
+                        "components": {
+                            "Example": {
+                                "id": 0,
+                                "attributes": {
+                                    "color": "500px",
+                                    "backgroundColor": "red"
+                                }
+                            }
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

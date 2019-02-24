@@ -1,6 +1,7 @@
 import * as debug from './lang/debug';
 import * as errors from './lang/errors';
 import * as bucketing from './utilities/bucketing';
+import _ from './utilities';
 
 const LOCAL_STORAGE_MAIN_TRAFFIC_BUCKET_KEY = 'testing-tool-main-bucket';
 const LOCAL_STORAGE_TRAFFIC_BUCKETS_KEY = 'testing-tool-buckets';
@@ -113,42 +114,42 @@ class Testing {
      * Initialize options
      */
     setupOptions(options) {
-        this.options = options;
+        this.options = Object.assign({
+            debug: false,
+            config: {}
+        }, options);
         this.options.debug && console.debug(debug.SETUP_OPTIONS);
     }
 
     /**
      * Initialize testing environment
      */
-    setupEnvironment() {
-        const url = window && window.location || '';
-
+    setupEnvironment(custom) {
         this.options.debug && console.debug(debug.SETUP_ENVIRONMENT);
 
-        this.env = {
-            // Current URL
-            url: url,
+        // Current view
+        const view = _.inBrowser && window.location || { href: '', search: '' };
 
-            // Viewport information
-            viewport: {
-                width: window && window.innerWidth || null,
-                height: window && window.innerHeight || null,
-                cookies: document && document.cookie || null,
-                userAgent: navigator && navigator.userAgent || null
-            },
+        // Visitor information
+        const visitor = {
+            // Generate/retrieve main traffic bucket
+            mainBucket: this.getMainTrafficBucket(),
 
-            // Visitor information
-            visitor: {
-                // Generate/retrieve main traffic bucket
-                mainBucket: this.getMainTrafficBucket(),
+            // If the user visit the page with forced query params
+            forcedQueryParams: this.extractQueryParams(view),
 
-                // If the user visit the page with forced query params
-                forcedQueryParams: this.extractQueryParams(url),
-
-                // Do not track setting
-                doNotTrack: window && this.checkDoNotTrackSetting() || false,
-            }
+            // Do not track setting
+            doNotTrack: _.inBrowser && this.checkDoNotTrackSetting() || false,
         };
+
+        // Viewport information
+        const viewport = {
+            width: _.inBrowser && window.innerWidth || 0,
+            height: _.inBrowser && window.innerHeight || 0,
+            userAgent: _.UA
+        };
+
+        this.env = Object.assign({ view, visitor, viewport }, custom);
     }
 
     /**
@@ -160,7 +161,7 @@ class Testing {
 
         // 2. Check targeting (views)
         experiments = experiments.filter((experiment) => this.checkViewAndAudienceTargeting(experiment));
-        console.log(experiments);
+        // console.log(experiments);
 
         // 3. Generate/retrieve buckets if qualified
 
@@ -176,13 +177,13 @@ class Testing {
         let experiments = [];
 
         // Target live experiments
-        experiments.push(...this.config.live.experiments);
+        experiments.push(_.arrayValue(['live', 'experiments'], this.config));
 
         // Check bucketed experiments
         experiments.push(...this.getBucketedExperiments(this.config.live));
 
         // Target draft experiments if query params forced
-        if(this.shouldForceQueryParams()) {
+        if (this.shouldForceQueryParams()) {
             experiments.push(...this.config.draft.experiments);
 
             experiments.push(...this.getBucketedExperiments(this.config.draft));
@@ -207,37 +208,26 @@ class Testing {
     }
 
     qualifyView(experiment) {
-        if (experiment.targeting.views.exclude != null && experiment.targeting.views.exclude.length > 0) {
-            for (var i in experiment.targeting.views.exclude) {
-                if (this.env.url.href.match(experiment.targeting.views.exclude[i].toString())) {
-                    return false;
-                }
+        const excludes = _.arrayValue('targeting.views.exclude', experiment);
+        for (let i in excludes) {
+            if (this.env.view.href.match(excludes[i]).toString()) {
+                return false;
             }
         }
 
-        if(experiment.targeting.views.include.length === 0) {
-            return true;
-        }
+        const includes = _.arrayValue('targeting.views.include', experiment);
 
-        if (experiment.targeting.views.include != null && experiment.targeting.views.include.length > 0) {
-            if (experiment.targeting.views.include[0] === '*' || experiment.targeting.views.include[0] === "\*") {
+        if (includes != null && includes.length > 0) {
+            if (includes[0] === '*' || includes[0] === '\*') {
                 return true;
             }
 
-            for (var i in experiment.targeting.views.include) {
-                if (this.env.url.href.match(experiment.targeting.views.include[i].toString())) {
+            for (let i in includes) {
+                if (this.env.view.href.match(includes[i].toString())) {
                     return true;
                 }
             }
-        }
-
-        return false;
-    }
-
-    shouldForceQueryParams() {
-        if(Object.keys(this.env.visitor.forcedQueryParams).length && this.env.visitor.forcedQueryParams.force) {
-            this.options.debug && console.debug(debug.QUERY_PARAMS);
-
+        } else {
             return true;
         }
 
@@ -245,10 +235,10 @@ class Testing {
     }
 
     getBucketedExperiments(group) {
-        if(this.getMainTrafficBucket() <= group.bucketed.max) {
-            for(let bucket of group.bucketed.buckets) {
-                if(this.getMainTrafficBucket() >= bucket.min && this.getMainTrafficBucket() <= bucket.max) {
-                    return bucket.experiments;
+        if (this.getMainTrafficBucket() <= _.arrayValue('bucketed.max', group)) {
+            for (let bucket of _.arrayValue('bucketed.buckets', group)) {
+                if (this.getMainTrafficBucket() >= _.value('max', bucket) && this.getMainTrafficBucket() <= _.value('max', bucket)) {
+                    return _.arrayValue('experiments', bucket);
                 }
             }
         }
@@ -257,15 +247,23 @@ class Testing {
     }
 
     /**
+     * Bucket number generator from 0 to 100
+     * @returns {number}
+     */
+    generateTrafficBucket() {
+        return Math.floor((Math.random() * 100));
+    }
+
+    /**
      * Retrieve or generate main traffic bucket for visitor
      * @returns {number}
      */
     getMainTrafficBucket() {
-        let bucket = parseInt(localStorage.getItem(LOCAL_STORAGE_MAIN_TRAFFIC_BUCKET_KEY), 10);
+        let bucket = parseInt(_.inBrowser && localStorage.getItem(LOCAL_STORAGE_MAIN_TRAFFIC_BUCKET_KEY), 10);
 
         if (!bucket) {
             bucket = this.generateTrafficBucket();
-            localStorage.setItem(LOCAL_STORAGE_MAIN_TRAFFIC_BUCKET_KEY, bucket);
+            _.inBrowser && localStorage.setItem(LOCAL_STORAGE_MAIN_TRAFFIC_BUCKET_KEY, bucket);
         }
 
         return bucket;
@@ -285,11 +283,27 @@ class Testing {
     }
 
     /**
+     * Should the query params be forced?
+     * @returns {boolean}
+     */
+    shouldForceQueryParams() {
+        if (Object.keys(this.env.visitor.forcedQueryParams).length && this.env.visitor.forcedQueryParams.force) {
+            this.options.debug && console.debug(debug.QUERY_PARAMS);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Get query parameters
      * @param url
      * @returns {object}
      */
     extractQueryParams(url) {
+        if (!url) return {};
+
         const queryParams = Object(url.search.substr(1).split('&').filter(item => item.length));
         let params = {};
 
@@ -309,6 +323,6 @@ class Testing {
     }
 }
 
-Object.assign(Testing.prototype, ...bucketing);
+Object.assign(Testing.prototype, bucketing);
 
 export default Testing;
