@@ -102,7 +102,7 @@ class Testing {
      * @returns {*|Array}
      */
     get experiments() {
-        return this._experiments;
+        return this._experiments || [];
     }
 
     /**
@@ -114,24 +114,41 @@ class Testing {
     }
 
     /**
-     * Initialize testing:
-     * use this when loading the page for the first time
+     * Get active experiments
+     * @returns {*|Array}
      */
-    initialize() {
-        this.setupEnvironment();
-        this.qualify();
-        this.isReady = true;
+    get variations() {
+        return  this.experiments.map((experiment) => experiment.variations).flat();
     }
 
     /**
-     * Refresh testing:
-     * use this after navigation (page URL/query params update)
+     * Get all components
+     * @returns {*|Array}
      */
-    refresh() {
-        this.isReady = false;
-        this.setupEnvironment();
+    get components() {
+        return Object.assign({}, ...this.variations.map((variation) => {
+            Object.keys(variation.components).map((key) => {
+                variation.components[key].bucket = this.getExperimentBucket({ id: variation.experiment_id });
+                variation.components[key].experiment_id = variation.experiment_id;
+                variation.components[key].variation_id = variation.id;
+            });
+
+            return variation.components;
+        }).flat());
+    }
+
+    /**
+     * Initialize testing:
+     * use this when loading the page for the first time
+     */
+    initialize(config, callback) {
+        this.setupEnvironment(config);
         this.qualify();
         this.isReady = true;
+
+        if (typeof callback == 'function') {
+            callback();
+        }
     }
 
     /**
@@ -149,34 +166,45 @@ class Testing {
      * Initialize testing environment
      */
     setupEnvironment(custom) {
-        this.options.debug && console.debug(debug.SETUP_ENVIRONMENT);
-
         // View information
-        const view = _.inBrowser && window.location || Object.assign(
-            { href: '', search: '' },
+        const view = Object.assign({
+                path: _.inBrowser && window.location.href || '',
+                query: _.value('query', custom) || Testing.extractQueryParams(window.location.search)
+            },
             _.objectValue('view', custom)
         );
 
         // Viewport information
         const viewport = {
             mainBucket: this.getMainTrafficBucket(),
-            forcedQueryParams: this.extractQueryParams(view),
-            doNotTrack: _.inBrowser && this.checkDoNotTrackSetting() || false,
-            width: _.inBrowser && window.innerWidth || 0,
-            height: _.inBrowser && window.innerHeight || 0,
+            doNotTrack: _.doNotTrack(),
+            width: _.width(),
+            height: _.height(),
             userAgent: _.UA,
         };
 
         // Targeting information
-        const targeting = Object.assign({}, _.objectValue('targeting', custom));
+        const targeting = Object.assign({
+            location: null,
+            viewport: {
+                min: -1,
+                max: -1,
+            },
+            platform: null,
+        }, _.objectValue('targeting', custom));
 
         this.env = { view, viewport, targeting };
+
+        this.options.debug && console.debug(debug.SETUP_ENVIRONMENT);
+        this.options.debug && console.debug(this.env);
     }
 
     /**
      * Qualify visitor for experiments
      */
     qualify() {
+        this.options.debug && console.debug(debug.LOADING_EXPERIMENTS);
+
         // 1. Get experiments based on bucket
         let experiments = this.loadExperiments();
 
@@ -184,10 +212,10 @@ class Testing {
         experiments = experiments.filter((experiment) => this.filterWithView(experiment));
 
         // 3. Check audience targeting
-        experiments = experiments.filter((experiment) => this.filterWithAudience(experiment));
+        // experiments = experiments.filter((experiment) => this.filterWithAudience(experiment));
 
         // 3. Reduce to 1 variation per experiment to prepare for display
-        experiments = experiments.filter((experiment) => this.filterVariationsWithBucket(experiment));
+        experiments = experiments.map((experiment) => this.filterVariationsWithBucket(experiment));
 
         this.experiments = experiments;
         this.isQualified = true;
@@ -199,12 +227,10 @@ class Testing {
      * @returns {Array}
      */
     loadExperiments() {
-        this.options.debug && console.debug(debug.LOADING_EXPERIMENTS);
-
         let experiments = [];
 
         // Load live main experiments
-        experiments.push(_.arrayValue('live.experiments', this.config));
+        experiments.push(..._.arrayValue('live.experiments', this.config));
 
         // Load live bucketed experiments if relevant
         experiments.push(...this.getBucketedExperiments(_.objectValue('live', this.config)));
@@ -241,9 +267,27 @@ class Testing {
     /**
      * Go through each experiment and filters their variation to
      * reduce to 1 based on visitor bucket
+     * @param experiment
+     * @returns {boolean}
      */
-    filterVariationsWithBucket() {
+    filterVariationsWithBucket(experiment) {
+        // // @TODO Assign bucket to visitor for experiment and filter variation
+        const bucket = this.getExperimentBucket(experiment);
+        let variations = _.arrayValue('variations', experiment);
 
+        variations = variations.filter((variation) => {
+            return bucket >= _.value('traffic_allocation.min', variation)
+                && bucket <= _.value('traffic_allocation.max', variation);
+        });
+
+        variations.map((variation) => {
+            variation.experiment_id = experiment.id;
+            return variation;
+        });
+
+        experiment.variations = variations;
+
+        return experiment;
     }
 
     /**
@@ -254,8 +298,16 @@ class Testing {
     filterWithView(experiment) {
         let isQualifiedForView = this.qualifyView(experiment);
 
-        this.options.debug && console.debug(debug.TARGETING_VIEW_CHECK);
-        this.options.debug && console.debug(isQualifiedForView ? debug.TARGETING_VIEW_QUALIFIED : debug.TARGETING_VIEW_NOT_QUALIFIED);
+        this.options.debug && console.groupCollapsed(
+            isQualifiedForView ?
+                debug.TARGETING_VIEW_QUALIFIED :
+                debug.TARGETING_VIEW_NOT_QUALIFIED
+        );
+
+        this.options.debug && console.debug(`Experiment: ${experiment.name}`);
+        this.options.debug && console.debug(`URL: ${_.value('view.path', this.env)}`);
+        this.options.debug && console.debug(`Query Params: `, _.value('view.query', this.env));
+        this.options.debug && console.groupEnd();
 
         return isQualifiedForView;
     }
@@ -268,7 +320,11 @@ class Testing {
     filterWithAudience(experiment) {
         let isQualifiedForAudience = this.qualifyAudience(experiment);
 
-        this.options.debug && console.debug(debug.TARGETING_AUDIENCE_CHECK);
+        this.options.debug && console.debug(
+            isQualifiedForAudience
+                ? debug.TARGETING_AUDIENCE_QUALIFIED
+                : debug.TARGETING_AUDIENCE_NOT_QUALIFIED
+        );
 
         return isQualifiedForAudience;
     }
@@ -279,10 +335,11 @@ class Testing {
      * @returns {boolean}
      */
     qualifyView(experiment) {
+        const path = _.value('view.path', this.env);
         const excludes = _.arrayValue('targeting.views.exclude', experiment);
 
-        for (let i in excludes) {
-            if (this.env.view.href.match(excludes[i]).toString()) {
+        for (let i = 0; i < excludes.length; i++) {
+            if (path.match(excludes[i]).toString()) {
                 return false;
             }
         }
@@ -294,13 +351,11 @@ class Testing {
                 return true;
             }
 
-            for (let i in includes) {
-                if (this.env.view.href.match(includes[i].toString())) {
+            for (let i = 0; i < includes.length; i++) {
+                if (path.match(includes[i].toString())) {
                     return true;
                 }
             }
-        } else {
-            return true;
         }
 
         return false;
@@ -337,17 +392,21 @@ class Testing {
         return bucket;
     }
 
-    /**
-     * Check the DoNotTrack settings in user's browser
-     * @returns {boolean}
-     */
-    checkDoNotTrackSetting() {
-        // Firefox override
-        if (window.navigator.doNotTrack == 'unspecified') {
-            return false;
+    getExperimentBucket(experiment) {
+        if (_.inBrowser) {
+            let bucket = localStorage.getItem(LOCAL_STORAGE_TRAFFIC_BUCKETS_KEY)
+                ? JSON.parse(localStorage.getItem(LOCAL_STORAGE_TRAFFIC_BUCKETS_KEY))
+                : {};
+
+            if (!bucket[experiment.id]) {
+                bucket[experiment.id] = this.generateTrafficBucket();
+                _.inBrowser && localStorage.setItem(LOCAL_STORAGE_TRAFFIC_BUCKETS_KEY, JSON.stringify(bucket));
+            }
+
+            return bucket[experiment.id];
         }
 
-        return window.navigator.doNotTrack || 0;
+        return 0;
     }
 
     /**
@@ -355,7 +414,7 @@ class Testing {
      * @returns {boolean}
      */
     shouldForceQueryParams() {
-        if (Object.keys(this.env.viewport.forcedQueryParams).length && this.env.viewport.forcedQueryParams.force) {
+        if (Object.keys(_.objectValue('view.query', this.env)).length && _.objectValue('view.query.force', this.env)) {
             this.options.debug && console.debug(debug.QUERY_PARAMS);
 
             return true;
@@ -369,21 +428,22 @@ class Testing {
      * @param url
      * @returns {object}
      */
-    extractQueryParams(url) {
-        if (!url) return {};
-
-        const queryParams = Object(url.search.substr(1).split('&').filter(item => item.length));
+    static extractQueryParams(url) {
         let params = {};
 
-        for (var i = 0; i < queryParams.length; i++) {
-            let [key, value] = queryParams[i].split('=');
+        if (_.inBrowser) {
+            const queryParams = Object(url.substr(1).split('&').filter(item => item.length));
 
-            if (!isNaN(value)) {
-                params[key] = Number(value);
-            } else if (value == 'true' || value == 'false') {
-                params[key] = value == 'true' ? true : false;
-            } else {
-                params[key] = value;
+            for (var i = 0; i < queryParams.length; i++) {
+                let [key, value] = queryParams[i].split('=');
+
+                if (!isNaN(value)) {
+                    params[key] = Number(value);
+                } else if (value == 'true' || value == 'false') {
+                    params[key] = value == 'true' ? true : false;
+                } else {
+                    params[key] = value;
+                }
             }
         }
 

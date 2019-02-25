@@ -1,11 +1,19 @@
 import * as env from './env';
 
 const value = (properties, object, defaultValue) => {
-    if(typeof properties === 'string') properties = properties.split('.');
-
     defaultValue = defaultValue || null;
 
-    return properties.reduce((xs, x) => (xs && xs[x]) ? xs[x] : defaultValue, object);
+    if(!properties) return defaultValue;
+
+    switch (typeof properties) {
+        case 'number':
+            return object[properties] || defaultValue;
+            break;
+        case 'string':
+            properties = properties.split('.');
+        default:
+            return properties.reduce((xs, x) => (xs && xs[x]) ? xs[x] : defaultValue, object);
+    }
 };
 
 const objectValue = (properties, object) => {
