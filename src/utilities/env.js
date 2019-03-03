@@ -27,6 +27,14 @@ export const doNotTrack = () => {
     return false;
 };
 
+export const href = () => {
+    return inBrowser ? window.location.href : '';
+}
+
+export const search = () => {
+    return inBrowser ? window.location.search : '';
+}
+
 export const width = () => {
     return inBrowser ? window.innerWidth : -1;
 };

@@ -50,7 +50,6 @@ describe('Environment', function () {
         expect(Test.env).toBeDefined();
         expect(Test.env.viewport).toBeDefined();
         expect(Test.env.viewport.mainBucket).toBeDefined();
-        expect(Test.env.viewport.forcedQueryParams).toBeDefined();
         expect(Test.env.viewport.doNotTrack).toBeDefined();
         expect(Test.env.viewport.width).toBeDefined();
         expect(Test.env.viewport.height).toBeDefined();

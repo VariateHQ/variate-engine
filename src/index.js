@@ -1,6 +1,5 @@
 import * as debug from './lang/debug';
 import * as errors from './lang/errors';
-import * as bucketing from './utilities/bucketing';
 import _ from './utilities';
 
 const LOCAL_STORAGE_MAIN_TRAFFIC_BUCKET_KEY = 'testing-tool-main-bucket';
@@ -168,8 +167,8 @@ class Testing {
     setupEnvironment(custom) {
         // View information
         const view = Object.assign({
-                path: _.inBrowser && window.location.href || '',
-                query: _.value('query', custom) || Testing.extractQueryParams(window.location.search)
+                path: _.value('path', custom) || _.href,
+                query: _.value('query', custom) || _.search
             },
             _.objectValue('view', custom)
         );
@@ -255,7 +254,7 @@ class Testing {
     getBucketedExperiments(group) {
         if (this.getMainTrafficBucket() <= _.arrayValue('bucketed.max', group)) {
             for (let bucket of _.arrayValue('bucketed.buckets', group)) {
-                if (this.getMainTrafficBucket() >= _.value('max', bucket) && this.getMainTrafficBucket() <= _.value('max', bucket)) {
+                if (this.getMainTrafficBucket() <= _.value('max', bucket) && this.getMainTrafficBucket() <= _.value('max', bucket)) {
                     return _.arrayValue('experiments', bucket);
                 }
             }
@@ -374,7 +373,7 @@ class Testing {
      * @returns {number}
      */
     generateTrafficBucket() {
-        return Math.floor((Math.random() * 100));
+        return Math.round(Math.random() * 100);
     }
 
     /**
@@ -382,7 +381,7 @@ class Testing {
      * @returns {number}
      */
     getMainTrafficBucket() {
-        let bucket = parseInt(_.inBrowser && localStorage.getItem(LOCAL_STORAGE_MAIN_TRAFFIC_BUCKET_KEY), 10);
+        let bucket = _.inBrowser && localStorage.getItem(LOCAL_STORAGE_MAIN_TRAFFIC_BUCKET_KEY);
 
         if (!bucket) {
             bucket = this.generateTrafficBucket();
@@ -450,7 +449,5 @@ class Testing {
         return params;
     }
 }
-
-Object.assign(Testing.prototype, bucketing);
 
 export default Testing;
