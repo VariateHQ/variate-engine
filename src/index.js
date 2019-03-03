@@ -1,3 +1,4 @@
+import version from './lang/version';
 import * as debug from './lang/debug';
 import * as errors from './lang/errors';
 import * as warnings from './lang/warnings';
@@ -8,6 +9,7 @@ const LOCAL_STORAGE_TRAFFIC_BUCKETS_KEY = 'testing-tool-buckets';
 
 class Testing {
     constructor(options) {
+        version.show();
         this.setupOptions(options);
     }
 

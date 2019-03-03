@@ -1,8 +1,4 @@
-const brandName = 'Variate Engine';
-
-const brandStyle = `background: rgba(143, 127, 224, 1); color: white; font-weight: 500; border-radius: 3px 0 0 3px; padding: 1px 2px;`;
-const typeStyle = 'background: #424242; color: white; font-weight: 400; padding: 1px 2px; border-radius: 0 3px 3px 0;';
-const messageStyle = 'background: transparent; color: #424242; font-weight: 400;';
+import { name, styles } from '../config/console';
 
 // Setup
 export const SETUP_OPTIONS = `[SETUP] Setting up options ✅`;
@@ -24,20 +20,20 @@ export const TARGETING_SEGMENT_NOT_QUALIFIED = `[TARGETING|SEGMENT] Not qualifie
 // Utilities
 export const log = (message, ...params) => {
     console.debug(
-        `%c ${brandName} %c DEBUG %c ${message}`,
-        brandStyle,
-        typeStyle,
-        messageStyle,
+        `%c ${name} %c DEBUG %c ${message}`,
+        styles.brand,
+        styles.type,
+        styles.message,
         ...params
     );
 };
 
 export function group(message, ...params) {
     console.groupCollapsed(
-        `%c ${brandName} %c DEBUG %c ${message}`,
-        brandStyle,
-        typeStyle,
-        messageStyle,
+        `%c ${name} %c DEBUG %c ${message}`,
+        styles.brand,
+        styles.type,
+        styles.message,
         ...params
     );
 }
