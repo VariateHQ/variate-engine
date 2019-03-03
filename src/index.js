@@ -1,5 +1,6 @@
 import * as debug from './lang/debug';
 import * as errors from './lang/errors';
+import * as warnings from './lang/warnings';
 import _ from './utilities';
 
 const LOCAL_STORAGE_MAIN_TRAFFIC_BUCKET_KEY = 'testing-tool-main-bucket';
@@ -192,8 +193,8 @@ class Testing {
             config: {}
         }, options);
 
-        if (this.options.debug) {
-            console.groupCollapsed(debug.SETUP_OPTIONS);
+        if(this.options.debug) {
+            debug.group(debug.SETUP_OPTIONS);
             console.debug(options);
             console.groupEnd();
         }
@@ -232,8 +233,8 @@ class Testing {
 
         this.env = { view, viewport, targeting };
 
-        if (this.options.debug) {
-            console.groupCollapsed(debug.SETUP_ENVIRONMENT);
+        if(this.options.debug) {
+            debug.group(debug.SETUP_ENVIRONMENT);
             console.debug(this.env);
             console.groupEnd();
         }
@@ -283,7 +284,7 @@ class Testing {
         }
 
         if (this.options.debug) {
-            console.groupCollapsed(debug.LOADING_EXPERIMENTS);
+            debug.group(debug.LOADING_EXPERIMENTS);
             console.debug(experiments);
             console.groupEnd();
         }
@@ -343,7 +344,7 @@ class Testing {
         let isQualifiedForView = this.qualifyView(experiment);
 
         if (this.options.debug) {
-            console.groupCollapsed(
+            debug.group(
                 isQualifiedForView ? debug.TARGETING_VIEW_QUALIFIED : debug.TARGETING_VIEW_NOT_QUALIFIED
             );
             console.debug(`Experiment: #${experiment.id} - ${experiment.name}`);
@@ -365,8 +366,8 @@ class Testing {
         let isQualifiedForSegment = this.qualifySegment(experiment);
 
         if (this.options.debug) {
-            console.groupCollapsed(
-                isQualifiedForSegment ? debug.TARGETING_AUDIENCE_QUALIFIED : debug.TARGETING_AUDIENCE_NOT_QUALIFIED
+            debug.group(
+                isQualifiedForSegment ? debug.TARGETING_SEGMENT_QUALIFIED : debug.TARGETING_SEGMENT_NOT_QUALIFIED
             );
 
             console.groupEnd();
@@ -412,7 +413,7 @@ class Testing {
      * @returns {boolean}
      */
     qualifySegment(experiment) {
-        return false;
+        return true;
     }
 
     /**
@@ -453,8 +454,8 @@ class Testing {
      */
     shouldForceQueryParams() {
         if (Object.keys(_.objectValue('view.query', this.env)).length && _.objectValue('view.query.force', this.env)) {
-            if (this.options.debug) {
-                console.groupCollapsed(debug.QUERY_PARAMS);
+            if(this.options.debug) {
+                debug.group(debug.QUERY_PARAMS);
                 console.debug(_.objectValue('view.query', this.env));
                 console.groupEnd();
             }
