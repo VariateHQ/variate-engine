@@ -1,24 +1,25 @@
 {
-  "name": "ab-engine",
+  "name": "variate-engine",
   "version": "1.0.0",
-  "description": "AB Testing engine for modern applications",
+  "description": "Variate AB testing engine for modern applications",
   "main": "src/index.js",
   "scripts": {
     "test": "jasmine JASMINE_CONFIG_PATH=tests/support/jasmine.json --reporter=jasmine-console-reporter"
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/foxted/AB-Engine.git"
+    "url": "git+ssh://git@github.com/foxted/Variate-Engine.git"
   },
   "keywords": [
-    "ab-testing"
+    "ab-testing",
+    "variate"
   ],
   "author": "Valentin Prugnaud <valentin@whatdafox.com>",
   "license": "SEE LICENCE IN <LICENSE>",
   "bugs": {
-    "url": "https://github.com/foxted/AB-Engine/issues"
+    "url": "https://github.com/foxted/Variate-Engine/issues"
   },
-  "homepage": "https://github.com/foxted/AB-Engine#readme",
+  "homepage": "https://github.com/foxted/Variate-Engine#readme",
   "devDependencies": {
     "@babel/core": "^7.3.3",
     "@babel/preset-env": "^7.3.1",
