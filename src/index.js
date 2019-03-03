@@ -117,7 +117,7 @@ class Testing {
      * @returns {*|Array}
      */
     get variations() {
-        return  this.experiments.map((experiment) => experiment.variations).flat();
+        return this.experiments.map((experiment) => experiment.variations).flat();
     }
 
     /**
@@ -134,6 +134,39 @@ class Testing {
 
             return variation.components;
         }).flat());
+    }
+
+    /**
+     * Bucket number generator from 0 to 100
+     * @returns {number}
+     */
+    static generateTrafficBucket() {
+        return Math.round(Math.random() * 100);
+    }
+
+    /**
+     * Get query parameters from window.Location object if needed
+     * @param url
+     * @returns {object}
+     */
+    static extractQueryParams(url = '') {
+        let params = {};
+
+        const queryParams = Object(url.substr(1).split('&').filter(item => item.length));
+
+        for (var i = 0; i < queryParams.length; i++) {
+            let [key, value] = queryParams[i].split('=');
+
+            if (!isNaN(value)) {
+                params[key] = Number(value);
+            } else if (value == 'true' || value == 'false') {
+                params[key] = value == 'true' ? true : false;
+            } else {
+                params[key] = value;
+            }
+        }
+
+        return params;
     }
 
     /**
@@ -158,7 +191,12 @@ class Testing {
             debug: false,
             config: {}
         }, options);
-        this.options.debug && console.debug(debug.SETUP_OPTIONS);
+
+        if (this.options.debug) {
+            console.groupCollapsed(debug.SETUP_OPTIONS);
+            console.debug(options);
+            console.groupEnd();
+        }
     }
 
     /**
@@ -167,8 +205,8 @@ class Testing {
     setupEnvironment(custom) {
         // View information
         const view = Object.assign({
-                path: _.value('path', custom) || _.href,
-                query: _.value('query', custom) || _.search
+                path: _.value('path', custom) || _.href(),
+                query: _.value('query', custom) || Testing.extractQueryParams(_.search())
             },
             _.objectValue('view', custom)
         );
@@ -194,24 +232,25 @@ class Testing {
 
         this.env = { view, viewport, targeting };
 
-        this.options.debug && console.debug(debug.SETUP_ENVIRONMENT);
-        this.options.debug && console.debug(this.env);
+        if (this.options.debug) {
+            console.groupCollapsed(debug.SETUP_ENVIRONMENT);
+            console.debug(this.env);
+            console.groupEnd();
+        }
     }
 
     /**
      * Qualify visitor for experiments
      */
     qualify() {
-        this.options.debug && console.debug(debug.LOADING_EXPERIMENTS);
-
         // 1. Get experiments based on bucket
         let experiments = this.loadExperiments();
 
         // 2. Check view targeting (URL)
         experiments = experiments.filter((experiment) => this.filterWithView(experiment));
 
-        // 3. Check audience targeting
-        // experiments = experiments.filter((experiment) => this.filterWithAudience(experiment));
+        // 3. Check segment targeting
+        experiments = experiments.filter((experiment) => this.filterWithSegment(experiment));
 
         // 3. Reduce to 1 variation per experiment to prepare for display
         experiments = experiments.map((experiment) => this.filterVariationsWithBucket(experiment));
@@ -241,6 +280,12 @@ class Testing {
 
             // Load draft bucketed experiments if relevant
             experiments.push(...this.getBucketedExperiments(_.objectValue('draft', this.config)));
+        }
+
+        if (this.options.debug) {
+            console.groupCollapsed(debug.LOADING_EXPERIMENTS);
+            console.debug(experiments);
+            console.groupEnd();
         }
 
         return experiments;
@@ -297,35 +342,37 @@ class Testing {
     filterWithView(experiment) {
         let isQualifiedForView = this.qualifyView(experiment);
 
-        this.options.debug && console.groupCollapsed(
-            isQualifiedForView ?
-                debug.TARGETING_VIEW_QUALIFIED :
-                debug.TARGETING_VIEW_NOT_QUALIFIED
-        );
-
-        this.options.debug && console.debug(`Experiment: ${experiment.name}`);
-        this.options.debug && console.debug(`URL: ${_.value('view.path', this.env)}`);
-        this.options.debug && console.debug(`Query Params: `, _.value('view.query', this.env));
-        this.options.debug && console.groupEnd();
+        if (this.options.debug) {
+            console.groupCollapsed(
+                isQualifiedForView ? debug.TARGETING_VIEW_QUALIFIED : debug.TARGETING_VIEW_NOT_QUALIFIED
+            );
+            console.debug(`Experiment: #${experiment.id} - ${experiment.name}`);
+            console.debug(`Current URL: ${_.value('view.path', this.env)}`);
+            console.debug(`Current Query Params: `, _.value('view.query', this.env));
+            console.debug(experiment);
+            console.groupEnd();
+        }
 
         return isQualifiedForView;
     }
 
     /**
-     * Check visitor audience options and check if qualified for given experiment
+     * Check visitor segment options and check if qualified for given experiment
      * @param experiment
      * @returns {boolean}
      */
-    filterWithAudience(experiment) {
-        let isQualifiedForAudience = this.qualifyAudience(experiment);
+    filterWithSegment(experiment) {
+        let isQualifiedForSegment = this.qualifySegment(experiment);
 
-        this.options.debug && console.debug(
-            isQualifiedForAudience
-                ? debug.TARGETING_AUDIENCE_QUALIFIED
-                : debug.TARGETING_AUDIENCE_NOT_QUALIFIED
-        );
+        if (this.options.debug) {
+            console.groupCollapsed(
+                isQualifiedForSegment ? debug.TARGETING_AUDIENCE_QUALIFIED : debug.TARGETING_AUDIENCE_NOT_QUALIFIED
+            );
 
-        return isQualifiedForAudience;
+            console.groupEnd();
+        }
+
+        return isQualifiedForSegment;
     }
 
     /**
@@ -361,19 +408,11 @@ class Testing {
     }
 
     /**
-     * Qualify visitor for given experiment based on audience
+     * Qualify visitor for given experiment based on segment
      * @returns {boolean}
      */
-    qualifyAudience(experiment) {
+    qualifySegment(experiment) {
         return false;
-    }
-
-    /**
-     * Bucket number generator from 0 to 100
-     * @returns {number}
-     */
-    generateTrafficBucket() {
-        return Math.round(Math.random() * 100);
     }
 
     /**
@@ -384,7 +423,7 @@ class Testing {
         let bucket = _.inBrowser && localStorage.getItem(LOCAL_STORAGE_MAIN_TRAFFIC_BUCKET_KEY);
 
         if (!bucket) {
-            bucket = this.generateTrafficBucket();
+            bucket = Testing.generateTrafficBucket();
             _.inBrowser && localStorage.setItem(LOCAL_STORAGE_MAIN_TRAFFIC_BUCKET_KEY, bucket);
         }
 
@@ -398,7 +437,7 @@ class Testing {
                 : {};
 
             if (!bucket[experiment.id]) {
-                bucket[experiment.id] = this.generateTrafficBucket();
+                bucket[experiment.id] = Testing.generateTrafficBucket();
                 _.inBrowser && localStorage.setItem(LOCAL_STORAGE_TRAFFIC_BUCKETS_KEY, JSON.stringify(bucket));
             }
 
@@ -414,39 +453,16 @@ class Testing {
      */
     shouldForceQueryParams() {
         if (Object.keys(_.objectValue('view.query', this.env)).length && _.objectValue('view.query.force', this.env)) {
-            this.options.debug && console.debug(debug.QUERY_PARAMS);
+            if (this.options.debug) {
+                console.groupCollapsed(debug.QUERY_PARAMS);
+                console.debug(_.objectValue('view.query', this.env));
+                console.groupEnd();
+            }
 
             return true;
         }
 
         return false;
-    }
-
-    /**
-     * Get query parameters
-     * @param url
-     * @returns {object}
-     */
-    static extractQueryParams(url) {
-        let params = {};
-
-        if (_.inBrowser) {
-            const queryParams = Object(url.substr(1).split('&').filter(item => item.length));
-
-            for (var i = 0; i < queryParams.length; i++) {
-                let [key, value] = queryParams[i].split('=');
-
-                if (!isNaN(value)) {
-                    params[key] = Number(value);
-                } else if (value == 'true' || value == 'false') {
-                    params[key] = value == 'true' ? true : false;
-                } else {
-                    params[key] = value;
-                }
-            }
-        }
-
-        return params;
     }
 }
 
