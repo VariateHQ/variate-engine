@@ -9,7 +9,7 @@ const LOCAL_STORAGE_TRAFFIC_BUCKETS_KEY = 'testing-tool-buckets';
 
 class Testing {
     constructor(options) {
-        version.show();
+        options.debug && version.show();
         this.setupOptions(options);
     }
 
