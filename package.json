@@ -8,7 +8,10 @@
     "src"
   ],
   "scripts": {
+    "clean": "rimraf dist/",
     "build": "babel src -d dist",
+    "lint": "eslint src/",
+    "prepublish": "npm run clean && npm run lint && npm run build",
     "test": "jasmine JASMINE_CONFIG_PATH=tests/support/jasmine.json --reporter=jasmine-console-reporter"
   },
   "repository": {
@@ -29,8 +32,13 @@
     "@babel/cli": "^7.2.3",
     "@babel/core": "^7.3.3",
     "@babel/preset-env": "^7.3.1",
+    "@babel/preset-flow": "^7.0.0",
     "@babel/register": "^7.0.0",
+    "babel-eslint": "^10.0.1",
     "chai": "^4.2.0",
+    "eslint": "^5.15.1",
+    "eslint-plugin-flowtype": "^3.4.2",
+    "flow-bin": "^0.94.0",
     "jasmine": "^3.3.1",
     "jasmine-console-reporter": "^3.1.0",
     "mocha": "^6.0.1",

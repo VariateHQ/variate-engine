@@ -1,0 +1,32 @@
+{
+    "extends": [
+        "eslint:recommended",
+        "plugin:flowtype/recommended"
+    ],
+    "plugins": [
+        "flowtype"
+    ],
+    "parser": "babel-eslint",
+    "env": {
+        "browser": true,
+        "node": true
+    },
+    "rules": {
+        "indent": [
+            "error",
+            4
+        ],
+        "no-console": [
+            "error",
+            {
+                "allow": [
+                    "warn",
+                    "error",
+                    "log",
+                    "groupCollapsed",
+                    "groupEnd"
+                ]
+            }
+        ]
+    }
+}

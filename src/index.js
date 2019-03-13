@@ -1,16 +1,24 @@
+// @flow
+
 import deepmerge from 'deepmerge';
 import get from 'get-value';
 import version from './lang/version';
 import * as debug from './lang/debug';
 import * as errors from './lang/errors';
-import * as warnings from './lang/warnings';
 import env from './utilities/env';
 
 const LOCAL_STORAGE_MAIN_TRAFFIC_BUCKET_KEY = 'testing-tool-main-bucket';
 const LOCAL_STORAGE_TRAFFIC_BUCKETS_KEY = 'testing-tool-buckets';
 
 class Testing {
-    constructor(options) {
+    _options: Object;
+    _config: Object;
+    _env: Object;
+    _experiments: Array<Object>;
+    _isReady: boolean;
+    _isQualified: boolean;
+
+    constructor(options: Object) {
         options.debug && version.show();
         this.setupOptions(options);
     }
@@ -27,7 +35,7 @@ class Testing {
      * Set testing options
      * @param options
      */
-    set options(options) {
+    set options(options: Object) {
         this._options = Object.assign({}, this._options, options);
     }
 
@@ -43,7 +51,7 @@ class Testing {
      * Set testing configuration
      * @param config
      */
-    set config(config) {
+    set config(config: Object) {
         this._options.config = config;
     }
 
@@ -59,7 +67,7 @@ class Testing {
      * Set status of the testing tool
      * @param value
      */
-    set isReady(value) {
+    set isReady(value: boolean) {
         if (typeof value !== 'boolean') {
             throw new TypeError(errors.IS_READY_TYPE_ERROR);
         }
@@ -70,7 +78,7 @@ class Testing {
      * Get qualification status for visitor
      * @returns {boolean}
      */
-    get isQualified() {
+    get isQualified(): boolean {
         return this._isQualified;
     }
 
@@ -78,7 +86,7 @@ class Testing {
      * Set qualification status for visitor
      * @param value
      */
-    set isQualified(value) {
+    set isQualified(value: boolean): void {
         if (typeof value !== 'boolean') {
             throw new TypeError(errors.IS_QUALIFIED_TYPE_ERROR);
         }
@@ -89,7 +97,7 @@ class Testing {
      * Get testing environment
      * @returns {object}
      */
-    get env() {
+    get env(): Object {
         return this._env;
     }
 
@@ -97,7 +105,7 @@ class Testing {
      * Set testing environment
      * @param value
      */
-    set env(value) {
+    set env(value: Object): void {
         this._env = Object.assign({}, this._env, value);
     }
 
@@ -113,7 +121,7 @@ class Testing {
      * Set active experiments
      * @param value
      */
-    set experiments(value) {
+    set experiments(value: Array<Object>) {
         this._experiments = value || [];
     }
 
@@ -140,10 +148,10 @@ class Testing {
      * @param variation
      * @returns {array}
      */
-    extractVariationComponents(variation) {
+    extractVariationComponents(variation: Object) {
         const bucket = this.getExperimentBucket({ id: variation.experiment_id });
 
-        for (let component of Object.entries(variation.components)) {
+        for (let component: Object of Object.entries(variation.components)) {
             component.shift();
             component[0].experiments = [];
             component[0].experiments.push({
@@ -170,18 +178,18 @@ class Testing {
      * @param url
      * @returns {object}
      */
-    static extractQueryParams(url = '') {
+    static extractQueryParams(url: string = '') {
         let params = {};
 
         const queryParams = Object(url.substr(1).split('&').filter(item => item.length));
 
-        for (var i = 0; i < queryParams.length; i++) {
+        for (let i = 0; i < queryParams.length; i++) {
             let [key, value] = queryParams[i].split('=');
 
             if (!isNaN(value)) {
                 params[key] = Number(value);
-            } else if (value == 'true' || value == 'false') {
-                params[key] = value == 'true' ? true : false;
+            } else if (value === 'true' || value === 'false') {
+                params[key] = value === 'true';
             } else {
                 params[key] = value;
             }
@@ -194,7 +202,7 @@ class Testing {
      * Initialize testing:
      * use this when loading the page for the first time
      */
-    initialize(config, callback) {
+    initialize(config: Object, callback: Function) {
         this.setupEnvironment(config);
         this.qualify();
         this.isReady = true;
@@ -207,7 +215,7 @@ class Testing {
     /**
      * Initialize options
      */
-    setupOptions(options) {
+    setupOptions(options: Object) {
         this.options = Object.assign({
             debug: false,
             config: {}
@@ -223,12 +231,13 @@ class Testing {
     /**
      * Initialize testing environment
      */
-    setupEnvironment(custom) {
+    setupEnvironment(custom: Object) {
         // View information
         // console.log(Testing.extractQueryParams(env.search()))
-        const view = Object.assign({
+        const view = Object.assign(
+            {
                 path: get(custom, 'path', env.href()),
-                query: get(custom, 'query', { default: Testing.extractQueryParams(env.search())})
+                query: get(custom, 'query', { default: Testing.extractQueryParams(env.search()) })
             },
             get(custom, 'view', { default: {} })
         );
@@ -318,7 +327,7 @@ class Testing {
      * @param group
      * @returns {array}
      */
-    getBucketedExperiments(group) {
+    getBucketedExperiments(group: Object) {
         if (this.getMainTrafficBucket() <= get(group, 'bucketed.max')) {
             for (let bucket of get(group, 'bucketed.buckets')) {
                 const max = get(bucket, 'max');
@@ -337,13 +346,13 @@ class Testing {
      * @param experiment
      * @returns {boolean}
      */
-    filterVariationsWithBucket(experiment) {
+    filterVariationsWithBucket(experiment: Object) {
         // // @TODO Assign bucket to visitor for experiment and filter variation
         const bucket = this.getExperimentBucket(experiment);
         let variations = get(experiment, 'variations');
 
         variations = variations.filter((variation) => {
-            return bucket >= get(variation,'traffic_allocation.min')
+            return bucket >= get(variation, 'traffic_allocation.min')
                 && bucket <= get(variation, 'traffic_allocation.max');
         });
 
@@ -362,7 +371,7 @@ class Testing {
      * @param experiment
      * @returns {boolean}
      */
-    filterWithView(experiment) {
+    filterWithView(experiment: Object) {
         let isQualifiedForView = this.qualifyView(experiment);
 
         if (this.options.debug) {
@@ -384,7 +393,7 @@ class Testing {
      * @param experiment
      * @returns {boolean}
      */
-    filterWithSegment(experiment) {
+    filterWithSegment(experiment: Object) {
         let isQualifiedForSegment = this.qualifySegment(experiment);
 
         if (this.options.debug) {
@@ -403,7 +412,7 @@ class Testing {
      * @param experiment
      * @returns {boolean}
      */
-    qualifyView(experiment) {
+    qualifyView(experiment: Object) {
         const path = get(this.env, 'view.path');
         const excludes = get(experiment, 'targeting.views.exclude');
 
@@ -416,7 +425,7 @@ class Testing {
         const includes = get(experiment, 'targeting.views.include');
 
         if (includes != null && includes.length > 0) {
-            if (includes[0] === '*' || includes[0] === '\*') {
+            if (includes[0] === '*') {
                 return true;
             }
 
@@ -434,7 +443,7 @@ class Testing {
      * Qualify visitor for given experiment based on segment
      * @returns {boolean}
      */
-    qualifySegment(experiment) {
+    qualifySegment(experiment: ?Object) {
         return true;
     }
 
@@ -447,7 +456,7 @@ class Testing {
 
         if (!bucket) {
             bucket = Testing.generateTrafficBucket();
-            env.inBrowser && localStorage.setItem(LOCAL_STORAGE_MAIN_TRAFFIC_BUCKET_KEY, bucket);
+            env.inBrowser && localStorage.setItem(LOCAL_STORAGE_MAIN_TRAFFIC_BUCKET_KEY, bucket.toString());
         }
 
         return bucket;
@@ -458,10 +467,10 @@ class Testing {
      * @param experiment
      * @returns {number}
      */
-    getExperimentBucket(experiment) {
+    getExperimentBucket(experiment: Object) {
         if (env.inBrowser) {
             let bucket = localStorage.getItem(LOCAL_STORAGE_TRAFFIC_BUCKETS_KEY)
-                ? JSON.parse(localStorage.getItem(LOCAL_STORAGE_TRAFFIC_BUCKETS_KEY))
+                ? JSON.parse(localStorage.getItem(LOCAL_STORAGE_TRAFFIC_BUCKETS_KEY) || '')
                 : {};
 
             if (!bucket[experiment.id]) {
@@ -483,7 +492,7 @@ class Testing {
         if (Object.keys(get(this.env, 'view.query' || {})).length && get(this.env, 'view.query.force', false)) {
             if (this.options.debug) {
                 debug.group(debug.QUERY_PARAMS);
-                console.log(get( this.env, 'view.query') || {});
+                console.log(get(this.env, 'view.query') || {});
                 console.groupEnd();
             }
 
