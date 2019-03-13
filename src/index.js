@@ -443,7 +443,7 @@ class Testing {
      * Qualify visitor for given experiment based on segment
      * @returns {boolean}
      */
-    qualifySegment(experiment: ?Object) {
+    qualifySegment() {
         return true;
     }
 
