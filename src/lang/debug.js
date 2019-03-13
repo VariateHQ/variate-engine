@@ -19,7 +19,7 @@ export const TARGETING_SEGMENT_NOT_QUALIFIED = `[TARGETING|SEGMENT] Not qualifie
 
 // Utilities
 export const log = (message, ...params) => {
-    console.debug(
+    console.log(
         `%c ${name} %c DEBUG %c ${message}`,
         styles.brand,
         styles.type,

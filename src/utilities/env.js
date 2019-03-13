@@ -1,6 +1,4 @@
 // Browser environment sniffing
-import _ from './index';
-
 export const inBrowser = typeof window !== 'undefined';
 export const UA = inBrowser && window.navigator.userAgent.toLowerCase();
 
@@ -15,7 +13,7 @@ export const isPhantomJS = UA && /phantomjs/.test(UA);
 export const isFF = UA && UA.match(/firefox\/(\d+)/);
 
 export const doNotTrack = () => {
-    if(inBrowser) {
+    if (inBrowser) {
         // Firefox override
         if (window.navigator.doNotTrack == 'unspecified') {
             return false;
@@ -29,11 +27,11 @@ export const doNotTrack = () => {
 
 export const href = () => {
     return inBrowser ? window.location.href : '';
-}
+};
 
 export const search = () => {
     return inBrowser ? window.location.search : '';
-}
+};
 
 export const width = () => {
     return inBrowser ? window.innerWidth : -1;
@@ -41,4 +39,21 @@ export const width = () => {
 
 export const height = () => {
     return inBrowser ? window.innerWidth : -1;
+};
+
+export default {
+    inBrowser,
+    UA,
+    isIE,
+    isIE9,
+    isAndroid,
+    isIOS,
+    isChrome,
+    isPhantomJS,
+    isFF,
+    doNotTrack,
+    href,
+    search,
+    width,
+    height,
 };

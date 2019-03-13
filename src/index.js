@@ -1,9 +1,10 @@
 import deepmerge from 'deepmerge';
+import get from 'get-value';
 import version from './lang/version';
 import * as debug from './lang/debug';
 import * as errors from './lang/errors';
 import * as warnings from './lang/warnings';
-import _ from './utilities';
+import env from './utilities/env';
 
 const LOCAL_STORAGE_MAIN_TRAFFIC_BUCKET_KEY = 'testing-tool-main-bucket';
 const LOCAL_STORAGE_TRAFFIC_BUCKETS_KEY = 'testing-tool-buckets';
@@ -16,7 +17,7 @@ class Testing {
 
     /**
      * Get testing options
-     * @returns {*}
+     * @returns {object}
      */
     get options() {
         return this._options;
@@ -32,7 +33,7 @@ class Testing {
 
     /**
      * Get testing configuration
-     * @returns {*}
+     * @returns {object}
      */
     get config() {
         return this._options.config;
@@ -48,7 +49,7 @@ class Testing {
 
     /**
      * Get status of the testing tool
-     * @returns {*|boolean}
+     * @returns {boolean}
      */
     get isReady() {
         return this._isReady;
@@ -67,7 +68,7 @@ class Testing {
 
     /**
      * Get qualification status for visitor
-     * @returns {*|boolean}
+     * @returns {boolean}
      */
     get isQualified() {
         return this._isQualified;
@@ -86,7 +87,7 @@ class Testing {
 
     /**
      * Get testing environment
-     * @returns {*}
+     * @returns {object}
      */
     get env() {
         return this._env;
@@ -102,7 +103,7 @@ class Testing {
 
     /**
      * Get active experiments
-     * @returns {*|Array}
+     * @returns {Array}
      */
     get experiments() {
         return this._experiments || [];
@@ -118,7 +119,7 @@ class Testing {
 
     /**
      * Get active experiments
-     * @returns {*|Array}
+     * @returns {Array}
      */
     get variations() {
         return this.experiments.map((experiment) => experiment.variations).flat();
@@ -126,7 +127,7 @@ class Testing {
 
     /**
      * Get all components
-     * @returns {*|Array}
+     * @returns {Array}
      */
     get components() {
         const components = deepmerge.all(this.variations.flatMap(this.extractVariationComponents.bind(this)));
@@ -137,7 +138,7 @@ class Testing {
     /**
      * Extract variation components
      * @param variation
-     * @returns {*}
+     * @returns {array}
      */
     extractVariationComponents(variation) {
         const bucket = this.getExperimentBucket({ id: variation.experiment_id });
@@ -214,7 +215,7 @@ class Testing {
 
         if (this.options.debug) {
             debug.group(debug.SETUP_OPTIONS);
-            console.debug(options);
+            console.log(options);
             console.groupEnd();
         }
     }
@@ -224,20 +225,21 @@ class Testing {
      */
     setupEnvironment(custom) {
         // View information
+        // console.log(Testing.extractQueryParams(env.search()))
         const view = Object.assign({
-                path: _.value('path', custom) || _.href(),
-                query: _.value('query', custom) || Testing.extractQueryParams(_.search())
+                path: get(custom, 'path', env.href()),
+                query: get(custom, 'query', { default: Testing.extractQueryParams(env.search())})
             },
-            _.objectValue('view', custom)
+            get(custom, 'view', { default: {} })
         );
 
         // Viewport information
         const viewport = {
             mainBucket: this.getMainTrafficBucket(),
-            doNotTrack: _.doNotTrack(),
-            width: _.width(),
-            height: _.height(),
-            userAgent: _.UA,
+            doNotTrack: env.doNotTrack(),
+            width: env.width(),
+            height: env.height(),
+            userAgent: env.UA,
         };
 
         // Targeting information
@@ -248,13 +250,13 @@ class Testing {
                 max: -1,
             },
             platform: null,
-        }, _.objectValue('targeting', custom));
+        }, get(custom, 'targeting', { default: {} }));
 
         this.env = { view, viewport, targeting };
 
         if (this.options.debug) {
             debug.group(debug.SETUP_ENVIRONMENT);
-            console.debug(this.env);
+            console.log(this.env);
             console.groupEnd();
         }
     }
@@ -288,23 +290,23 @@ class Testing {
         let experiments = [];
 
         // Load live main experiments
-        experiments.push(..._.arrayValue('live.experiments', this.config));
+        experiments.push(...get(this.config, 'live.experiments', []));
 
         // Load live bucketed experiments if relevant
-        experiments.push(...this.getBucketedExperiments(_.objectValue('live', this.config)));
+        experiments.push(...this.getBucketedExperiments(get(this.config, 'live', { default: {} })));
 
         // Load draft experiments if query params forced
         if (this.shouldForceQueryParams()) {
             // Load draft main experiments
-            experiments.push(..._.arrayValue('draft.experiments', this.config));
+            experiments.push(...get(this.config, 'draft.experiments', []));
 
             // Load draft bucketed experiments if relevant
-            experiments.push(...this.getBucketedExperiments(_.objectValue('draft', this.config)));
+            experiments.push(...this.getBucketedExperiments(get(this.config, 'draft', { default: {} })));
         }
 
         if (this.options.debug) {
             debug.group(debug.LOADING_EXPERIMENTS);
-            console.debug(experiments);
+            console.log(experiments);
             console.groupEnd();
         }
 
@@ -314,13 +316,14 @@ class Testing {
     /**
      * Retrieve bucketed experiments
      * @param group
-     * @returns {*}
+     * @returns {array}
      */
     getBucketedExperiments(group) {
-        if (this.getMainTrafficBucket() <= _.arrayValue('bucketed.max', group)) {
-            for (let bucket of _.arrayValue('bucketed.buckets', group)) {
-                if (this.getMainTrafficBucket() <= _.value('max', bucket) && this.getMainTrafficBucket() <= _.value('max', bucket)) {
-                    return _.arrayValue('experiments', bucket);
+        if (this.getMainTrafficBucket() <= get(group, 'bucketed.max')) {
+            for (let bucket of get(group, 'bucketed.buckets')) {
+                const max = get(bucket, 'max');
+                if (this.getMainTrafficBucket() <= max && this.getMainTrafficBucket() <= max) {
+                    return get(bucket, 'experiments');
                 }
             }
         }
@@ -337,11 +340,11 @@ class Testing {
     filterVariationsWithBucket(experiment) {
         // // @TODO Assign bucket to visitor for experiment and filter variation
         const bucket = this.getExperimentBucket(experiment);
-        let variations = _.arrayValue('variations', experiment);
+        let variations = get(experiment, 'variations');
 
         variations = variations.filter((variation) => {
-            return bucket >= _.value('traffic_allocation.min', variation)
-                && bucket <= _.value('traffic_allocation.max', variation);
+            return bucket >= get(variation,'traffic_allocation.min')
+                && bucket <= get(variation, 'traffic_allocation.max');
         });
 
         variations.map((variation) => {
@@ -366,10 +369,10 @@ class Testing {
             debug.group(
                 isQualifiedForView ? debug.TARGETING_VIEW_QUALIFIED : debug.TARGETING_VIEW_NOT_QUALIFIED
             );
-            console.debug(`Experiment: #${experiment.id} - ${experiment.name}`);
-            console.debug(`Current URL: ${_.value('view.path', this.env)}`);
-            console.debug(`Current Query Params: `, _.value('view.query', this.env));
-            console.debug(experiment);
+            console.log(`Experiment: #${experiment.id} - ${experiment.name}`);
+            console.log(`Current URL: ${get(this.env, 'view.path')}`);
+            console.log(`Current Query Params: `, get(this.env, 'view.query'));
+            console.log(experiment);
             console.groupEnd();
         }
 
@@ -401,8 +404,8 @@ class Testing {
      * @returns {boolean}
      */
     qualifyView(experiment) {
-        const path = _.value('view.path', this.env);
-        const excludes = _.arrayValue('targeting.views.exclude', experiment);
+        const path = get(this.env, 'view.path');
+        const excludes = get(experiment, 'targeting.views.exclude');
 
         for (let i = 0; i < excludes.length; i++) {
             if (path.match(excludes[i]).toString()) {
@@ -410,7 +413,7 @@ class Testing {
             }
         }
 
-        const includes = _.arrayValue('targeting.views.include', experiment);
+        const includes = get(experiment, 'targeting.views.include');
 
         if (includes != null && includes.length > 0) {
             if (includes[0] === '*' || includes[0] === '\*') {
@@ -440,25 +443,30 @@ class Testing {
      * @returns {number}
      */
     getMainTrafficBucket() {
-        let bucket = _.inBrowser && localStorage.getItem(LOCAL_STORAGE_MAIN_TRAFFIC_BUCKET_KEY);
+        let bucket = env.inBrowser && localStorage.getItem(LOCAL_STORAGE_MAIN_TRAFFIC_BUCKET_KEY);
 
         if (!bucket) {
             bucket = Testing.generateTrafficBucket();
-            _.inBrowser && localStorage.setItem(LOCAL_STORAGE_MAIN_TRAFFIC_BUCKET_KEY, bucket);
+            env.inBrowser && localStorage.setItem(LOCAL_STORAGE_MAIN_TRAFFIC_BUCKET_KEY, bucket);
         }
 
         return bucket;
     }
 
+    /**
+     * Get a traffic bucket for a given experiment
+     * @param experiment
+     * @returns {number}
+     */
     getExperimentBucket(experiment) {
-        if (_.inBrowser) {
+        if (env.inBrowser) {
             let bucket = localStorage.getItem(LOCAL_STORAGE_TRAFFIC_BUCKETS_KEY)
                 ? JSON.parse(localStorage.getItem(LOCAL_STORAGE_TRAFFIC_BUCKETS_KEY))
                 : {};
 
             if (!bucket[experiment.id]) {
                 bucket[experiment.id] = Testing.generateTrafficBucket();
-                _.inBrowser && localStorage.setItem(LOCAL_STORAGE_TRAFFIC_BUCKETS_KEY, JSON.stringify(bucket));
+                env.inBrowser && localStorage.setItem(LOCAL_STORAGE_TRAFFIC_BUCKETS_KEY, JSON.stringify(bucket));
             }
 
             return bucket[experiment.id];
@@ -472,10 +480,10 @@ class Testing {
      * @returns {boolean}
      */
     shouldForceQueryParams() {
-        if (Object.keys(_.objectValue('view.query', this.env)).length && _.objectValue('view.query.force', this.env)) {
+        if (Object.keys(get(this.env, 'view.query' || {})).length && get(this.env, 'view.query.force', false)) {
             if (this.options.debug) {
                 debug.group(debug.QUERY_PARAMS);
-                console.debug(_.objectValue('view.query', this.env));
+                console.log(get( this.env, 'view.query') || {});
                 console.groupEnd();
             }
 

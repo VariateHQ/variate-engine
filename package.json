@@ -1,9 +1,14 @@
 {
-  "name": "variate-engine",
+  "name": "@variate/engine",
   "version": "1.0.0",
   "description": "Variate AB testing engine for modern applications",
-  "main": "src/index.js",
+  "main": "dist/index.js",
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
+    "build": "babel src -d dist",
     "test": "jasmine JASMINE_CONFIG_PATH=tests/support/jasmine.json --reporter=jasmine-console-reporter"
   },
   "repository": {
@@ -21,15 +26,18 @@
   },
   "homepage": "https://github.com/foxted/Variate-Engine#readme",
   "devDependencies": {
+    "@babel/cli": "^7.2.3",
     "@babel/core": "^7.3.3",
     "@babel/preset-env": "^7.3.1",
     "@babel/register": "^7.0.0",
     "chai": "^4.2.0",
     "jasmine": "^3.3.1",
     "jasmine-console-reporter": "^3.1.0",
-    "mocha": "^6.0.1"
+    "mocha": "^6.0.1",
+    "rimraf": "^2.6.3"
   },
   "dependencies": {
-    "deepmerge": "^3.2.0"
+    "deepmerge": "^3.2.0",
+    "get-value": "^3.0.1"
   }
 }
