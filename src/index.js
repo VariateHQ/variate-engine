@@ -1,3 +1,4 @@
+import deepmerge from 'deepmerge';
 import version from './lang/version';
 import * as debug from './lang/debug';
 import * as errors from './lang/errors';
@@ -128,15 +129,31 @@ class Testing {
      * @returns {*|Array}
      */
     get components() {
-        return Object.assign({}, ...this.variations.map((variation) => {
-            Object.keys(variation.components).map((key) => {
-                variation.components[key].bucket = this.getExperimentBucket({ id: variation.experiment_id });
-                variation.components[key].experiment_id = variation.experiment_id;
-                variation.components[key].variation_id = variation.id;
-            });
+        const components = deepmerge.all(this.variations.flatMap(this.extractVariationComponents.bind(this)));
 
-            return variation.components;
-        }).flat());
+        return Object.assign({}, components);
+    }
+
+    /**
+     * Extract variation components
+     * @param variation
+     * @returns {*}
+     */
+    extractVariationComponents(variation) {
+        const bucket = this.getExperimentBucket({ id: variation.experiment_id });
+
+        for (let component of Object.entries(variation.components)) {
+            component.shift();
+            component[0].experiments = [];
+            component[0].experiments.push({
+                experiment: variation.experiment_id,
+                variation: variation.id,
+                bucket: bucket,
+                attributes: component[0].attributes
+            });
+        }
+
+        return variation.components;
     }
 
     /**
@@ -195,7 +212,7 @@ class Testing {
             config: {}
         }, options);
 
-        if(this.options.debug) {
+        if (this.options.debug) {
             debug.group(debug.SETUP_OPTIONS);
             console.debug(options);
             console.groupEnd();
@@ -235,7 +252,7 @@ class Testing {
 
         this.env = { view, viewport, targeting };
 
-        if(this.options.debug) {
+        if (this.options.debug) {
             debug.group(debug.SETUP_ENVIRONMENT);
             console.debug(this.env);
             console.groupEnd();
@@ -456,7 +473,7 @@ class Testing {
      */
     shouldForceQueryParams() {
         if (Object.keys(_.objectValue('view.query', this.env)).length && _.objectValue('view.query.force', this.env)) {
-            if(this.options.debug) {
+            if (this.options.debug) {
                 debug.group(debug.QUERY_PARAMS);
                 console.debug(_.objectValue('view.query', this.env));
                 console.groupEnd();
