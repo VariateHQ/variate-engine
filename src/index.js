@@ -113,7 +113,7 @@ class Testing {
      * Get active experiments
      * @returns {Array}
      */
-    get experiments() {
+    get experiments(): Array<Object> {
         return this._experiments || [];
     }
 
@@ -441,9 +441,11 @@ class Testing {
 
     /**
      * Qualify visitor for given experiment based on segment
+     * @param experiment
      * @returns {boolean}
      */
-    qualifySegment() {
+    qualifySegment(experiment: Object) {
+        console.log(experiment);
         return true;
     }
 
