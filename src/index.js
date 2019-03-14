@@ -3,6 +3,7 @@
 import deepmerge from 'deepmerge';
 import get from 'get-value';
 import version from './lang/version';
+import Option, { Options } from './components/options';
 import * as debug from './lang/debug';
 import * as errors from './lang/errors';
 import env from './utilities/env';
@@ -25,9 +26,9 @@ class Testing {
 
     /**
      * Get testing options
-     * @returns {object}
+     * @returns {Options}
      */
-    get options() {
+    get options(): Options {
         return this._options;
     }
 
@@ -35,8 +36,8 @@ class Testing {
      * Set testing options
      * @param options
      */
-    set options(options: Object) {
-        this._options = Object.assign({}, this._options, options);
+    set options(options: Options) {
+        this._options = options;
     }
 
     /**
@@ -127,20 +128,18 @@ class Testing {
 
     /**
      * Get active experiments
-     * @returns {Array}
+     * @returns {Array<Object>}
      */
-    get variations() {
-        return this.experiments.map((experiment) => experiment.variations).flat();
+    get variations(): Array<Object> {
+        return this.experiments.map((experiment) => experiment.variations).reduce((acc, val) => acc.concat(val), []);
     }
 
     /**
      * Get all components
-     * @returns {Array}
+     * @returns {Object}
      */
-    get components() {
-        const components = deepmerge.all(this.variations.flatMap(this.extractVariationComponents.bind(this)));
-
-        return Object.assign({}, components);
+    get components(): Object {
+        return deepmerge.all(this.variations.map(this.extractVariationComponents.bind(this)));
     }
 
     /**
@@ -216,10 +215,7 @@ class Testing {
      * Initialize options
      */
     setupOptions(options: Object) {
-        this.options = Object.assign({
-            debug: false,
-            config: {}
-        }, options);
+        this.options = new Options(options);
 
         if (this.options.debug) {
             debug.group(debug.SETUP_OPTIONS);
@@ -445,7 +441,7 @@ class Testing {
      * @returns {boolean}
      */
     qualifySegment(experiment: Object) {
-        console.log(experiment);
+        // console.log(experiment);
         return true;
     }
 

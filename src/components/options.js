@@ -18,3 +18,5 @@ export class Options {
         this._config = config;
     }
 }
+
+export default Options;

@@ -1,154 +1,98 @@
 {
     "live": {
-        "bucketed": {
-            "min": 0,
-            "max": 40,
-            "buckets": [
-                {
-                    "min": 0,
-                    "max": 20,
-                    "experiments": []
-                },
-                {
-                    "min": 21,
-                    "max": 40,
-                    "experiments": []
-                }
-            ]
-        },
         "experiments": [
             {
-                "id": 0,
-                "name": "Live-Home",
+                "id": 16,
+                "name": "Homepage - Hero Banner",
+                "status": "live",
                 "targeting": {
                     "views": {
+                        "include": [
+                            "/$"
+                        ],
+                        "exclude": []
+                    },
+                    "segments": {
                         "exclude": [],
                         "include": []
-                    },
-                    "audiences": {
-                        "parameters": ["location", "platform"],
-                        "include": [
-                            {
-                                "id": 0,
-                                "parameters": {
-                                    "location": ["Canada", "USA"],
-                                    "platform": "Android"
-                                }
-                            },
-                            {
-                                "id": 1,
-                                "parameters": {
-                                    "location": "France",
-                                    "platform": ["iOS", "Android"]
-                                }
-                            },
-                            {
-                                "id": 3,
-                                "parameters": {
-                                    "range": {
-                                        "min": 1,
-                                        "max": 100
-                                    }
-                                }
-                            }
-                        ],
-                        "exclude": [
-                            {
-                                "id": 2,
-                                "parameters": {
-                                    "viewport": "<280px"
-                                }
-                            }
-                        ]
                     }
                 },
                 "variations": [
                     {
+                        "id": 22,
                         "traffic_allocation": {
-                            "min": 0,
-                            "max": 50
+                            "max": 50,
+                            "min": 0
                         },
                         "components": {
-                            "Example": {
-                                "id": 0,
+                            "Hero": {
+                                "id": 25,
                                 "attributes": {
-                                    "color": "red",
-                                    "backgroundColor": "red"
+                                    "backgroundImage": "https://placeimg.com/1000/500/animals"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "id": 23,
+                        "traffic_allocation": {
+                            "max": 100,
+                            "min": 51
+                        },
+                        "components": {
+                            "Hero": {
+                                "id": 25,
+                                "attributes": {
+                                    "backgroundImage": "https://placeimg.com/1000/500/arch"
                                 }
                             }
                         }
                     }
                 ]
-            }
-        ]
-    },
-    "draft": {
-        "bucketed": {
-            "min": 0,
-            "max": 40,
-            "buckets": [
-                {
-                    "min": 0,
-                    "max": 20,
-                    "experiments": []
-                },
-                {
-                    "min": 21,
-                    "max": 40,
-                    "experiments": []
-                }
-            ]
-        },
-
-        "experiments": [
+            },
             {
-                "id": 1,
-                "name": "Draft-About",
+                "id": 17,
+                "name": "Homepage - Hero Headline",
+                "status": "live",
                 "targeting": {
                     "views": {
-                        "exclude": [],
-                        "include": ["about"]
-                    },
-                    "audiences": {
-                        "parameters": ["location", "platform", "viewport"],
                         "include": [
-                            {
-                                "id": 0,
-                                "parameters": {
-                                    "location": "Canada",
-                                    "platform": "Android"
-                                }
-                            },
-                            {
-                                "id": 1,
-                                "parameters": {
-                                    "location": "Germany",
-                                    "platform": "iOS"
-                                }
-                            }
+                            "/$"
                         ],
-                        "exclude": [
-                            {
-                                "id": 2,
-                                "parameters": {
-                                    "viewport": "<280px"
-                                }
-                            }
-                        ]
+                        "exclude": []
+                    },
+                    "segments": {
+                        "exclude": [],
+                        "include": []
                     }
                 },
                 "variations": [
                     {
+                        "id": 24,
                         "traffic_allocation": {
-                            "min": 0,
-                            "max": 50
+                            "max": 50,
+                            "min": 0
                         },
                         "components": {
-                            "Example": {
-                                "id": 0,
+                            "Hero": {
+                                "id": 25,
                                 "attributes": {
-                                    "color": "500px",
-                                    "backgroundColor": "red"
+                                    "headline": "Awesome control variation!"
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "id": 25,
+                        "traffic_allocation": {
+                            "max": 100,
+                            "min": 51
+                        },
+                        "components": {
+                            "Hero": {
+                                "id": 25,
+                                "attributes": {
+                                    "headline": "Awesome variation 1!"
                                 }
                             }
                         }
