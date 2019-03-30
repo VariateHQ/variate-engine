@@ -8,8 +8,9 @@ import * as debug from './lang/debug';
 import * as errors from './lang/errors';
 import env from './utilities/env';
 
-const LOCAL_STORAGE_MAIN_TRAFFIC_BUCKET_KEY = 'testing-tool-main-bucket';
-const LOCAL_STORAGE_TRAFFIC_BUCKETS_KEY = 'testing-tool-buckets';
+const LOCAL_STORAGE_UUID_KEY = 'variate-uuid';
+const LOCAL_STORAGE_MAIN_TRAFFIC_BUCKET_KEY = 'variate-main-bucket';
+const LOCAL_STORAGE_TRAFFIC_BUCKETS_KEY = 'variate-buckets';
 
 class Testing {
     _options: Object;
@@ -165,6 +166,16 @@ class Testing {
     }
 
     /**
+     * Generate visitor UUID
+     * @returns {string}
+     */
+    static generateUUID() {
+        let timestamp = Date.now();
+
+        return 'V-' + timestamp + '-' + parseInt(Math.floor(Math.random() * 900000000) + 100000000)
+    }
+
+    /**
      * Bucket number generator from 0 to 100
      * @returns {number}
      */
@@ -229,7 +240,6 @@ class Testing {
      */
     setupEnvironment(custom: Object) {
         // View information
-        // console.log(Testing.extractQueryParams(env.search()))
         const view = Object.assign(
             {
                 path: get(custom, 'path', env.href()),
@@ -240,6 +250,7 @@ class Testing {
 
         // Viewport information
         const viewport = {
+            userId: this.getUUID(),
             mainBucket: this.getMainTrafficBucket(),
             doNotTrack: env.doNotTrack(),
             width: env.width(),
@@ -443,6 +454,20 @@ class Testing {
     qualifySegment(experiment: Object) {
         // console.log(experiment);
         return true;
+    }
+
+    /**
+     * Retrieve or generate visitor UUID
+     */
+    getUUID() {
+        let uuid = env.inBrowser && localStorage.getItem(LOCAL_STORAGE_UUID_KEY);
+
+        if(!uuid) {
+            uuid = Testing.generateUUID();
+            env.inBrowser && localStorage.setItem(LOCAL_STORAGE_UUID_KEY, uuid);
+        }
+
+        return uuid;
     }
 
     /**
