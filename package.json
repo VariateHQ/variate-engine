@@ -2,15 +2,16 @@
   "name": "@variate/engine",
   "version": "1.0.0",
   "description": "Variate AB testing engine for modern applications",
-  "main": "dist/index.js",
+  "main": "dist/variate.js",
+  "module": "dist/variate.esm.js",
   "files": [
-    "dist",
-    "src"
+    "dist"
   ],
   "scripts": {
     "flow": "flow check",
     "clean": "rimraf dist/",
-    "build": "babel src -d dist",
+    "build": "rollup -c rollup.config.js",
+    "watch": "rollup -c rollup.config.js --watch",
     "lint": "eslint src/",
     "prepublish": "npm run clean && npm run lint && npm run build",
     "test": "jasmine JASMINE_CONFIG_PATH=tests/support/jasmine.json --reporter=jasmine-console-reporter"
@@ -31,19 +32,22 @@
   "homepage": "https://github.com/foxted/Variate-Engine#readme",
   "devDependencies": {
     "@babel/cli": "^7.2.3",
-    "@babel/core": "^7.3.3",
-    "@babel/preset-env": "^7.3.1",
+    "@babel/core": "^7.4.0",
+    "@babel/preset-env": "^7.4.2",
     "@babel/preset-flow": "^7.0.0",
-    "@babel/register": "^7.0.0",
+    "@babel/register": "^7.4.0",
     "babel-eslint": "^10.0.1",
     "chai": "^4.2.0",
-    "eslint": "^5.15.1",
+    "eslint": "^5.16.0",
     "eslint-plugin-flowtype": "^3.4.2",
-    "flow-bin": "^0.94.0",
+    "flow-bin": "^0.95.0",
     "jasmine": "^3.3.1",
     "jasmine-console-reporter": "^3.1.0",
-    "mocha": "^6.0.1",
-    "rimraf": "^2.6.3"
+    "mocha": "^6.0.2",
+    "rimraf": "^2.6.3",
+    "rollup": "^1.7.4",
+    "rollup-plugin-babel": "^4.3.2",
+    "rollup-plugin-json": "^4.0.0"
   },
   "dependencies": {
     "deepmerge": "^3.2.0",

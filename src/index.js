@@ -3,7 +3,7 @@
 import deepmerge from 'deepmerge';
 import get from 'get-value';
 import version from './lang/version';
-import Option, { Options } from './components/options';
+import Options from './components/options';
 import * as debug from './lang/debug';
 import * as errors from './lang/errors';
 import env from './utilities/env';
@@ -452,7 +452,7 @@ class Variate {
      * @returns {boolean}
      */
     qualifySegment(experiment: Object) {
-        // console.log(experiment);
+        console.log('Segment qualification coming soon');
         return true;
     }
 
@@ -523,6 +523,39 @@ class Variate {
         }
 
         return false;
+    }
+
+    track(...args: Object) {
+        if(!args.length) {
+            console.error(errors.REQUIRED_PARAMETERS, 'track()');
+            return false;
+        }
+
+        if(typeof args[0] === 'object') {
+            const { name, type, value } = args[0];
+            const body = { name, type, value };
+            //Send call to API
+            const xhr = new XMLHttpRequest();
+
+            xhr.open('POST', 'https://reporting.variate.ca/track', true);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.onload = function() {
+                if (xhr.status === 204) {
+                    console.log('OK');
+                    return;
+                }
+
+                console.error('Not tracked');
+            };
+            xhr.send(JSON.stringify(body));
+            return true;
+        }
+
+        const [name, type, value] = args;
+        const body = { name, type, value };
+
+        console.log('Event tracked with regular params');
+        console.log(body);
     }
 }
 
