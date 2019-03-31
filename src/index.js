@@ -12,7 +12,7 @@ const LOCAL_STORAGE_UUID_KEY = 'variate-uuid';
 const LOCAL_STORAGE_MAIN_TRAFFIC_BUCKET_KEY = 'variate-main-bucket';
 const LOCAL_STORAGE_TRAFFIC_BUCKETS_KEY = 'variate-buckets';
 
-class Testing {
+class Variate {
     _options: Object;
     _config: Object;
     _env: Object;
@@ -243,7 +243,7 @@ class Testing {
         const view = Object.assign(
             {
                 path: get(custom, 'path', env.href()),
-                query: get(custom, 'query', { default: Testing.extractQueryParams(env.search()) })
+                query: get(custom, 'query', { default: Variate.extractQueryParams(env.search()) })
             },
             get(custom, 'view', { default: {} })
         );
@@ -463,7 +463,7 @@ class Testing {
         let uuid = env.inBrowser && localStorage.getItem(LOCAL_STORAGE_UUID_KEY);
 
         if(!uuid) {
-            uuid = Testing.generateUUID();
+            uuid = Variate.generateUUID();
             env.inBrowser && localStorage.setItem(LOCAL_STORAGE_UUID_KEY, uuid);
         }
 
@@ -478,7 +478,7 @@ class Testing {
         let bucket = env.inBrowser && localStorage.getItem(LOCAL_STORAGE_MAIN_TRAFFIC_BUCKET_KEY);
 
         if (!bucket) {
-            bucket = Testing.generateTrafficBucket();
+            bucket = Variate.generateTrafficBucket();
             env.inBrowser && localStorage.setItem(LOCAL_STORAGE_MAIN_TRAFFIC_BUCKET_KEY, bucket.toString());
         }
 
@@ -497,7 +497,7 @@ class Testing {
                 : {};
 
             if (!bucket[experiment.id]) {
-                bucket[experiment.id] = Testing.generateTrafficBucket();
+                bucket[experiment.id] = Variate.generateTrafficBucket();
                 env.inBrowser && localStorage.setItem(LOCAL_STORAGE_TRAFFIC_BUCKETS_KEY, JSON.stringify(bucket));
             }
 
@@ -526,4 +526,4 @@ class Testing {
     }
 }
 
-export default Testing;
+export default Variate;
