@@ -229,7 +229,7 @@ class Variate {
         this.options = new Options(options);
 
         if (this.options.debug) {
-            debug.group(debug.SETUP_OPTIONS);
+            console.group(debug.SETUP_OPTIONS);
             console.log(options);
             console.groupEnd();
         }
@@ -271,7 +271,7 @@ class Variate {
         this.env = { view, viewport, targeting };
 
         if (this.options.debug) {
-            debug.group(debug.SETUP_ENVIRONMENT);
+            console.group(debug.SETUP_ENVIRONMENT);
             console.log(this.env);
             console.groupEnd();
         }
@@ -321,7 +321,7 @@ class Variate {
         }
 
         if (this.options.debug) {
-            debug.group(debug.LOADING_EXPERIMENTS);
+            console.group(debug.LOADING_EXPERIMENTS);
             console.log(experiments);
             console.groupEnd();
         }
@@ -382,7 +382,7 @@ class Variate {
         let isQualifiedForView = this.qualifyView(experiment);
 
         if (this.options.debug) {
-            debug.group(
+            console.group(
                 isQualifiedForView ? debug.TARGETING_VIEW_QUALIFIED : debug.TARGETING_VIEW_NOT_QUALIFIED
             );
             console.log(`Experiment: #${experiment.id} - ${experiment.name}`);
@@ -404,7 +404,7 @@ class Variate {
         let isQualifiedForSegment = this.qualifySegment(experiment);
 
         if (this.options.debug) {
-            debug.group(
+            console.group(
                 isQualifiedForSegment ? debug.TARGETING_SEGMENT_QUALIFIED : debug.TARGETING_SEGMENT_NOT_QUALIFIED
             );
 
@@ -514,7 +514,7 @@ class Variate {
     shouldForceQueryParams() {
         if (Object.keys(get(this.env, 'view.query' || {})).length && get(this.env, 'view.query.force', false)) {
             if (this.options.debug) {
-                debug.group(debug.QUERY_PARAMS);
+                console.group(debug.QUERY_PARAMS);
                 console.log(get(this.env, 'view.query') || {});
                 console.groupEnd();
             }
@@ -525,37 +525,74 @@ class Variate {
         return false;
     }
 
+    /**
+     * Track an event to Variate Reporting API
+     * @param args
+     * @returns {boolean}
+     */
     track(...args: Object) {
-        if(!args.length) {
-            console.error(errors.REQUIRED_PARAMETERS, 'track()');
+        let reporter = this.report;
+        let event = this.extractTrackingArguments(args);
+
+        if(!this.options.tracking) {
+            this.options.debug && console.info(debug.REPORTING_DISABLED);
             return false;
         }
 
-        if(typeof args[0] === 'object') {
-            const { name, type, value } = args[0];
-            const body = { name, type, value };
-            //Send call to API
-            const xhr = new XMLHttpRequest();
+        this.options.debug && console.info(debug.REPORTING_ENABLED);
 
-            xhr.open('POST', 'https://reporting.variate.ca/track', true);
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.onload = function() {
-                if (xhr.status === 204) {
-                    console.log('OK');
-                    return;
-                }
+        if(this.options.reporter !== null) {
+            if(typeof this.options.reporter !== 'function') {
+                throw new Error(errors.REPORTING_INVALID_REPORTER);
+            }
 
-                console.error('Not tracked');
-            };
-            xhr.send(JSON.stringify(body));
-            return true;
+            this.options.debug && console.info(debug.REPORTING_CUSTOM_REPORTER);
+            reporter = this.options.reporter;
         }
 
-        const [name, type, value] = args;
+        if(reporter(...args)) {
+            if(this.options.debug){
+                console.group(debug.REPORTING_EVENT_TRACKED);
+                console.log(args);
+                console.groupEnd();
+            }
+
+            return true;
+        };
+
+        return false;
+    }
+
+    extractTrackingArguments(args: Object) {
+        if(!args.length) {
+            throw new Error(errors.REQUIRED_PARAMETERS.replace('%s', 'track()'));
+        }
+        console.log(args);
+        if(Array.isArray(args)) {
+            const [name, type, value] = args;
+            return { name, type, value};
+        }
+
+        const { name, type, value } = args[0];
+        return { name, type, value };
+    }
+
+    report(name: String, type: String, value: Object|String) {
         const body = { name, type, value };
 
-        console.log('Event tracked with regular params');
-        console.log(body);
+        const xhr = new XMLHttpRequest();
+
+        xhr.open('POST', 'https://reporting.variate.ca/track', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onload = () => {
+            if (xhr.status === 204) {
+                return true;
+            }
+
+            return false;
+        };
+
+        xhr.send(JSON.stringify(body));
     }
 }
 

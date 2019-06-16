@@ -9,9 +9,9 @@
   ],
   "scripts": {
     "flow": "flow check",
+    "build": "npm run clean && rollup -c rollup.config.js",
+    "dev": "npm run clean && rollup -w -c rollup.config.js",
     "clean": "rimraf dist/",
-    "build": "rollup -c rollup.config.js",
-    "watch": "rollup -c rollup.config.js --watch",
     "lint": "eslint src/",
     "prepublish": "npm run clean && npm run lint && npm run build",
     "test": "jasmine JASMINE_CONFIG_PATH=tests/support/jasmine.json --reporter=jasmine-console-reporter"

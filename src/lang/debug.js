@@ -1,5 +1,3 @@
-import { name, styles } from '../config/console';
-
 // Setup
 export const SETUP_OPTIONS = `[SETUP] Setting up options ✅`;
 export const SETUP_ENVIRONMENT = `[SETUP] Setting up environment ✅`;
@@ -17,23 +15,8 @@ export const TARGETING_VIEW_NOT_QUALIFIED = `[TARGETING|VIEW] Not qualified 👎
 export const TARGETING_SEGMENT_QUALIFIED = `[TARGETING|SEGMENT] Qualified 👍`;
 export const TARGETING_SEGMENT_NOT_QUALIFIED = `[TARGETING|SEGMENT] Not qualified 👎`;
 
-// Utilities
-export const log = (message, ...params) => {
-    console.log(
-        `%c ${name} %c DEBUG %c ${message}`,
-        styles.brand,
-        styles.type,
-        styles.message,
-        ...params
-    );
-};
-
-export function group(message, ...params) {
-    console.groupCollapsed(
-        `%c ${name} %c DEBUG %c ${message}`,
-        styles.brand,
-        styles.type,
-        styles.message,
-        ...params
-    );
-}
+// Reporting
+export const REPORTING_ENABLED = '[REPORTING] Reporting is enabled.';
+export const REPORTING_DISABLED = '[REPORTING] Reporting is disabled.';
+export const REPORTING_CUSTOM_REPORTER = '[REPORTING] Using a custom reporter.';
+export const REPORTING_EVENT_TRACKED = '[REPORTING] Event tracked';
