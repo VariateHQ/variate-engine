@@ -229,7 +229,7 @@ class Variate {
         this.options = new Options(options);
 
         if (this.options.debug) {
-            console.group(debug.SETUP_OPTIONS);
+            console.groupCollapsed(debug.SETUP_OPTIONS);
             console.log(options);
             console.groupEnd();
         }
@@ -271,7 +271,7 @@ class Variate {
         this.env = { view, viewport, targeting };
 
         if (this.options.debug) {
-            console.group(debug.SETUP_ENVIRONMENT);
+            console.groupCollapsed(debug.SETUP_ENVIRONMENT);
             console.log(this.env);
             console.groupEnd();
         }
@@ -321,7 +321,7 @@ class Variate {
         }
 
         if (this.options.debug) {
-            console.group(debug.LOADING_EXPERIMENTS);
+            console.groupCollapsed(debug.LOADING_EXPERIMENTS);
             console.log(experiments);
             console.groupEnd();
         }
@@ -382,8 +382,8 @@ class Variate {
         let isQualifiedForView = this.qualifyView(experiment);
 
         if (this.options.debug) {
-            console.group(
-                isQualifiedForView ? debug.TARGETING_VIEW_QUALIFIED : debug.TARGETING_VIEW_NOT_QUALIFIED
+            console.groupCollapsed(
+                isQualifiedForView ? debug.TARGETING_QUALIFIED : debug.TARGETING_NOT_QUALIFIED
             );
             console.log(`Experiment: #${experiment.id} - ${experiment.name}`);
             console.log(`Current URL: ${get(this.env, 'view.path')}`);
@@ -404,8 +404,8 @@ class Variate {
         let isQualifiedForSegment = this.qualifySegment(experiment);
 
         if (this.options.debug) {
-            console.group(
-                isQualifiedForSegment ? debug.TARGETING_SEGMENT_QUALIFIED : debug.TARGETING_SEGMENT_NOT_QUALIFIED
+            console.groupCollapsed(
+                isQualifiedForSegment ? debug.SEGMENTING_QUALIFIED : debug.SEGMENTING_NOT_QUALIFIED
             );
 
             console.groupEnd();
@@ -452,7 +452,6 @@ class Variate {
      * @returns {boolean}
      */
     qualifySegment(experiment: Object) {
-        console.log('Segment qualification coming soon');
         return true;
     }
 
@@ -514,7 +513,7 @@ class Variate {
     shouldForceQueryParams() {
         if (Object.keys(get(this.env, 'view.query' || {})).length && get(this.env, 'view.query.force', false)) {
             if (this.options.debug) {
-                console.group(debug.QUERY_PARAMS);
+                console.groupCollapsed(debug.QUERY_PARAMS);
                 console.log(get(this.env, 'view.query') || {});
                 console.groupEnd();
             }
@@ -552,7 +551,7 @@ class Variate {
 
         if(reporter(...args)) {
             if(this.options.debug){
-                console.group(debug.REPORTING_EVENT_TRACKED);
+                console.groupCollapsed(debug.REPORTING_EVENT_TRACKED);
                 console.log(args);
                 console.groupEnd();
             }

@@ -9,11 +9,12 @@ export const QUERY_PARAMS = `[QUERY PARAMS] Query params detected ✅️`;
 export const LOADING_EXPERIMENTS = `[LOADING] Loading relevant experiments ✅`;
 
 // Targeting
-export const TARGETING_VIEW_QUALIFIED = `[TARGETING|VIEW] Qualified 👍`;
-export const TARGETING_VIEW_NOT_QUALIFIED = `[TARGETING|VIEW] Not qualified 👎`;
+export const TARGETING_QUALIFIED = `[TARGETING] Qualified 👍`;
+export const TARGETING_NOT_QUALIFIED = `[TARGETING] Not qualified 👎`;
 
-export const TARGETING_SEGMENT_QUALIFIED = `[TARGETING|SEGMENT] Qualified 👍`;
-export const TARGETING_SEGMENT_NOT_QUALIFIED = `[TARGETING|SEGMENT] Not qualified 👎`;
+// Segmenting
+export const SEGMENTING_QUALIFIED = `[SEGMENTING] Qualified 👍`;
+export const SEGMENTING_NOT_QUALIFIED = `[SEGMENTING] Not qualified 👎`;
 
 // Reporting
 export const REPORTING_ENABLED = '[REPORTING] Reporting is enabled.';
