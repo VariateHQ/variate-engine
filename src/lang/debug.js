@@ -17,7 +17,7 @@ export const SEGMENTING_QUALIFIED = `[SEGMENTING] Qualified 👍`;
 export const SEGMENTING_NOT_QUALIFIED = `[SEGMENTING] Not qualified 👎`;
 
 // Reporting
-export const REPORTING_ENABLED = '[REPORTING] Reporting is enabled.';
 export const REPORTING_DISABLED = '[REPORTING] Reporting is disabled.';
 export const REPORTING_CUSTOM_REPORTER = '[REPORTING] Using a custom reporter.';
-export const REPORTING_EVENT_TRACKED = '[REPORTING] Event tracked';
+export const REPORTING_EVENT_TRACKED = '[REPORTING] Event tracked 👍';
+export const REPORTING_EVENT_NOT_TRACKED = '[REPORTING] Event not tracked 👎';

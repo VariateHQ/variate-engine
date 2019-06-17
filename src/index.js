@@ -383,7 +383,7 @@ class Variate {
     filterWithView(experiment: Object) {
         let isQualifiedForView = this.qualifyView(experiment);
 
-        if(isQualifiedForView && this.options.pageview) {
+        if (isQualifiedForView && this.options.pageview) {
             this.track('Pageview', eventTypes.EVENT_PAGEVIEW, get(this.env, 'view.fullPath'));
         }
 
@@ -544,9 +544,6 @@ class Variate {
             return false;
         }
 
-        this.options.debug && console.info(debug.REPORTING_ENABLED);
-        this.options.debug && console.log(event);
-
         if (this.options.reporter !== null) {
             if (typeof this.options.reporter !== 'function') {
                 throw new Error(errors.REPORTING_INVALID_REPORTER);
@@ -556,17 +553,13 @@ class Variate {
             reporter = this.options.reporter;
         }
 
-        if (reporter(event)) {
-            if (this.options.debug) {
-                console.groupCollapsed(debug.REPORTING_EVENT_TRACKED);
-                console.log(event);
-                console.groupEnd();
-            }
+        const wasTracked = reporter(event);
 
-            return true;
+        if (this.options.debug) {
+            console.groupCollapsed(wasTracked ? debug.REPORTING_EVENT_TRACKED : debug.REPORTING_EVENT_NOT_TRACKED);
+            console.log(event);
+            console.groupEnd();
         }
-
-        return false;
     }
 
     extractTrackingArguments(args: Object) {
@@ -588,15 +581,9 @@ class Variate {
 
         xhr.open('POST', 'https://reporting.variate.ca/track', true);
         xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.onload = () => {
-            if (xhr.status === 204) {
-                return true;
-            }
-
-            return false;
-        };
-
         xhr.send(event.toJson());
+
+        return xhr.readyState === 4 ? true : false;
     }
 }
 
