@@ -4,6 +4,8 @@ import deepmerge from 'deepmerge';
 import get from 'get-value';
 import version from './lang/version';
 import Options from './components/options';
+import Event from './components/event';
+import * as eventTypes from './config/event-types';
 import * as debug from './lang/debug';
 import * as errors from './lang/errors';
 import env from './utilities/env';
@@ -172,7 +174,7 @@ class Variate {
     static generateUUID() {
         let timestamp = Date.now();
 
-        return 'V-' + timestamp + '-' + parseInt(Math.floor(Math.random() * 900000000) + 100000000)
+        return 'V-' + timestamp + '-' + parseInt(Math.floor(Math.random() * 900000000) + 100000000);
     }
 
     /**
@@ -381,6 +383,10 @@ class Variate {
     filterWithView(experiment: Object) {
         let isQualifiedForView = this.qualifyView(experiment);
 
+        if(isQualifiedForView && this.options.pageview) {
+            this.track('Pageview', eventTypes.EVENT_PAGEVIEW, get(this.env, 'view.fullPath'));
+        }
+
         if (this.options.debug) {
             console.groupCollapsed(
                 isQualifiedForView ? debug.TARGETING_QUALIFIED : debug.TARGETING_NOT_QUALIFIED
@@ -461,7 +467,7 @@ class Variate {
     getUUID() {
         let uuid = env.inBrowser && localStorage.getItem(LOCAL_STORAGE_UUID_KEY);
 
-        if(!uuid) {
+        if (!uuid) {
             uuid = Variate.generateUUID();
             env.inBrowser && localStorage.setItem(LOCAL_STORAGE_UUID_KEY, uuid);
         }
@@ -533,15 +539,16 @@ class Variate {
         let reporter = this.report;
         let event = this.extractTrackingArguments(args);
 
-        if(!this.options.tracking) {
+        if (!this.options.tracking) {
             this.options.debug && console.info(debug.REPORTING_DISABLED);
             return false;
         }
 
         this.options.debug && console.info(debug.REPORTING_ENABLED);
+        this.options.debug && console.log(event);
 
-        if(this.options.reporter !== null) {
-            if(typeof this.options.reporter !== 'function') {
+        if (this.options.reporter !== null) {
+            if (typeof this.options.reporter !== 'function') {
                 throw new Error(errors.REPORTING_INVALID_REPORTER);
             }
 
@@ -549,36 +556,34 @@ class Variate {
             reporter = this.options.reporter;
         }
 
-        if(reporter(...args)) {
-            if(this.options.debug){
+        if (reporter(event)) {
+            if (this.options.debug) {
                 console.groupCollapsed(debug.REPORTING_EVENT_TRACKED);
-                console.log(args);
+                console.log(event);
                 console.groupEnd();
             }
 
             return true;
-        };
+        }
 
         return false;
     }
 
     extractTrackingArguments(args: Object) {
-        if(!args.length) {
+        if (!args.length) {
             throw new Error(errors.REQUIRED_PARAMETERS.replace('%s', 'track()'));
         }
-        console.log(args);
-        if(Array.isArray(args)) {
+
+        if (typeof args[0] === 'string') {
             const [name, type, value] = args;
-            return { name, type, value};
+            return new Event({ name, type, value });
         }
 
         const { name, type, value } = args[0];
-        return { name, type, value };
+        return new Event({ name, type, value });
     }
 
-    report(name: String, type: String, value: Object|String) {
-        const body = { name, type, value };
-
+    report(event: Event) {
         const xhr = new XMLHttpRequest();
 
         xhr.open('POST', 'https://reporting.variate.ca/track', true);
@@ -591,7 +596,7 @@ class Variate {
             return false;
         };
 
-        xhr.send(JSON.stringify(body));
+        xhr.send(event.toJson());
     }
 }
 
