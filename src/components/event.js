@@ -5,11 +5,13 @@ export class Event {
     _name: String;
     _type: String;
     _value: String|Object|Number|Boolean;
+    _context: Object;
 
     constructor(event: Object) {
         this.name = get(event, 'name', 'Pageview');
         this.type = get(event, 'type', 'pageview');
         this.value = get(event, 'value', null);
+        this.context = get(event, 'context', {});
     }
 
     get name(): String {
@@ -36,20 +38,25 @@ export class Event {
         this._value = value;
     }
 
+    get context(): Object {
+        return this._context;
+    }
+
+    set context(context: Object) {
+        this._context = context;
+    }
+
     toObject(){
         return {
             name: this.name,
             type: this.type,
             value: this.value,
+            // context: this.context,
         }
     }
 
     toJson(){
-        return JSON.stringify({
-            name: this.name,
-            type: this.type,
-            value: this.value,
-        });
+        return JSON.stringify(this.toObject());
     }
 }
 

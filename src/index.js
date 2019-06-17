@@ -1,5 +1,5 @@
 // @flow
-
+import jsonLogic from 'json-logic-js';
 import deepmerge from 'deepmerge';
 import get from 'get-value';
 import version from './lang/version';
@@ -215,9 +215,11 @@ class Variate {
      * use this when loading the page for the first time
      */
     initialize(config: Object, callback: Function) {
+        this.options.debug && console.time('[BENCHMARK] Variate Initialization');
         this.setupEnvironment(config);
         this.qualify();
         this.isReady = true;
+        this.options.debug && console.timeEnd('[BENCHMARK] Variate Initialization');
 
         if (typeof callback == 'function') {
             callback();
@@ -261,14 +263,7 @@ class Variate {
         };
 
         // Targeting information
-        const targeting = Object.assign({
-            location: null,
-            viewport: {
-                min: -1,
-                max: -1,
-            },
-            platform: null,
-        }, get(custom, 'targeting', { default: {} }));
+        const targeting = get(custom, 'targeting', { default: {} });
 
         this.env = { view, viewport, targeting };
 
@@ -294,6 +289,18 @@ class Variate {
 
         // 3. Reduce to 1 variation per experiment to prepare for display
         experiments = experiments.map((experiment) => this.filterVariationsWithBucket(experiment));
+
+        // 4. Send pageview event if enabled
+        experiments.forEach((experiment) => {
+            const [ variation ] = get(experiment, 'variations', []);
+
+            if(this.options.pageview) {
+                this.track('Pageview', eventTypes.EVENT_PAGEVIEW, {
+                    experimentId: experiment.id,
+                    variationId: variation.id,
+                });
+            }
+        })
 
         this.experiments = experiments;
         this.isQualified = true;
@@ -383,10 +390,6 @@ class Variate {
     filterWithView(experiment: Object) {
         let isQualifiedForView = this.qualifyView(experiment);
 
-        if (isQualifiedForView && this.options.pageview) {
-            this.track('Pageview', eventTypes.EVENT_PAGEVIEW, get(this.env, 'view.fullPath'));
-        }
-
         if (this.options.debug) {
             console.groupCollapsed(
                 isQualifiedForView ? debug.TARGETING_QUALIFIED : debug.TARGETING_NOT_QUALIFIED
@@ -413,6 +416,10 @@ class Variate {
             console.groupCollapsed(
                 isQualifiedForSegment ? debug.SEGMENTING_QUALIFIED : debug.SEGMENTING_NOT_QUALIFIED
             );
+
+            console.log(`Experiment: #${experiment.id} - ${experiment.name}`);
+            console.log('Rules: ', get(experiment, 'targeting.segment'));
+            console.log('Data: ', get(this.env, 'targeting'));
 
             console.groupEnd();
         }
@@ -458,7 +465,10 @@ class Variate {
      * @returns {boolean}
      */
     qualifySegment(experiment: Object) {
-        return true;
+        const rules = get(experiment, 'targeting.segment', true);
+        const data = get(this.env, 'targeting', {});
+
+        return jsonLogic.apply(rules, data);
     }
 
     /**
@@ -569,11 +579,11 @@ class Variate {
 
         if (typeof args[0] === 'string') {
             const [name, type, value] = args;
-            return new Event({ name, type, value });
+            return new Event({ name, type, value, context: this.env });
         }
 
         const { name, type, value } = args[0];
-        return new Event({ name, type, value });
+        return new Event({ name, type, value, context: this.env });
     }
 
     report(event: Event) {
