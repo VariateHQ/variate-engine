@@ -51,7 +51,7 @@ export class Event {
             name: this.name,
             type: this.type,
             value: this.value,
-            // context: this.context,
+            context: this.context,
         }
     }
 

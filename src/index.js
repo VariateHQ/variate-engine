@@ -437,7 +437,7 @@ class Variate {
         const excludes = get(experiment, 'targeting.views.exclude');
 
         for (let i = 0; i < excludes.length; i++) {
-            if (path.match(excludes[i]).toString()) {
+            if (path.match(excludes[i])) {
                 return false;
             }
         }
@@ -450,7 +450,7 @@ class Variate {
             }
 
             for (let i = 0; i < includes.length; i++) {
-                if (path.match(includes[i].toString())) {
+                if (path.match(includes[i])) {
                     return true;
                 }
             }
