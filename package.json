@@ -1,6 +1,6 @@
 {
   "name": "@variate/engine",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Variate AB testing engine for modern applications",
   "main": "dist/variate.js",
   "module": "dist/variate.esm.js",
@@ -26,7 +26,7 @@
     "variate"
   ],
   "author": "Valentin Prugnaud <valentin@whatdafox.com>",
-  "license": "SEE LICENCE IN <LICENSE>",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/variateapp/variate-engine/issues"
   },
