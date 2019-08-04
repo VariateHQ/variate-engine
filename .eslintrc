@@ -17,16 +17,7 @@
             4
         ],
         "no-console": [
-            "error",
-            {
-                "allow": [
-                    "warn",
-                    "error",
-                    "log",
-                    "groupCollapsed",
-                    "groupEnd"
-                ]
-            }
+            "off"
         ]
     }
 }

@@ -13,12 +13,13 @@
     "dev": "npm run clean && rollup -w -c rollup.config.js",
     "clean": "rimraf dist/",
     "lint": "eslint src/",
-    "prepublish": "npm run clean && npm run lint && npm run build",
+    "lint": "eslint --fix src/",
+    "prepublishOnly": "npm run clean && npm run lint && npm run build",
     "test": "jasmine JASMINE_CONFIG_PATH=tests/support/jasmine.json --reporter=jasmine-console-reporter"
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/foxted/Variate-Engine.git"
+    "url": "git+ssh://git@github.com/variateapp/variate-engine.git"
   },
   "keywords": [
     "ab-testing",
@@ -27,30 +28,31 @@
   "author": "Valentin Prugnaud <valentin@whatdafox.com>",
   "license": "SEE LICENCE IN <LICENSE>",
   "bugs": {
-    "url": "https://github.com/foxted/Variate-Engine/issues"
+    "url": "https://github.com/variateapp/variate-engine/issues"
   },
-  "homepage": "https://github.com/foxted/Variate-Engine#readme",
+  "homepage": "https://github.com/variateapp/variate-engine#README.md",
   "devDependencies": {
-    "@babel/cli": "^7.2.3",
-    "@babel/core": "^7.4.0",
-    "@babel/preset-env": "^7.4.2",
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
     "@babel/preset-flow": "^7.0.0",
-    "@babel/register": "^7.4.0",
-    "babel-eslint": "^10.0.1",
+    "@babel/register": "^7.5.5",
+    "babel-eslint": "^10.0.2",
     "chai": "^4.2.0",
-    "eslint": "^5.16.0",
-    "eslint-plugin-flowtype": "^3.4.2",
-    "flow-bin": "^0.95.0",
-    "jasmine": "^3.3.1",
+    "eslint": "^6.1.0",
+    "eslint-plugin-flowtype": "^3.13.0",
+    "flow-bin": "^0.104.0",
+    "jasmine": "^3.4.0",
     "jasmine-console-reporter": "^3.1.0",
-    "mocha": "^6.0.2",
+    "mocha": "^6.2.0",
     "rimraf": "^2.6.3",
-    "rollup": "^1.7.4",
-    "rollup-plugin-babel": "^4.3.2",
-    "rollup-plugin-json": "^4.0.0"
+    "rollup": "^1.18.0",
+    "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-json": "^4.0.0",
+    "rollup-plugin-node-resolve": "^5.2.0"
   },
   "dependencies": {
-    "deepmerge": "^3.2.0",
+    "deepmerge": "^4.0.0",
     "get-value": "^3.0.1",
     "json-logic-js": "^1.2.2"
   }

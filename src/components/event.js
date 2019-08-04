@@ -4,7 +4,7 @@ import get from 'get-value';
 export class Event {
     _name: String;
     _type: String;
-    _value: String|Object|Number|Boolean;
+    _value: String | Object | Number | Boolean;
     _context: Object;
 
     constructor(event: Object) {
@@ -30,11 +30,11 @@ export class Event {
         this._type = type;
     }
 
-    get value(): String|Object|Number|Boolean {
+    get value(): String | Object | Number | Boolean {
         return this._value;
     }
 
-    set value(value: String|Object|Number|Boolean) {
+    set value(value: String | Object | Number | Boolean) {
         this._value = value;
     }
 
