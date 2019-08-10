@@ -2,18 +2,10 @@
 import get from 'get-value';
 
 export class Options {
-    // Activate debug mode
-    debug: boolean;
-
-    // Activate tracking
-    tracking: boolean;
-
-    // Allow for a custom tracking reporter
-    reporter: function;
-
-    // Activate automatic pageview tracking
-    pageview: boolean;
-
+    debug: Boolean;
+    tracking: Boolean;
+    reporter: Function;
+    pageview: Boolean;
     _config: Object;
 
     constructor(options: Object) {
