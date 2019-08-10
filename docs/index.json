@@ -2512,7 +2512,7 @@
   },
   {
     "kind": "index",
-    "content": "# Variate Engine\n\nVariate AB testing engine for modern applications. \n\nhttps://variate.ca\n\n## Information\n\nVariate Engine is not built to work in a standalone mode in the browser. The engine must be wrapped into a plugin/package\nfor another JavaScript library such as [Vue](https://github.com/variateapp/variate-vue), React, Angular, etc.\n\n## API\n\n\n",
+    "content": "# Variate Engine\n\nVariate AB testing engine for modern applications. \n\nhttps://variate.ca\n\n## Information\n\nVariate Engine is not built to work in a standalone mode in the browser. The engine must be wrapped into a plugin/package\nfor another JavaScript library such as [Vue](https://github.com/variateapp/variate-vue), React, Angular, etc.\n",
     "longname": "/Users/valentinprugnaud/Sites/variate-engine/README.md",
     "name": "./README.md",
     "static": true,
