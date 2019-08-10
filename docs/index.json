@@ -1098,128 +1098,6 @@
   {
     "__docId__": 89,
     "kind": "file",
-    "name": "src/config/console.js",
-    "content": "import pjson from '../../package.json';\n\nexport const name = 'Variate Engine';\n\nexport const version = pjson.version;\n\nexport const styles = {\n    brand: \"background: rgba(143, 127, 224, 1); color: white; font-weight: 500; border-radius: 3px 0 0 3px; padding: 1px 2px;\",\n    error: \"background: #e17055; color: white; font-weight: 500; border-radius: 3px 0 0 3px; padding: 1px 2px;\",\n    warning: \"background: #fdcb6e; color: white; font-weight: 500; border-radius: 3px 0 0 3px; padding: 1px 2px;\",\n    type: \"background: #424242; color: white; font-weight: 400; padding: 1px 2px; border-radius: 0 3px 3px 0;\",\n    message: \"background: transparent; font-weight: 400;\"\n}\n",
-    "static": true,
-    "longname": "/Users/valentinprugnaud/Sites/variate-engine/src/config/console.js",
-    "access": "public",
-    "description": null,
-    "lineNumber": 1
-  },
-  {
-    "__docId__": 90,
-    "kind": "variable",
-    "name": "name",
-    "memberof": "src/config/console.js",
-    "static": true,
-    "longname": "src/config/console.js~name",
-    "access": "public",
-    "export": true,
-    "importPath": "@variate/engine/src/config/console.js",
-    "importStyle": "{name}",
-    "description": null,
-    "lineNumber": 3,
-    "undocument": true,
-    "type": {
-      "types": [
-        "string"
-      ]
-    }
-  },
-  {
-    "__docId__": 91,
-    "kind": "variable",
-    "name": "version",
-    "memberof": "src/config/console.js",
-    "static": true,
-    "longname": "src/config/console.js~version",
-    "access": "public",
-    "export": true,
-    "importPath": "@variate/engine/src/config/console.js",
-    "importStyle": "{version}",
-    "description": null,
-    "lineNumber": 5,
-    "undocument": true,
-    "type": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 92,
-    "kind": "variable",
-    "name": "styles",
-    "memberof": "src/config/console.js",
-    "static": true,
-    "longname": "src/config/console.js~styles",
-    "access": "public",
-    "export": true,
-    "importPath": "@variate/engine/src/config/console.js",
-    "importStyle": "{styles}",
-    "description": null,
-    "lineNumber": 7,
-    "undocument": true,
-    "type": {
-      "types": [
-        "{\"brand\": string, \"error\": string, \"warning\": string, \"type\": string, \"message\": string}"
-      ]
-    }
-  },
-  {
-    "__docId__": 93,
-    "kind": "file",
-    "name": "src/config/event-types.js",
-    "content": "export const EVENT_PAGEVIEW = 'pageview';\nexport const EVENT_CLICK = 'click';\n",
-    "static": true,
-    "longname": "/Users/valentinprugnaud/Sites/variate-engine/src/config/event-types.js",
-    "access": "public",
-    "description": null,
-    "lineNumber": 1
-  },
-  {
-    "__docId__": 94,
-    "kind": "variable",
-    "name": "EVENT_PAGEVIEW",
-    "memberof": "src/config/event-types.js",
-    "static": true,
-    "longname": "src/config/event-types.js~EVENT_PAGEVIEW",
-    "access": "public",
-    "export": true,
-    "importPath": "@variate/engine/src/config/event-types.js",
-    "importStyle": "{EVENT_PAGEVIEW}",
-    "description": null,
-    "lineNumber": 1,
-    "undocument": true,
-    "type": {
-      "types": [
-        "string"
-      ]
-    }
-  },
-  {
-    "__docId__": 95,
-    "kind": "variable",
-    "name": "EVENT_CLICK",
-    "memberof": "src/config/event-types.js",
-    "static": true,
-    "longname": "src/config/event-types.js~EVENT_CLICK",
-    "access": "public",
-    "export": true,
-    "importPath": "@variate/engine/src/config/event-types.js",
-    "importStyle": "{EVENT_CLICK}",
-    "description": null,
-    "lineNumber": 2,
-    "undocument": true,
-    "type": {
-      "types": [
-        "string"
-      ]
-    }
-  },
-  {
-    "__docId__": 96,
-    "kind": "file",
     "name": "src/index.js",
     "content": "// @flow\nimport jsonLogic from 'json-logic-js';\nimport deepmerge from 'deepmerge';\nimport get from 'get-value';\nimport version from './lang/version';\nimport Options from './components/options';\nimport Event from './components/event';\nimport * as eventTypes from './config/event-types';\nimport * as debug from './lang/debug';\nimport * as errors from './lang/errors';\nimport env from './utilities/env';\n\nconst LOCAL_STORAGE_UUID_KEY = 'variate-uuid';\nconst LOCAL_STORAGE_MAIN_TRAFFIC_BUCKET_KEY = 'variate-main-bucket';\nconst LOCAL_STORAGE_TRAFFIC_BUCKETS_KEY = 'variate-buckets';\n\nclass Variate {\n    _options: Object;\n    _config: Object;\n    _env: Object;\n    _experiments: Array<Object>;\n    _isReady: boolean;\n    _isQualified: boolean;\n\n    /**\n     * @param {object} options\n     */\n    constructor(options: Object) {\n        options.debug && version.show();\n        this.setupOptions(options);\n    }\n\n    /**\n     * Get testing options\n     * @returns {Options}\n     */\n    get options(): Options {\n        return this._options;\n    }\n\n    /**\n     * Set testing options\n     * @param options\n     */\n    set options(options: Options) {\n        this._options = options;\n    }\n\n    /**\n     * Get testing configuration\n     * @returns {object}\n     */\n    get config() {\n        return this._options.config;\n    }\n\n    /**\n     * Set testing configuration\n     * @param config\n     */\n    set config(config: Object) {\n        this._options.config = config;\n    }\n\n    /**\n     * Get status of the testing tool\n     * @returns {boolean}\n     */\n    get isReady() {\n        return this._isReady;\n    }\n\n    /**\n     * Set status of the testing tool\n     * @param value\n     */\n    set isReady(value: boolean) {\n        if (typeof value !== 'boolean') {\n            throw new TypeError(errors.IS_READY_TYPE_ERROR);\n        }\n        this._isReady = value;\n    }\n\n    /**\n     * Get qualification status for visitor\n     * @returns {boolean}\n     */\n    get isQualified(): boolean {\n        return this._isQualified;\n    }\n\n    /**\n     * Set qualification status for visitor\n     * @param value\n     */\n    set isQualified(value: boolean): void {\n        if (typeof value !== 'boolean') {\n            throw new TypeError(errors.IS_QUALIFIED_TYPE_ERROR);\n        }\n        this._isQualified = value;\n    }\n\n    /**\n     * Get testing environment\n     * @returns {object}\n     */\n    get env(): Object {\n        return this._env;\n    }\n\n    /**\n     * Set testing environment\n     * @param value\n     */\n    set env(value: Object): void {\n        this._env = Object.assign({}, this._env, value);\n    }\n\n    /**\n     * Get active experiments\n     * @returns {Array}\n     */\n    get experiments(): Array<Object> {\n        return this._experiments || [];\n    }\n\n    /**\n     * Set active experiments\n     * @param value\n     */\n    set experiments(value: Array<Object>) {\n        this._experiments = value || [];\n    }\n\n    /**\n     * Get active experiments\n     * @returns {Array<Object>}\n     */\n    get variations(): Array<Object> {\n        return this.experiments.map((experiment) => experiment.variations).reduce((acc, val) => acc.concat(val), []);\n    }\n\n    /**\n     * Get all components\n     * @returns {Object}\n     */\n    get components(): Object {\n        return deepmerge.all(this.variations.map(this.extractVariationComponents.bind(this)));\n    }\n\n    /**\n     * Extract variation components\n     * @param variation\n     * @returns {array}\n     */\n    extractVariationComponents(variation: Object) {\n        const bucket = this.getExperimentBucket({ id: variation.experiment_id });\n\n        for (let component: Object of Object.entries(variation.components)) {\n            component.shift();\n            component[0].experiments = [];\n            component[0].experiments.push({\n                experiment: variation.experiment_id,\n                variation: variation.id,\n                bucket: bucket,\n                attributes: component[0].attributes\n            });\n        }\n\n        return variation.components;\n    }\n\n    /**\n     * Generate visitor UUID\n     * @returns {string}\n     */\n    static generateUUID() {\n        let timestamp = Date.now();\n\n        return 'V-' + timestamp + '-' + parseInt(Math.floor(Math.random() * 900000000) + 100000000);\n    }\n\n    /**\n     * Bucket number generator from 0 to 100\n     * @returns {number}\n     */\n    static generateTrafficBucket() {\n        return Math.round(Math.random() * 100);\n    }\n\n    /**\n     * Get query parameters from window.Location object if needed\n     * @param url\n     * @returns {object}\n     */\n    static extractQueryParams(url: string = '') {\n        let params = {};\n\n        const queryParams = Object(url.substr(1).split('&').filter(item => item.length));\n\n        for (let i = 0; i < queryParams.length; i++) {\n            let [key, value] = queryParams[i].split('=');\n\n            if (!isNaN(value)) {\n                params[key] = Number(value);\n            } else if (value === 'true' || value === 'false') {\n                params[key] = value === 'true';\n            } else {\n                params[key] = value;\n            }\n        }\n\n        return params;\n    }\n\n    /**\n     * Initialize testing:\n     * use this when loading the page for the first time\n     */\n    initialize(config: Object, callback: Function) {\n        this.options.debug && console.time('[BENCHMARK] Variate Initialization');\n        this.setupEnvironment(config);\n        this.qualify();\n        this.isReady = true;\n        this.options.debug && console.timeEnd('[BENCHMARK] Variate Initialization');\n\n        if (typeof callback == 'function') {\n            callback();\n        }\n    }\n\n    /**\n     * Initialize options\n     */\n    setupOptions(options: Object) {\n        this.options = new Options(options);\n\n        if (this.options.debug) {\n            console.groupCollapsed(debug.SETUP_OPTIONS);\n            console.log(options);\n            console.groupEnd();\n        }\n    }\n\n    /**\n     * Initialize testing environment\n     */\n    setupEnvironment(custom: Object) {\n        // View information\n        const view = Object.assign(\n            {\n                path: get(custom, 'path', env.href()),\n                query: get(custom, 'query', { default: Variate.extractQueryParams(env.search()) })\n            },\n            get(custom, 'view', { default: {} })\n        );\n\n        // Viewport information\n        const viewport = {\n            userId: this.getUUID(),\n            mainBucket: this.getMainTrafficBucket(),\n            doNotTrack: env.doNotTrack(),\n            width: env.width(),\n            height: env.height(),\n            userAgent: env.UA,\n        };\n\n        // Targeting information\n        const targeting = get(custom, 'targeting', { default: {} });\n\n        this.env = { view, viewport, targeting };\n\n        if (this.options.debug) {\n            console.groupCollapsed(debug.SETUP_ENVIRONMENT);\n            console.log(this.env);\n            console.groupEnd();\n        }\n    }\n\n    /**\n     * Qualify visitor for experiments\n     */\n    qualify() {\n        // 1. Get experiments based on bucket\n        let experiments = this.loadExperiments();\n\n        // 2. Check view targeting (URL)\n        experiments = experiments.filter((experiment) => this.filterWithView(experiment));\n\n        // 3. Check segment targeting\n        experiments = experiments.filter((experiment) => this.filterWithSegment(experiment));\n\n        // 3. Reduce to 1 variation per experiment to prepare for display\n        experiments = experiments.map((experiment) => this.filterVariationsWithBucket(experiment));\n\n        // 4. Send pageview event if enabled\n        experiments.forEach((experiment) => {\n            const [ variation ] = get(experiment, 'variations', []);\n\n            if(this.options.pageview) {\n                this.track('Pageview', eventTypes.EVENT_PAGEVIEW, {\n                    experimentId: experiment.id,\n                    variationId: variation.id,\n                });\n            }\n        })\n\n        this.experiments = experiments;\n        this.isQualified = true;\n    }\n\n    /**\n     * Go through experiments and load only the relevant experiments\n     * based on visitor main bucket and if query params are present\n     * @returns {Array}\n     */\n    loadExperiments() {\n        let experiments = [];\n\n        // Load live main experiments\n        experiments.push(...get(this.config, 'live.experiments', []));\n\n        // Load live bucketed experiments if relevant\n        experiments.push(...this.getBucketedExperiments(get(this.config, 'live', { default: {} })));\n\n        // Load draft experiments if query params forced\n        if (this.shouldForceQueryParams()) {\n            // Load draft main experiments\n            experiments.push(...get(this.config, 'draft.experiments', []));\n\n            // Load draft bucketed experiments if relevant\n            experiments.push(...this.getBucketedExperiments(get(this.config, 'draft', { default: {} })));\n        }\n\n        if (this.options.debug) {\n            console.groupCollapsed(debug.LOADING_EXPERIMENTS);\n            console.log(experiments);\n            console.groupEnd();\n        }\n\n        return experiments;\n    }\n\n    /**\n     * Retrieve bucketed experiments\n     * @param group\n     * @returns {array}\n     */\n    getBucketedExperiments(group: Object) {\n        if (this.getMainTrafficBucket() <= get(group, 'bucketed.max')) {\n            for (let bucket of get(group, 'bucketed.buckets')) {\n                const max = get(bucket, 'max');\n                if (this.getMainTrafficBucket() <= max && this.getMainTrafficBucket() <= max) {\n                    return get(bucket, 'experiments');\n                }\n            }\n        }\n\n        return [];\n    }\n\n    /**\n     * Go through each experiment and filters their variation to\n     * reduce to 1 based on visitor bucket\n     * @param experiment\n     * @returns {boolean}\n     */\n    filterVariationsWithBucket(experiment: Object) {\n        // // @TODO Assign bucket to visitor for experiment and filter variation\n        const bucket = this.getExperimentBucket(experiment);\n        let variations = get(experiment, 'variations');\n\n        variations = variations.filter((variation) => {\n            return bucket >= get(variation, 'traffic_allocation.min')\n                && bucket <= get(variation, 'traffic_allocation.max');\n        });\n\n        variations.map((variation) => {\n            variation.experiment_id = experiment.id;\n            return variation;\n        });\n\n        experiment.variations = variations;\n\n        return experiment;\n    }\n\n    /**\n     * Check visitor view options and check if qualified for given experiment\n     * @param experiment\n     * @returns {boolean}\n     */\n    filterWithView(experiment: Object) {\n        let isQualifiedForView = this.qualifyView(experiment);\n\n        if (this.options.debug) {\n            console.groupCollapsed(\n                isQualifiedForView ? debug.TARGETING_QUALIFIED : debug.TARGETING_NOT_QUALIFIED\n            );\n            console.log(`Experiment: #${experiment.id} - ${experiment.name}`);\n            console.log(`Current URL: ${get(this.env, 'view.path')}`);\n            console.log(`Current Query Params: `, get(this.env, 'view.query'));\n            console.log(experiment);\n            console.groupEnd();\n        }\n\n        return isQualifiedForView;\n    }\n\n    /**\n     * Check visitor segment options and check if qualified for given experiment\n     * @param experiment\n     * @returns {boolean}\n     */\n    filterWithSegment(experiment: Object) {\n        let isQualifiedForSegment = this.qualifySegment(experiment);\n\n        if (this.options.debug) {\n            console.groupCollapsed(\n                isQualifiedForSegment ? debug.SEGMENTING_QUALIFIED : debug.SEGMENTING_NOT_QUALIFIED\n            );\n\n            console.log(`Experiment: #${experiment.id} - ${experiment.name}`);\n            console.log('Rules: ', get(experiment, 'targeting.segment'));\n            console.log('Data: ', get(this.env, 'targeting'));\n\n            console.groupEnd();\n        }\n\n        return isQualifiedForSegment;\n    }\n\n    /**\n     * Qualify visitor for given experiment based on current view (URL)\n     * @param experiment\n     * @returns {boolean}\n     */\n    qualifyView(experiment: Object) {\n        const path = get(this.env, 'view.path');\n        const excludes = get(experiment, 'targeting.views.exclude');\n\n        for (let i = 0; i < excludes.length; i++) {\n            if (path.match(excludes[i])) {\n                return false;\n            }\n        }\n\n        const includes = get(experiment, 'targeting.views.include');\n\n        if (includes != null && includes.length > 0) {\n            if (includes[0] === '*') {\n                return true;\n            }\n\n            for (let i = 0; i < includes.length; i++) {\n                if (path.match(includes[i])) {\n                    return true;\n                }\n            }\n        }\n\n        return false;\n    }\n\n    /**\n     * Qualify visitor for given experiment based on segment\n     * @param experiment\n     * @returns {boolean}\n     */\n    qualifySegment(experiment: Object) {\n        const rules = get(experiment, 'targeting.segment', true);\n        const data = get(this.env, 'targeting', {});\n\n        return jsonLogic.apply(rules, data);\n    }\n\n    /**\n     * Retrieve or generate visitor UUID\n     */\n    getUUID() {\n        let uuid = env.inBrowser && localStorage.getItem(LOCAL_STORAGE_UUID_KEY);\n\n        if (!uuid) {\n            uuid = Variate.generateUUID();\n            env.inBrowser && localStorage.setItem(LOCAL_STORAGE_UUID_KEY, uuid);\n        }\n\n        return uuid;\n    }\n\n    /**\n     * Retrieve or generate main traffic bucket for visitor\n     * @returns {number}\n     */\n    getMainTrafficBucket() {\n        let bucket = env.inBrowser && localStorage.getItem(LOCAL_STORAGE_MAIN_TRAFFIC_BUCKET_KEY);\n\n        if (!bucket) {\n            bucket = Variate.generateTrafficBucket();\n            env.inBrowser && localStorage.setItem(LOCAL_STORAGE_MAIN_TRAFFIC_BUCKET_KEY, bucket.toString());\n        }\n\n        return bucket;\n    }\n\n    /**\n     * Get a traffic bucket for a given experiment\n     * @param experiment\n     * @returns {number}\n     */\n    getExperimentBucket(experiment: Object) {\n        if (env.inBrowser) {\n            let bucket = localStorage.getItem(LOCAL_STORAGE_TRAFFIC_BUCKETS_KEY)\n                ? JSON.parse(localStorage.getItem(LOCAL_STORAGE_TRAFFIC_BUCKETS_KEY) || '')\n                : {};\n\n            if (!bucket[experiment.id]) {\n                bucket[experiment.id] = Variate.generateTrafficBucket();\n                env.inBrowser && localStorage.setItem(LOCAL_STORAGE_TRAFFIC_BUCKETS_KEY, JSON.stringify(bucket));\n            }\n\n            return bucket[experiment.id];\n        }\n\n        return 0;\n    }\n\n    /**\n     * Should the query params be forced?\n     * @returns {boolean}\n     */\n    shouldForceQueryParams() {\n        if (Object.keys(get(this.env, 'view.query' || {})).length && get(this.env, 'view.query.force', false)) {\n            if (this.options.debug) {\n                console.groupCollapsed(debug.QUERY_PARAMS);\n                console.log(get(this.env, 'view.query') || {});\n                console.groupEnd();\n            }\n\n            return true;\n        }\n\n        return false;\n    }\n\n    /**\n     * Track an event to Variate Reporting API\n     * @param args\n     * @returns {boolean}\n     */\n    track(...args: Object) {\n        let reporter = this.report;\n        let event = this.extractTrackingArguments(args);\n\n        if (!this.options.tracking) {\n            this.options.debug && console.info(debug.REPORTING_DISABLED);\n            return false;\n        }\n\n        if (this.options.reporter !== null) {\n            if (typeof this.options.reporter !== 'function') {\n                throw new Error(errors.REPORTING_INVALID_REPORTER);\n            }\n\n            this.options.debug && console.info(debug.REPORTING_CUSTOM_REPORTER);\n            reporter = this.options.reporter;\n        }\n\n        const wasTracked = reporter(event);\n\n        if (this.options.debug) {\n            console.groupCollapsed(wasTracked ? debug.REPORTING_EVENT_TRACKED : debug.REPORTING_EVENT_NOT_TRACKED);\n            console.log(event);\n            console.groupEnd();\n        }\n    }\n\n    extractTrackingArguments(args: Object) {\n        if (!args.length) {\n            throw new Error(errors.REQUIRED_PARAMETERS.replace('%s', 'track()'));\n        }\n\n        if (typeof args[0] === 'string') {\n            const [name, type, value] = args;\n            return new Event({ name, type, value, context: this.env });\n        }\n\n        const { name, type, value } = args[0];\n        return new Event({ name, type, value, context: this.env });\n    }\n\n    report(event: Event) {\n        const xhr = new XMLHttpRequest();\n\n        xhr.open('POST', 'https://reporting.variate.ca/track', true);\n        xhr.setRequestHeader('Content-Type', 'application/json');\n        xhr.send(event.toJson());\n\n        return xhr.readyState === 4 ? true : false;\n    }\n}\n\nexport default Variate;\n",
     "static": true,
@@ -1229,7 +1107,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 97,
+    "__docId__": 90,
     "kind": "variable",
     "name": "LOCAL_STORAGE_UUID_KEY",
     "memberof": "src/index.js",
@@ -1250,7 +1128,7 @@
     "ignore": true
   },
   {
-    "__docId__": 98,
+    "__docId__": 91,
     "kind": "variable",
     "name": "LOCAL_STORAGE_MAIN_TRAFFIC_BUCKET_KEY",
     "memberof": "src/index.js",
@@ -1271,7 +1149,7 @@
     "ignore": true
   },
   {
-    "__docId__": 99,
+    "__docId__": 92,
     "kind": "variable",
     "name": "LOCAL_STORAGE_TRAFFIC_BUCKETS_KEY",
     "memberof": "src/index.js",
@@ -1292,7 +1170,7 @@
     "ignore": true
   },
   {
-    "__docId__": 100,
+    "__docId__": 93,
     "kind": "class",
     "name": "Variate",
     "memberof": "src/index.js",
@@ -1308,7 +1186,7 @@
     "interface": false
   },
   {
-    "__docId__": 101,
+    "__docId__": 94,
     "kind": "member",
     "name": "_options",
     "memberof": "src/index.js~Variate",
@@ -1327,7 +1205,7 @@
     }
   },
   {
-    "__docId__": 102,
+    "__docId__": 95,
     "kind": "member",
     "name": "_config",
     "memberof": "src/index.js~Variate",
@@ -1346,7 +1224,7 @@
     }
   },
   {
-    "__docId__": 103,
+    "__docId__": 96,
     "kind": "member",
     "name": "_env",
     "memberof": "src/index.js~Variate",
@@ -1365,7 +1243,7 @@
     }
   },
   {
-    "__docId__": 104,
+    "__docId__": 97,
     "kind": "member",
     "name": "_experiments",
     "memberof": "src/index.js~Variate",
@@ -1384,7 +1262,7 @@
     }
   },
   {
-    "__docId__": 105,
+    "__docId__": 98,
     "kind": "member",
     "name": "_isReady",
     "memberof": "src/index.js~Variate",
@@ -1403,7 +1281,7 @@
     }
   },
   {
-    "__docId__": 106,
+    "__docId__": 99,
     "kind": "member",
     "name": "_isQualified",
     "memberof": "src/index.js~Variate",
@@ -1422,7 +1300,7 @@
     }
   },
   {
-    "__docId__": 107,
+    "__docId__": 100,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "src/index.js~Variate",
@@ -1447,7 +1325,7 @@
     ]
   },
   {
-    "__docId__": 108,
+    "__docId__": 101,
     "kind": "get",
     "name": "options",
     "memberof": "src/index.js~Variate",
@@ -1482,7 +1360,7 @@
     }
   },
   {
-    "__docId__": 109,
+    "__docId__": 102,
     "kind": "set",
     "name": "options",
     "memberof": "src/index.js~Variate",
@@ -1515,7 +1393,7 @@
     }
   },
   {
-    "__docId__": 111,
+    "__docId__": 104,
     "kind": "get",
     "name": "config",
     "memberof": "src/index.js~Variate",
@@ -1547,7 +1425,7 @@
     }
   },
   {
-    "__docId__": 112,
+    "__docId__": 105,
     "kind": "set",
     "name": "config",
     "memberof": "src/index.js~Variate",
@@ -1580,7 +1458,7 @@
     }
   },
   {
-    "__docId__": 113,
+    "__docId__": 106,
     "kind": "get",
     "name": "isReady",
     "memberof": "src/index.js~Variate",
@@ -1612,7 +1490,7 @@
     }
   },
   {
-    "__docId__": 114,
+    "__docId__": 107,
     "kind": "set",
     "name": "isReady",
     "memberof": "src/index.js~Variate",
@@ -1645,7 +1523,7 @@
     }
   },
   {
-    "__docId__": 116,
+    "__docId__": 109,
     "kind": "get",
     "name": "isQualified",
     "memberof": "src/index.js~Variate",
@@ -1680,7 +1558,7 @@
     }
   },
   {
-    "__docId__": 117,
+    "__docId__": 110,
     "kind": "set",
     "name": "isQualified",
     "memberof": "src/index.js~Variate",
@@ -1713,7 +1591,7 @@
     }
   },
   {
-    "__docId__": 119,
+    "__docId__": 112,
     "kind": "get",
     "name": "env",
     "memberof": "src/index.js~Variate",
@@ -1748,7 +1626,7 @@
     }
   },
   {
-    "__docId__": 120,
+    "__docId__": 113,
     "kind": "set",
     "name": "env",
     "memberof": "src/index.js~Variate",
@@ -1781,7 +1659,7 @@
     }
   },
   {
-    "__docId__": 122,
+    "__docId__": 115,
     "kind": "get",
     "name": "experiments",
     "memberof": "src/index.js~Variate",
@@ -1816,7 +1694,7 @@
     }
   },
   {
-    "__docId__": 123,
+    "__docId__": 116,
     "kind": "set",
     "name": "experiments",
     "memberof": "src/index.js~Variate",
@@ -1849,7 +1727,7 @@
     }
   },
   {
-    "__docId__": 125,
+    "__docId__": 118,
     "kind": "get",
     "name": "variations",
     "memberof": "src/index.js~Variate",
@@ -1884,7 +1762,7 @@
     }
   },
   {
-    "__docId__": 126,
+    "__docId__": 119,
     "kind": "get",
     "name": "components",
     "memberof": "src/index.js~Variate",
@@ -1919,7 +1797,7 @@
     }
   },
   {
-    "__docId__": 127,
+    "__docId__": 120,
     "kind": "method",
     "name": "extractVariationComponents",
     "memberof": "src/index.js~Variate",
@@ -1958,7 +1836,7 @@
     }
   },
   {
-    "__docId__": 128,
+    "__docId__": 121,
     "kind": "method",
     "name": "generateUUID",
     "memberof": "src/index.js~Variate",
@@ -1986,7 +1864,7 @@
     "params": []
   },
   {
-    "__docId__": 129,
+    "__docId__": 122,
     "kind": "method",
     "name": "generateTrafficBucket",
     "memberof": "src/index.js~Variate",
@@ -2014,7 +1892,7 @@
     "params": []
   },
   {
-    "__docId__": 130,
+    "__docId__": 123,
     "kind": "method",
     "name": "extractQueryParams",
     "memberof": "src/index.js~Variate",
@@ -2055,7 +1933,7 @@
     }
   },
   {
-    "__docId__": 131,
+    "__docId__": 124,
     "kind": "method",
     "name": "initialize",
     "memberof": "src/index.js~Variate",
@@ -2091,7 +1969,7 @@
     "return": null
   },
   {
-    "__docId__": 133,
+    "__docId__": 126,
     "kind": "method",
     "name": "setupOptions",
     "memberof": "src/index.js~Variate",
@@ -2117,7 +1995,7 @@
     "return": null
   },
   {
-    "__docId__": 135,
+    "__docId__": 128,
     "kind": "method",
     "name": "setupEnvironment",
     "memberof": "src/index.js~Variate",
@@ -2143,7 +2021,7 @@
     "return": null
   },
   {
-    "__docId__": 137,
+    "__docId__": 130,
     "kind": "method",
     "name": "qualify",
     "memberof": "src/index.js~Variate",
@@ -2158,7 +2036,7 @@
     "return": null
   },
   {
-    "__docId__": 140,
+    "__docId__": 133,
     "kind": "method",
     "name": "loadExperiments",
     "memberof": "src/index.js~Variate",
@@ -2186,7 +2064,7 @@
     "params": []
   },
   {
-    "__docId__": 141,
+    "__docId__": 134,
     "kind": "method",
     "name": "getBucketedExperiments",
     "memberof": "src/index.js~Variate",
@@ -2225,7 +2103,7 @@
     }
   },
   {
-    "__docId__": 142,
+    "__docId__": 135,
     "kind": "method",
     "name": "filterVariationsWithBucket",
     "memberof": "src/index.js~Variate",
@@ -2264,7 +2142,7 @@
     }
   },
   {
-    "__docId__": 143,
+    "__docId__": 136,
     "kind": "method",
     "name": "filterWithView",
     "memberof": "src/index.js~Variate",
@@ -2303,7 +2181,7 @@
     }
   },
   {
-    "__docId__": 144,
+    "__docId__": 137,
     "kind": "method",
     "name": "filterWithSegment",
     "memberof": "src/index.js~Variate",
@@ -2342,7 +2220,7 @@
     }
   },
   {
-    "__docId__": 145,
+    "__docId__": 138,
     "kind": "method",
     "name": "qualifyView",
     "memberof": "src/index.js~Variate",
@@ -2381,7 +2259,7 @@
     }
   },
   {
-    "__docId__": 146,
+    "__docId__": 139,
     "kind": "method",
     "name": "qualifySegment",
     "memberof": "src/index.js~Variate",
@@ -2420,7 +2298,7 @@
     }
   },
   {
-    "__docId__": 147,
+    "__docId__": 140,
     "kind": "method",
     "name": "getUUID",
     "memberof": "src/index.js~Variate",
@@ -2439,7 +2317,7 @@
     }
   },
   {
-    "__docId__": 148,
+    "__docId__": 141,
     "kind": "method",
     "name": "getMainTrafficBucket",
     "memberof": "src/index.js~Variate",
@@ -2467,7 +2345,7 @@
     "params": []
   },
   {
-    "__docId__": 149,
+    "__docId__": 142,
     "kind": "method",
     "name": "getExperimentBucket",
     "memberof": "src/index.js~Variate",
@@ -2506,7 +2384,7 @@
     }
   },
   {
-    "__docId__": 150,
+    "__docId__": 143,
     "kind": "method",
     "name": "shouldForceQueryParams",
     "memberof": "src/index.js~Variate",
@@ -2534,7 +2412,7 @@
     "params": []
   },
   {
-    "__docId__": 151,
+    "__docId__": 144,
     "kind": "method",
     "name": "track",
     "memberof": "src/index.js~Variate",
@@ -2573,7 +2451,7 @@
     }
   },
   {
-    "__docId__": 152,
+    "__docId__": 145,
     "kind": "method",
     "name": "extractTrackingArguments",
     "memberof": "src/index.js~Variate",
@@ -2603,7 +2481,7 @@
     }
   },
   {
-    "__docId__": 153,
+    "__docId__": 146,
     "kind": "method",
     "name": "report",
     "memberof": "src/index.js~Variate",
@@ -2626,696 +2504,6 @@
         "description": ""
       }
     ],
-    "return": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 154,
-    "kind": "file",
-    "name": "src/lang/debug.js",
-    "content": "// Setup\nexport const SETUP_OPTIONS = `[SETUP] Setting up options ✅`;\nexport const SETUP_ENVIRONMENT = `[SETUP] Setting up environment ✅`;\n\n// Query Params\nexport const QUERY_PARAMS = `[QUERY PARAMS] Query params detected ✅️`;\n\n// Experiments\nexport const LOADING_EXPERIMENTS = `[LOADING] Loading relevant experiments ✅`;\n\n// Targeting\nexport const TARGETING_QUALIFIED = `[TARGETING] Qualified 👍`;\nexport const TARGETING_NOT_QUALIFIED = `[TARGETING] Not qualified 👎`;\n\n// Segmenting\nexport const SEGMENTING_QUALIFIED = `[SEGMENTING] Qualified 👍`;\nexport const SEGMENTING_NOT_QUALIFIED = `[SEGMENTING] Not qualified 👎`;\n\n// Reporting\nexport const REPORTING_DISABLED = '[REPORTING] Reporting is disabled.';\nexport const REPORTING_CUSTOM_REPORTER = '[REPORTING] Using a custom reporter.';\nexport const REPORTING_EVENT_TRACKED = '[REPORTING] Event tracked 👍';\nexport const REPORTING_EVENT_NOT_TRACKED = '[REPORTING] Event not tracked 👎';\n",
-    "static": true,
-    "longname": "/Users/valentinprugnaud/Sites/variate-engine/src/lang/debug.js",
-    "access": "public",
-    "description": null,
-    "lineNumber": 1
-  },
-  {
-    "__docId__": 155,
-    "kind": "variable",
-    "name": "SETUP_OPTIONS",
-    "memberof": "src/lang/debug.js",
-    "static": true,
-    "longname": "src/lang/debug.js~SETUP_OPTIONS",
-    "access": "public",
-    "export": true,
-    "importPath": "@variate/engine/src/lang/debug.js",
-    "importStyle": "{SETUP_OPTIONS}",
-    "description": null,
-    "lineNumber": 2,
-    "undocument": true,
-    "type": {
-      "types": [
-        "string"
-      ]
-    }
-  },
-  {
-    "__docId__": 156,
-    "kind": "variable",
-    "name": "SETUP_ENVIRONMENT",
-    "memberof": "src/lang/debug.js",
-    "static": true,
-    "longname": "src/lang/debug.js~SETUP_ENVIRONMENT",
-    "access": "public",
-    "export": true,
-    "importPath": "@variate/engine/src/lang/debug.js",
-    "importStyle": "{SETUP_ENVIRONMENT}",
-    "description": null,
-    "lineNumber": 3,
-    "undocument": true,
-    "type": {
-      "types": [
-        "string"
-      ]
-    }
-  },
-  {
-    "__docId__": 157,
-    "kind": "variable",
-    "name": "QUERY_PARAMS",
-    "memberof": "src/lang/debug.js",
-    "static": true,
-    "longname": "src/lang/debug.js~QUERY_PARAMS",
-    "access": "public",
-    "export": true,
-    "importPath": "@variate/engine/src/lang/debug.js",
-    "importStyle": "{QUERY_PARAMS}",
-    "description": null,
-    "lineNumber": 6,
-    "undocument": true,
-    "type": {
-      "types": [
-        "string"
-      ]
-    }
-  },
-  {
-    "__docId__": 158,
-    "kind": "variable",
-    "name": "LOADING_EXPERIMENTS",
-    "memberof": "src/lang/debug.js",
-    "static": true,
-    "longname": "src/lang/debug.js~LOADING_EXPERIMENTS",
-    "access": "public",
-    "export": true,
-    "importPath": "@variate/engine/src/lang/debug.js",
-    "importStyle": "{LOADING_EXPERIMENTS}",
-    "description": null,
-    "lineNumber": 9,
-    "undocument": true,
-    "type": {
-      "types": [
-        "string"
-      ]
-    }
-  },
-  {
-    "__docId__": 159,
-    "kind": "variable",
-    "name": "TARGETING_QUALIFIED",
-    "memberof": "src/lang/debug.js",
-    "static": true,
-    "longname": "src/lang/debug.js~TARGETING_QUALIFIED",
-    "access": "public",
-    "export": true,
-    "importPath": "@variate/engine/src/lang/debug.js",
-    "importStyle": "{TARGETING_QUALIFIED}",
-    "description": null,
-    "lineNumber": 12,
-    "undocument": true,
-    "type": {
-      "types": [
-        "string"
-      ]
-    }
-  },
-  {
-    "__docId__": 160,
-    "kind": "variable",
-    "name": "TARGETING_NOT_QUALIFIED",
-    "memberof": "src/lang/debug.js",
-    "static": true,
-    "longname": "src/lang/debug.js~TARGETING_NOT_QUALIFIED",
-    "access": "public",
-    "export": true,
-    "importPath": "@variate/engine/src/lang/debug.js",
-    "importStyle": "{TARGETING_NOT_QUALIFIED}",
-    "description": null,
-    "lineNumber": 13,
-    "undocument": true,
-    "type": {
-      "types": [
-        "string"
-      ]
-    }
-  },
-  {
-    "__docId__": 161,
-    "kind": "variable",
-    "name": "SEGMENTING_QUALIFIED",
-    "memberof": "src/lang/debug.js",
-    "static": true,
-    "longname": "src/lang/debug.js~SEGMENTING_QUALIFIED",
-    "access": "public",
-    "export": true,
-    "importPath": "@variate/engine/src/lang/debug.js",
-    "importStyle": "{SEGMENTING_QUALIFIED}",
-    "description": null,
-    "lineNumber": 16,
-    "undocument": true,
-    "type": {
-      "types": [
-        "string"
-      ]
-    }
-  },
-  {
-    "__docId__": 162,
-    "kind": "variable",
-    "name": "SEGMENTING_NOT_QUALIFIED",
-    "memberof": "src/lang/debug.js",
-    "static": true,
-    "longname": "src/lang/debug.js~SEGMENTING_NOT_QUALIFIED",
-    "access": "public",
-    "export": true,
-    "importPath": "@variate/engine/src/lang/debug.js",
-    "importStyle": "{SEGMENTING_NOT_QUALIFIED}",
-    "description": null,
-    "lineNumber": 17,
-    "undocument": true,
-    "type": {
-      "types": [
-        "string"
-      ]
-    }
-  },
-  {
-    "__docId__": 163,
-    "kind": "variable",
-    "name": "REPORTING_DISABLED",
-    "memberof": "src/lang/debug.js",
-    "static": true,
-    "longname": "src/lang/debug.js~REPORTING_DISABLED",
-    "access": "public",
-    "export": true,
-    "importPath": "@variate/engine/src/lang/debug.js",
-    "importStyle": "{REPORTING_DISABLED}",
-    "description": null,
-    "lineNumber": 20,
-    "undocument": true,
-    "type": {
-      "types": [
-        "string"
-      ]
-    }
-  },
-  {
-    "__docId__": 164,
-    "kind": "variable",
-    "name": "REPORTING_CUSTOM_REPORTER",
-    "memberof": "src/lang/debug.js",
-    "static": true,
-    "longname": "src/lang/debug.js~REPORTING_CUSTOM_REPORTER",
-    "access": "public",
-    "export": true,
-    "importPath": "@variate/engine/src/lang/debug.js",
-    "importStyle": "{REPORTING_CUSTOM_REPORTER}",
-    "description": null,
-    "lineNumber": 21,
-    "undocument": true,
-    "type": {
-      "types": [
-        "string"
-      ]
-    }
-  },
-  {
-    "__docId__": 165,
-    "kind": "variable",
-    "name": "REPORTING_EVENT_TRACKED",
-    "memberof": "src/lang/debug.js",
-    "static": true,
-    "longname": "src/lang/debug.js~REPORTING_EVENT_TRACKED",
-    "access": "public",
-    "export": true,
-    "importPath": "@variate/engine/src/lang/debug.js",
-    "importStyle": "{REPORTING_EVENT_TRACKED}",
-    "description": null,
-    "lineNumber": 22,
-    "undocument": true,
-    "type": {
-      "types": [
-        "string"
-      ]
-    }
-  },
-  {
-    "__docId__": 166,
-    "kind": "variable",
-    "name": "REPORTING_EVENT_NOT_TRACKED",
-    "memberof": "src/lang/debug.js",
-    "static": true,
-    "longname": "src/lang/debug.js~REPORTING_EVENT_NOT_TRACKED",
-    "access": "public",
-    "export": true,
-    "importPath": "@variate/engine/src/lang/debug.js",
-    "importStyle": "{REPORTING_EVENT_NOT_TRACKED}",
-    "description": null,
-    "lineNumber": 23,
-    "undocument": true,
-    "type": {
-      "types": [
-        "string"
-      ]
-    }
-  },
-  {
-    "__docId__": 167,
-    "kind": "file",
-    "name": "src/lang/errors.js",
-    "content": "export const IS_READY_TYPE_ERROR = `The isReady property requires a boolean.`;\nexport const IS_QUALIFIED_TYPE_ERROR = `The isQualified property requires a boolean.`;\nexport const REQUIRED_PARAMETERS = `Parameters are required for the method %s`;\n\n// Reporting\nexport const REPORTING_INVALID_REPORTER = 'Reporter must be a function';\n",
-    "static": true,
-    "longname": "/Users/valentinprugnaud/Sites/variate-engine/src/lang/errors.js",
-    "access": "public",
-    "description": null,
-    "lineNumber": 1
-  },
-  {
-    "__docId__": 168,
-    "kind": "variable",
-    "name": "IS_READY_TYPE_ERROR",
-    "memberof": "src/lang/errors.js",
-    "static": true,
-    "longname": "src/lang/errors.js~IS_READY_TYPE_ERROR",
-    "access": "public",
-    "export": true,
-    "importPath": "@variate/engine/src/lang/errors.js",
-    "importStyle": "{IS_READY_TYPE_ERROR}",
-    "description": null,
-    "lineNumber": 1,
-    "undocument": true,
-    "type": {
-      "types": [
-        "string"
-      ]
-    }
-  },
-  {
-    "__docId__": 169,
-    "kind": "variable",
-    "name": "IS_QUALIFIED_TYPE_ERROR",
-    "memberof": "src/lang/errors.js",
-    "static": true,
-    "longname": "src/lang/errors.js~IS_QUALIFIED_TYPE_ERROR",
-    "access": "public",
-    "export": true,
-    "importPath": "@variate/engine/src/lang/errors.js",
-    "importStyle": "{IS_QUALIFIED_TYPE_ERROR}",
-    "description": null,
-    "lineNumber": 2,
-    "undocument": true,
-    "type": {
-      "types": [
-        "string"
-      ]
-    }
-  },
-  {
-    "__docId__": 170,
-    "kind": "variable",
-    "name": "REQUIRED_PARAMETERS",
-    "memberof": "src/lang/errors.js",
-    "static": true,
-    "longname": "src/lang/errors.js~REQUIRED_PARAMETERS",
-    "access": "public",
-    "export": true,
-    "importPath": "@variate/engine/src/lang/errors.js",
-    "importStyle": "{REQUIRED_PARAMETERS}",
-    "description": null,
-    "lineNumber": 3,
-    "undocument": true,
-    "type": {
-      "types": [
-        "string"
-      ]
-    }
-  },
-  {
-    "__docId__": 171,
-    "kind": "variable",
-    "name": "REPORTING_INVALID_REPORTER",
-    "memberof": "src/lang/errors.js",
-    "static": true,
-    "longname": "src/lang/errors.js~REPORTING_INVALID_REPORTER",
-    "access": "public",
-    "export": true,
-    "importPath": "@variate/engine/src/lang/errors.js",
-    "importStyle": "{REPORTING_INVALID_REPORTER}",
-    "description": null,
-    "lineNumber": 6,
-    "undocument": true,
-    "type": {
-      "types": [
-        "string"
-      ]
-    }
-  },
-  {
-    "__docId__": 172,
-    "kind": "file",
-    "name": "src/lang/version.js",
-    "content": "import { name, version, styles } from '../config/console';\n\nexport default {\n    show: function() {\n        console.log(\n            `%c ${name} %c ${version} `,\n            styles.brand,\n            styles.type\n        );\n    },\n}\n",
-    "static": true,
-    "longname": "/Users/valentinprugnaud/Sites/variate-engine/src/lang/version.js",
-    "access": "public",
-    "description": null,
-    "lineNumber": 1
-  },
-  {
-    "__docId__": 173,
-    "kind": "file",
-    "name": "src/lang/warnings.js",
-    "content": "\n",
-    "static": true,
-    "longname": "/Users/valentinprugnaud/Sites/variate-engine/src/lang/warnings.js",
-    "access": "public",
-    "description": null,
-    "lineNumber": 1
-  },
-  {
-    "__docId__": 174,
-    "kind": "file",
-    "name": "src/utilities/env.js",
-    "content": "// Browser environment sniffing\nexport const inBrowser = typeof window !== 'undefined';\nexport const UA = inBrowser && window.navigator.userAgent.toLowerCase();\n\n// Browsers\nexport const isIE = UA && /msie|trident/.test(UA);\nexport const isIE9 = UA && UA.indexOf('msie 9.0') > 0;\nexport const isEdge = UA && UA.indexOf('edge/') > 0;\nexport const isAndroid = (UA && UA.indexOf('android') > 0);\nexport const isIOS = (UA && /iphone|ipad|ipod|ios/.test(UA));\nexport const isChrome = UA && /chrome\\/\\d+/.test(UA) && !isEdge;\nexport const isPhantomJS = UA && /phantomjs/.test(UA);\nexport const isFF = UA && UA.match(/firefox\\/(\\d+)/);\n\nexport const doNotTrack = () => {\n    if (inBrowser) {\n        // Firefox override\n        if (window.navigator.doNotTrack == 'unspecified') {\n            return false;\n        }\n\n        return window.navigator.doNotTrack || false;\n    }\n\n    return false;\n};\n\nexport const href = () => {\n    return inBrowser ? window.location.href : '';\n};\n\nexport const search = () => {\n    return inBrowser ? window.location.search : '';\n};\n\nexport const width = () => {\n    return inBrowser ? window.innerWidth : -1;\n};\n\nexport const height = () => {\n    return inBrowser ? window.innerWidth : -1;\n};\n\nexport default {\n    inBrowser,\n    UA,\n    isIE,\n    isIE9,\n    isAndroid,\n    isIOS,\n    isChrome,\n    isPhantomJS,\n    isFF,\n    doNotTrack,\n    href,\n    search,\n    width,\n    height,\n};\n",
-    "static": true,
-    "longname": "/Users/valentinprugnaud/Sites/variate-engine/src/utilities/env.js",
-    "access": "public",
-    "description": null,
-    "lineNumber": 1
-  },
-  {
-    "__docId__": 175,
-    "kind": "variable",
-    "name": "inBrowser",
-    "memberof": "src/utilities/env.js",
-    "static": true,
-    "longname": "src/utilities/env.js~inBrowser",
-    "access": "public",
-    "export": true,
-    "importPath": "@variate/engine/src/utilities/env.js",
-    "importStyle": "{inBrowser}",
-    "description": null,
-    "lineNumber": 2,
-    "undocument": true,
-    "type": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 176,
-    "kind": "variable",
-    "name": "UA",
-    "memberof": "src/utilities/env.js",
-    "static": true,
-    "longname": "src/utilities/env.js~UA",
-    "access": "public",
-    "export": true,
-    "importPath": "@variate/engine/src/utilities/env.js",
-    "importStyle": "{UA}",
-    "description": null,
-    "lineNumber": 3,
-    "undocument": true,
-    "type": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 177,
-    "kind": "variable",
-    "name": "isIE",
-    "memberof": "src/utilities/env.js",
-    "static": true,
-    "longname": "src/utilities/env.js~isIE",
-    "access": "public",
-    "export": true,
-    "importPath": "@variate/engine/src/utilities/env.js",
-    "importStyle": "{isIE}",
-    "description": null,
-    "lineNumber": 6,
-    "undocument": true,
-    "type": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 178,
-    "kind": "variable",
-    "name": "isIE9",
-    "memberof": "src/utilities/env.js",
-    "static": true,
-    "longname": "src/utilities/env.js~isIE9",
-    "access": "public",
-    "export": true,
-    "importPath": "@variate/engine/src/utilities/env.js",
-    "importStyle": "{isIE9}",
-    "description": null,
-    "lineNumber": 7,
-    "undocument": true,
-    "type": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 179,
-    "kind": "variable",
-    "name": "isEdge",
-    "memberof": "src/utilities/env.js",
-    "static": true,
-    "longname": "src/utilities/env.js~isEdge",
-    "access": "public",
-    "export": true,
-    "importPath": "@variate/engine/src/utilities/env.js",
-    "importStyle": "{isEdge}",
-    "description": null,
-    "lineNumber": 8,
-    "undocument": true,
-    "type": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 180,
-    "kind": "variable",
-    "name": "isAndroid",
-    "memberof": "src/utilities/env.js",
-    "static": true,
-    "longname": "src/utilities/env.js~isAndroid",
-    "access": "public",
-    "export": true,
-    "importPath": "@variate/engine/src/utilities/env.js",
-    "importStyle": "{isAndroid}",
-    "description": null,
-    "lineNumber": 9,
-    "undocument": true,
-    "type": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 181,
-    "kind": "variable",
-    "name": "isIOS",
-    "memberof": "src/utilities/env.js",
-    "static": true,
-    "longname": "src/utilities/env.js~isIOS",
-    "access": "public",
-    "export": true,
-    "importPath": "@variate/engine/src/utilities/env.js",
-    "importStyle": "{isIOS}",
-    "description": null,
-    "lineNumber": 10,
-    "undocument": true,
-    "type": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 182,
-    "kind": "variable",
-    "name": "isChrome",
-    "memberof": "src/utilities/env.js",
-    "static": true,
-    "longname": "src/utilities/env.js~isChrome",
-    "access": "public",
-    "export": true,
-    "importPath": "@variate/engine/src/utilities/env.js",
-    "importStyle": "{isChrome}",
-    "description": null,
-    "lineNumber": 11,
-    "undocument": true,
-    "type": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 183,
-    "kind": "variable",
-    "name": "isPhantomJS",
-    "memberof": "src/utilities/env.js",
-    "static": true,
-    "longname": "src/utilities/env.js~isPhantomJS",
-    "access": "public",
-    "export": true,
-    "importPath": "@variate/engine/src/utilities/env.js",
-    "importStyle": "{isPhantomJS}",
-    "description": null,
-    "lineNumber": 12,
-    "undocument": true,
-    "type": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 184,
-    "kind": "variable",
-    "name": "isFF",
-    "memberof": "src/utilities/env.js",
-    "static": true,
-    "longname": "src/utilities/env.js~isFF",
-    "access": "public",
-    "export": true,
-    "importPath": "@variate/engine/src/utilities/env.js",
-    "importStyle": "{isFF}",
-    "description": null,
-    "lineNumber": 13,
-    "undocument": true,
-    "type": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 185,
-    "kind": "function",
-    "name": "doNotTrack",
-    "memberof": "src/utilities/env.js",
-    "generator": false,
-    "async": false,
-    "static": true,
-    "longname": "src/utilities/env.js~doNotTrack",
-    "access": "public",
-    "export": true,
-    "importPath": "@variate/engine/src/utilities/env.js",
-    "importStyle": "{doNotTrack}",
-    "description": null,
-    "lineNumber": 15,
-    "undocument": true,
-    "params": [],
-    "return": {
-      "types": [
-        "boolean"
-      ]
-    }
-  },
-  {
-    "__docId__": 186,
-    "kind": "function",
-    "name": "href",
-    "memberof": "src/utilities/env.js",
-    "generator": false,
-    "async": false,
-    "static": true,
-    "longname": "src/utilities/env.js~href",
-    "access": "public",
-    "export": true,
-    "importPath": "@variate/engine/src/utilities/env.js",
-    "importStyle": "{href}",
-    "description": null,
-    "lineNumber": 28,
-    "undocument": true,
-    "params": [],
-    "return": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 187,
-    "kind": "function",
-    "name": "search",
-    "memberof": "src/utilities/env.js",
-    "generator": false,
-    "async": false,
-    "static": true,
-    "longname": "src/utilities/env.js~search",
-    "access": "public",
-    "export": true,
-    "importPath": "@variate/engine/src/utilities/env.js",
-    "importStyle": "{search}",
-    "description": null,
-    "lineNumber": 32,
-    "undocument": true,
-    "params": [],
-    "return": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 188,
-    "kind": "function",
-    "name": "width",
-    "memberof": "src/utilities/env.js",
-    "generator": false,
-    "async": false,
-    "static": true,
-    "longname": "src/utilities/env.js~width",
-    "access": "public",
-    "export": true,
-    "importPath": "@variate/engine/src/utilities/env.js",
-    "importStyle": "{width}",
-    "description": null,
-    "lineNumber": 36,
-    "undocument": true,
-    "params": [],
-    "return": {
-      "types": [
-        "*"
-      ]
-    }
-  },
-  {
-    "__docId__": 189,
-    "kind": "function",
-    "name": "height",
-    "memberof": "src/utilities/env.js",
-    "generator": false,
-    "async": false,
-    "static": true,
-    "longname": "src/utilities/env.js~height",
-    "access": "public",
-    "export": true,
-    "importPath": "@variate/engine/src/utilities/env.js",
-    "importStyle": "{height}",
-    "description": null,
-    "lineNumber": 40,
-    "undocument": true,
-    "params": [],
     "return": {
       "types": [
         "*"

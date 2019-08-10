@@ -1,39 +1,9 @@
 window.esdocSearchIndex = [
   [
-    "@variate/engine/src/config/event-types.js~event_click",
-    "variable/index.html#static-variable-EVENT_CLICK",
-    "<span>EVENT_CLICK</span> <span class=\"search-result-import-path\">@variate/engine/src/config/event-types.js</span>",
-    "variable"
-  ],
-  [
-    "@variate/engine/src/config/event-types.js~event_pageview",
-    "variable/index.html#static-variable-EVENT_PAGEVIEW",
-    "<span>EVENT_PAGEVIEW</span> <span class=\"search-result-import-path\">@variate/engine/src/config/event-types.js</span>",
-    "variable"
-  ],
-  [
     "@variate/engine/src/components/event.js~event",
     "class/src/components/event.js~Event.html",
     "<span>Event</span> <span class=\"search-result-import-path\">@variate/engine/src/components/event.js</span>",
     "class"
-  ],
-  [
-    "@variate/engine/src/lang/errors.js~is_qualified_type_error",
-    "variable/index.html#static-variable-IS_QUALIFIED_TYPE_ERROR",
-    "<span>IS_QUALIFIED_TYPE_ERROR</span> <span class=\"search-result-import-path\">@variate/engine/src/lang/errors.js</span>",
-    "variable"
-  ],
-  [
-    "@variate/engine/src/lang/errors.js~is_ready_type_error",
-    "variable/index.html#static-variable-IS_READY_TYPE_ERROR",
-    "<span>IS_READY_TYPE_ERROR</span> <span class=\"search-result-import-path\">@variate/engine/src/lang/errors.js</span>",
-    "variable"
-  ],
-  [
-    "@variate/engine/src/lang/debug.js~loading_experiments",
-    "variable/index.html#static-variable-LOADING_EXPERIMENTS",
-    "<span>LOADING_EXPERIMENTS</span> <span class=\"search-result-import-path\">@variate/engine/src/lang/debug.js</span>",
-    "variable"
   ],
   [
     "@variate/engine/src/components/options.js~options",
@@ -42,196 +12,10 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
-    "@variate/engine/src/lang/debug.js~query_params",
-    "variable/index.html#static-variable-QUERY_PARAMS",
-    "<span>QUERY_PARAMS</span> <span class=\"search-result-import-path\">@variate/engine/src/lang/debug.js</span>",
-    "variable"
-  ],
-  [
-    "@variate/engine/src/lang/debug.js~reporting_custom_reporter",
-    "variable/index.html#static-variable-REPORTING_CUSTOM_REPORTER",
-    "<span>REPORTING_CUSTOM_REPORTER</span> <span class=\"search-result-import-path\">@variate/engine/src/lang/debug.js</span>",
-    "variable"
-  ],
-  [
-    "@variate/engine/src/lang/debug.js~reporting_disabled",
-    "variable/index.html#static-variable-REPORTING_DISABLED",
-    "<span>REPORTING_DISABLED</span> <span class=\"search-result-import-path\">@variate/engine/src/lang/debug.js</span>",
-    "variable"
-  ],
-  [
-    "@variate/engine/src/lang/debug.js~reporting_event_not_tracked",
-    "variable/index.html#static-variable-REPORTING_EVENT_NOT_TRACKED",
-    "<span>REPORTING_EVENT_NOT_TRACKED</span> <span class=\"search-result-import-path\">@variate/engine/src/lang/debug.js</span>",
-    "variable"
-  ],
-  [
-    "@variate/engine/src/lang/debug.js~reporting_event_tracked",
-    "variable/index.html#static-variable-REPORTING_EVENT_TRACKED",
-    "<span>REPORTING_EVENT_TRACKED</span> <span class=\"search-result-import-path\">@variate/engine/src/lang/debug.js</span>",
-    "variable"
-  ],
-  [
-    "@variate/engine/src/lang/errors.js~reporting_invalid_reporter",
-    "variable/index.html#static-variable-REPORTING_INVALID_REPORTER",
-    "<span>REPORTING_INVALID_REPORTER</span> <span class=\"search-result-import-path\">@variate/engine/src/lang/errors.js</span>",
-    "variable"
-  ],
-  [
-    "@variate/engine/src/lang/errors.js~required_parameters",
-    "variable/index.html#static-variable-REQUIRED_PARAMETERS",
-    "<span>REQUIRED_PARAMETERS</span> <span class=\"search-result-import-path\">@variate/engine/src/lang/errors.js</span>",
-    "variable"
-  ],
-  [
-    "@variate/engine/src/lang/debug.js~segmenting_not_qualified",
-    "variable/index.html#static-variable-SEGMENTING_NOT_QUALIFIED",
-    "<span>SEGMENTING_NOT_QUALIFIED</span> <span class=\"search-result-import-path\">@variate/engine/src/lang/debug.js</span>",
-    "variable"
-  ],
-  [
-    "@variate/engine/src/lang/debug.js~segmenting_qualified",
-    "variable/index.html#static-variable-SEGMENTING_QUALIFIED",
-    "<span>SEGMENTING_QUALIFIED</span> <span class=\"search-result-import-path\">@variate/engine/src/lang/debug.js</span>",
-    "variable"
-  ],
-  [
-    "@variate/engine/src/lang/debug.js~setup_environment",
-    "variable/index.html#static-variable-SETUP_ENVIRONMENT",
-    "<span>SETUP_ENVIRONMENT</span> <span class=\"search-result-import-path\">@variate/engine/src/lang/debug.js</span>",
-    "variable"
-  ],
-  [
-    "@variate/engine/src/lang/debug.js~setup_options",
-    "variable/index.html#static-variable-SETUP_OPTIONS",
-    "<span>SETUP_OPTIONS</span> <span class=\"search-result-import-path\">@variate/engine/src/lang/debug.js</span>",
-    "variable"
-  ],
-  [
-    "@variate/engine/src/lang/debug.js~targeting_not_qualified",
-    "variable/index.html#static-variable-TARGETING_NOT_QUALIFIED",
-    "<span>TARGETING_NOT_QUALIFIED</span> <span class=\"search-result-import-path\">@variate/engine/src/lang/debug.js</span>",
-    "variable"
-  ],
-  [
-    "@variate/engine/src/lang/debug.js~targeting_qualified",
-    "variable/index.html#static-variable-TARGETING_QUALIFIED",
-    "<span>TARGETING_QUALIFIED</span> <span class=\"search-result-import-path\">@variate/engine/src/lang/debug.js</span>",
-    "variable"
-  ],
-  [
-    "@variate/engine/src/utilities/env.js~ua",
-    "variable/index.html#static-variable-UA",
-    "<span>UA</span> <span class=\"search-result-import-path\">@variate/engine/src/utilities/env.js</span>",
-    "variable"
-  ],
-  [
     "@variate/engine/src/index.js~variate",
     "class/src/index.js~Variate.html",
     "<span>Variate</span> <span class=\"search-result-import-path\">@variate/engine/src/index.js</span>",
     "class"
-  ],
-  [
-    "@variate/engine/src/utilities/env.js~donottrack",
-    "function/index.html#static-function-doNotTrack",
-    "<span>doNotTrack</span> <span class=\"search-result-import-path\">@variate/engine/src/utilities/env.js</span>",
-    "function"
-  ],
-  [
-    "@variate/engine/src/utilities/env.js~height",
-    "function/index.html#static-function-height",
-    "<span>height</span> <span class=\"search-result-import-path\">@variate/engine/src/utilities/env.js</span>",
-    "function"
-  ],
-  [
-    "@variate/engine/src/utilities/env.js~href",
-    "function/index.html#static-function-href",
-    "<span>href</span> <span class=\"search-result-import-path\">@variate/engine/src/utilities/env.js</span>",
-    "function"
-  ],
-  [
-    "@variate/engine/src/utilities/env.js~inbrowser",
-    "variable/index.html#static-variable-inBrowser",
-    "<span>inBrowser</span> <span class=\"search-result-import-path\">@variate/engine/src/utilities/env.js</span>",
-    "variable"
-  ],
-  [
-    "@variate/engine/src/utilities/env.js~isandroid",
-    "variable/index.html#static-variable-isAndroid",
-    "<span>isAndroid</span> <span class=\"search-result-import-path\">@variate/engine/src/utilities/env.js</span>",
-    "variable"
-  ],
-  [
-    "@variate/engine/src/utilities/env.js~ischrome",
-    "variable/index.html#static-variable-isChrome",
-    "<span>isChrome</span> <span class=\"search-result-import-path\">@variate/engine/src/utilities/env.js</span>",
-    "variable"
-  ],
-  [
-    "@variate/engine/src/utilities/env.js~isedge",
-    "variable/index.html#static-variable-isEdge",
-    "<span>isEdge</span> <span class=\"search-result-import-path\">@variate/engine/src/utilities/env.js</span>",
-    "variable"
-  ],
-  [
-    "@variate/engine/src/utilities/env.js~isff",
-    "variable/index.html#static-variable-isFF",
-    "<span>isFF</span> <span class=\"search-result-import-path\">@variate/engine/src/utilities/env.js</span>",
-    "variable"
-  ],
-  [
-    "@variate/engine/src/utilities/env.js~isie9",
-    "variable/index.html#static-variable-isIE9",
-    "<span>isIE9</span> <span class=\"search-result-import-path\">@variate/engine/src/utilities/env.js</span>",
-    "variable"
-  ],
-  [
-    "@variate/engine/src/utilities/env.js~isie",
-    "variable/index.html#static-variable-isIE",
-    "<span>isIE</span> <span class=\"search-result-import-path\">@variate/engine/src/utilities/env.js</span>",
-    "variable"
-  ],
-  [
-    "@variate/engine/src/utilities/env.js~isios",
-    "variable/index.html#static-variable-isIOS",
-    "<span>isIOS</span> <span class=\"search-result-import-path\">@variate/engine/src/utilities/env.js</span>",
-    "variable"
-  ],
-  [
-    "@variate/engine/src/utilities/env.js~isphantomjs",
-    "variable/index.html#static-variable-isPhantomJS",
-    "<span>isPhantomJS</span> <span class=\"search-result-import-path\">@variate/engine/src/utilities/env.js</span>",
-    "variable"
-  ],
-  [
-    "@variate/engine/src/config/console.js~name",
-    "variable/index.html#static-variable-name",
-    "<span>name</span> <span class=\"search-result-import-path\">@variate/engine/src/config/console.js</span>",
-    "variable"
-  ],
-  [
-    "@variate/engine/src/utilities/env.js~search",
-    "function/index.html#static-function-search",
-    "<span>search</span> <span class=\"search-result-import-path\">@variate/engine/src/utilities/env.js</span>",
-    "function"
-  ],
-  [
-    "@variate/engine/src/config/console.js~styles",
-    "variable/index.html#static-variable-styles",
-    "<span>styles</span> <span class=\"search-result-import-path\">@variate/engine/src/config/console.js</span>",
-    "variable"
-  ],
-  [
-    "@variate/engine/src/config/console.js~version",
-    "variable/index.html#static-variable-version",
-    "<span>version</span> <span class=\"search-result-import-path\">@variate/engine/src/config/console.js</span>",
-    "variable"
-  ],
-  [
-    "@variate/engine/src/utilities/env.js~width",
-    "function/index.html#static-function-width",
-    "<span>width</span> <span class=\"search-result-import-path\">@variate/engine/src/utilities/env.js</span>",
-    "function"
   ],
   [
     "src/.external-ecmascript.js~array",
@@ -666,18 +450,6 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
-    "src/config/console.js",
-    "file/src/config/console.js.html",
-    "src/config/console.js",
-    "file"
-  ],
-  [
-    "src/config/event-types.js",
-    "file/src/config/event-types.js.html",
-    "src/config/event-types.js",
-    "file"
-  ],
-  [
     "src/index.js",
     "file/src/index.js.html",
     "src/index.js",
@@ -940,35 +712,5 @@ window.esdocSearchIndex = [
     "class/src/index.js~Variate.html#static-method-generateUUID",
     "src/index.js~Variate.generateUUID",
     "method"
-  ],
-  [
-    "src/lang/debug.js",
-    "file/src/lang/debug.js.html",
-    "src/lang/debug.js",
-    "file"
-  ],
-  [
-    "src/lang/errors.js",
-    "file/src/lang/errors.js.html",
-    "src/lang/errors.js",
-    "file"
-  ],
-  [
-    "src/lang/version.js",
-    "file/src/lang/version.js.html",
-    "src/lang/version.js",
-    "file"
-  ],
-  [
-    "src/lang/warnings.js",
-    "file/src/lang/warnings.js.html",
-    "src/lang/warnings.js",
-    "file"
-  ],
-  [
-    "src/utilities/env.js",
-    "file/src/utilities/env.js.html",
-    "src/utilities/env.js",
-    "file"
   ]
 ]
