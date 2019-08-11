@@ -8,13 +8,13 @@ export const QUERY_PARAMS = `[QUERY PARAMS] Query params detected ✅️`;
 // Experiments
 export const LOADING_EXPERIMENTS = `[LOADING] Loading relevant experiments ✅`;
 
-// Targeting
-export const TARGETING_QUALIFIED = `[TARGETING] Qualified 👍`;
-export const TARGETING_NOT_QUALIFIED = `[TARGETING] Not qualified 👎`;
+// Views
+export const VIEW_QUALIFIED = `[VIEW] Qualified 👍`;
+export const VIEW_NOT_QUALIFIED = `[VIEW] Not qualified 👎`;
 
 // Segmenting
-export const SEGMENTING_QUALIFIED = `[SEGMENTING] Qualified 👍`;
-export const SEGMENTING_NOT_QUALIFIED = `[SEGMENTING] Not qualified 👎`;
+export const AUDIENCE_QUALIFIED = `[AUDIENCE] Qualified 👍`;
+export const AUDIENCE_NOT_QUALIFIED = `[AUDIENCE] Not qualified 👎`;
 
 // Reporting
 export const REPORTING_DISABLED = '[REPORTING] Reporting is disabled.';

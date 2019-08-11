@@ -257,7 +257,7 @@ class Variate {
 
         // Viewport information
         const viewport = {
-            userId: this.getUUID(),
+            visitorId: this.getUUID(),
             mainBucket: this.getMainTrafficBucket(),
             doNotTrack: env.doNotTrack(),
             width: env.width(),
@@ -287,8 +287,8 @@ class Variate {
         // 2. Check view targeting (URL)
         experiments = experiments.filter((experiment) => this.filterWithView(experiment));
 
-        // 3. Check segment targeting
-        experiments = experiments.filter((experiment) => this.filterWithSegment(experiment));
+        // 3. Check audience targeting
+        experiments = experiments.filter((experiment) => this.filterWithAudience(experiment));
 
         // 3. Reduce to 1 variation per experiment to prepare for display
         experiments = experiments.map((experiment) => this.filterVariationsWithBucket(experiment));
@@ -395,7 +395,7 @@ class Variate {
 
         if (this.options.debug) {
             console.groupCollapsed(
-                isQualifiedForView ? debug.TARGETING_QUALIFIED : debug.TARGETING_NOT_QUALIFIED
+                isQualifiedForView ? debug.VIEW_QUALIFIED : debug.VIEW_NOT_QUALIFIED
             );
             console.log(`Experiment: #${experiment.id} - ${experiment.name}`);
             console.log(`Current URL: ${get(this.env, 'view.path')}`);
@@ -408,26 +408,26 @@ class Variate {
     }
 
     /**
-     * Check visitor segment options and check if qualified for given experiment
+     * Check visitor audience options and check if qualified for given experiment
      * @param experiment
      * @returns {boolean}
      */
-    filterWithSegment(experiment: Object) {
-        let isQualifiedForSegment = this.qualifySegment(experiment);
+    filterWithAudience(experiment: Object) {
+        let isQualifiedForAudience = this.qualifyAudience(experiment);
 
         if (this.options.debug) {
             console.groupCollapsed(
-                isQualifiedForSegment ? debug.SEGMENTING_QUALIFIED : debug.SEGMENTING_NOT_QUALIFIED
+                isQualifiedForAudience ? debug.AUDIENCE_QUALIFIED : debug.AUDIENCE_NOT_QUALIFIED
             );
 
             console.log(`Experiment: #${experiment.id} - ${experiment.name}`);
-            console.log('Rules: ', get(experiment, 'targeting.segment'));
+            console.log('Rules: ', get(experiment, 'targeting.audiences'));
             console.log('Data: ', get(this.env, 'targeting'));
 
             console.groupEnd();
         }
 
-        return isQualifiedForSegment;
+        return isQualifiedForAudience;
     }
 
     /**
@@ -463,12 +463,12 @@ class Variate {
     }
 
     /**
-     * Qualify visitor for given experiment based on segment
+     * Qualify visitor for given experiment based on audience
      * @param experiment
      * @returns {boolean}
      */
-    qualifySegment(experiment: Object) {
-        const rules = get(experiment, 'targeting.segment', true);
+    qualifyAudience(experiment: Object) {
+        const rules = get(experiment, 'targeting.audiences', true);
         const data = get(this.env, 'targeting', {});
 
         return jsonLogic.apply(rules, data);
