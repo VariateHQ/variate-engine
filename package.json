@@ -17,6 +17,7 @@
     "docs": "esdoc",
     "prepublishOnly": "npm run clean && npm run lint && npm run build",
     "publish": "npm publish --access public",
+    "release": "standard-version",
     "test": "jasmine JASMINE_CONFIG_PATH=tests/support/jasmine.json --reporter=jasmine-console-reporter"
   },
   "repository": {
@@ -39,15 +40,19 @@
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-flow": "^7.0.0",
     "@babel/register": "^7.5.5",
+    "@commitlint/cli": "^8.2.0",
+    "@commitlint/config-conventional": "^8.2.0",
     "babel-eslint": "^10.0.2",
     "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "chai": "^4.2.0",
+    "cz-conventional-changelog": "^3.0.2",
     "esdoc": "^1.1.0",
     "esdoc-flow-type-plugin": "^1.1.0",
     "esdoc-standard-plugin": "^1.0.0",
     "eslint": "^6.1.0",
     "eslint-plugin-flowtype": "^3.13.0",
     "flow-bin": "^0.104.0",
+    "husky": "^3.0.9",
     "jasmine": "^3.4.0",
     "jasmine-console-reporter": "^3.1.0",
     "mocha": "^6.2.0",
@@ -55,11 +60,17 @@
     "rollup": "^1.18.0",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-json": "^4.0.0",
-    "rollup-plugin-node-resolve": "^5.2.0"
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "standard-version": "^7.0.0"
   },
   "dependencies": {
     "deepmerge": "^4.0.0",
     "get-value": "^3.0.1",
     "json-logic-js": "^1.2.2"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
