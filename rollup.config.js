@@ -1,9 +1,9 @@
-import babel from 'rollup-plugin-babel';
 import json from 'rollup-plugin-json';
 import resolve from 'rollup-plugin-node-resolve';
+import typescript from 'rollup-plugin-typescript';
 
 export default [{
-    input: 'src/index.js',
+    input: 'src/index.ts',
     output: [
         {
             file: 'dist/variate.js',
@@ -15,7 +15,7 @@ export default [{
         }
     ],
     plugins: [
-        babel(),
+        typescript(),
         json(),
         resolve({
             // the fields to scan in a package.json to determine the entry point
