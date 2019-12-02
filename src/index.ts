@@ -546,15 +546,20 @@ class Variate {
             reporter = this._options.reporter;
         }
 
-        const wasTracked = reporter(event);
+        try {
+            const wasTracked = reporter(event);
+            
+            if (this._options.debug) {
+                console.groupCollapsed(wasTracked ? debug.REPORTING_EVENT_TRACKED : debug.REPORTING_EVENT_NOT_TRACKED);
+                console.log(event);
+                console.groupEnd();
+            }
 
-        if (this._options.debug) {
-            console.groupCollapsed(wasTracked ? debug.REPORTING_EVENT_TRACKED : debug.REPORTING_EVENT_NOT_TRACKED);
-            console.log(event);
-            console.groupEnd();
+            return wasTracked;
+        } catch(e) {
+            this._options.debug && console.error(e);
+            return false;
         }
-
-        return wasTracked;
     }
 
     extractTrackingArguments(args?: any[]) {
