@@ -2,6 +2,8 @@
   "name": "@variate/engine",
   "version": "1.1.1",
   "description": "Variate AB testing engine for modern applications",
+  "author": "Valentin Prugnaud <valentin.prugnaud@variate.ca>",
+  "license": "BSL 1.1",
   "main": "dist/variate.js",
   "module": "dist/variate.esm.js",
   "files": [
@@ -27,8 +29,6 @@
     "ab-testing",
     "variate"
   ],
-  "author": "Valentin Prugnaud <valentin@whatdafox.com>",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/variateapp/variate-engine/issues"
   },
