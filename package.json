@@ -19,6 +19,8 @@
     "prepublishOnly": "npm run clean && npm run lint && npm run build",
     "publish": "npm publish --access public",
     "release": "standard-version",
+    "release:alpha": "npm run release -- --prerelease alpha",
+    "release:beta": "npm run release -- --prerelease beta",
     "test": "jest --coverage"
   },
   "repository": {
