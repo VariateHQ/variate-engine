@@ -160,7 +160,7 @@ class Variate {
                 experiment: variation.experimentId,
                 variation: variation.id,
                 bucket: bucket,
-                attributes: component.attributes
+                variables: component.variables
             });
         }
 
