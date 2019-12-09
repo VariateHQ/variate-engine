@@ -2,7 +2,7 @@
 
 Variate AB testing engine for modern applications. 
 
-https://variate.ca
+> Documentation: https://docs.variate.ca/engine
 
 ## Information
 
