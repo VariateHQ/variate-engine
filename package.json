@@ -1,6 +1,6 @@
 {
   "name": "@variate/engine",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Variate AB testing engine for modern applications",
   "author": "Valentin Prugnaud <valentin.prugnaud@variate.ca>",
   "license": "BSL 1.1",
