@@ -26,6 +26,18 @@ confusion with downstream frameworks language.
 
 * **components:** rename attributes to variables ([c7569aa](https://github.com/variateapp/variate-engine/commit/c7569aace82199f114e4cc74b52ac3a5d331331d)), closes [#7](https://github.com/variateapp/variate-engine/issues/7)
 
+## [2.0.0](https://github.com/variateapp/variate-engine/compare/v1.2.0...v2.0.0) (2019-12-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* **components:** Components schema now references "variables" instead of "attributes" to avoid
+confusion with downstream frameworks language.
+
+### Features
+
+* **components:** rename attributes to variables ([c7569aa](https://github.com/variateapp/variate-engine/commit/c7569aace82199f114e4cc74b52ac3a5d331331d)), closes [#7](https://github.com/variateapp/variate-engine/issues/7)
+
 ## [1.2.0](https://github.com/variateapp/variate-engine/compare/v1.2.0-alpha.0...v1.2.0) (2019-12-05)
 
 ## [1.2.0-alpha.0](https://github.com/variateapp/variate-engine/compare/v1.0.1...v1.2.0-alpha.0) (2019-12-05)
