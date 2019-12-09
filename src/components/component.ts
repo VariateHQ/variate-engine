@@ -1,4 +1,4 @@
 export default class Component {
-    public attributes: any;
+    public variables: any;
     public experiments?: any[];
 }

@@ -99,10 +99,10 @@ describe('Config', function () {
         }));
         expect(variate.components.Hero).toEqual(expect.objectContaining({
             id: expect.any(Number),
-            attributes: expect.any(Object),
+            variables: expect.any(Object),
             experiments: expect.any(Array),
         }));
-        expect(variate.components.Hero.attributes).toEqual(expect.objectContaining({
+        expect(variate.components.Hero.variables).toEqual(expect.objectContaining({
             backgroundImage: expect.any(String),
             headline: expect.any(String),
         }));

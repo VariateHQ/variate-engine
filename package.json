@@ -10,12 +10,12 @@
     "dist"
   ],
   "scripts": {
+    "docs": "typedoc --out docs src --mode modules --exclude '**/__tests__/**/*.+(ts|tsx|js)' --name Variate",
     "build": "npm run clean && rollup -c rollup.config.js",
     "dev": "npm run clean && rollup -w -c rollup.config.js",
     "clean": "rimraf dist/",
     "lint": "tslint -c tslint.json src/**/*.ts",
     "lint:fix": "eslint --fix src/",
-    "docs": "esdoc",
     "prepublishOnly": "npm run clean && npm run lint && npm run build",
     "publish": "npm publish --access public",
     "release": "standard-version",
@@ -51,6 +51,7 @@
     "ts-jest": "^24.2.0",
     "tslib": "^1.10.0",
     "tslint": "^5.20.1",
+    "typedoc": "^0.15.3",
     "typescript": "^3.7.2"
   },
   "dependencies": {
