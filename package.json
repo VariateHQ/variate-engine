@@ -16,7 +16,6 @@
     "clean": "rimraf dist/",
     "lint": "tslint -c tslint.json src/**/*.ts",
     "lint:fix": "eslint --fix src/",
-    "publish": "npm publish --access public",
     "release": "standard-version -a",
     "release:alpha": "npm run release -- --prerelease alpha",
     "release:beta": "npm run release -- --prerelease beta",
