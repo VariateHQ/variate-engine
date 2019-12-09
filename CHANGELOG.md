@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.1](https://github.com/variateapp/variate-engine/compare/v2.0.0...v2.0.1) (2019-12-09)
+
+
+### Bug Fixes
+
+* remove prepublish script ([4e683f0](https://github.com/variateapp/variate-engine/commit/4e683f029fdb04c8ed6d430090406267a60c7308))
+
 ## [2.0.0](https://github.com/variateapp/variate-engine/compare/v1.2.0...v2.0.0) (2019-12-09)
 
 
