@@ -241,7 +241,7 @@ class Variate {
                 default: {}
             }));
 
-            if (this._options.tracking.enabled && this._options.pageview) {
+            if (this._options.tracking.enabled && (this._options.pageview || !experiment.manualPageview)) {
                 this.track('Pageview', EventTypes.PAGEVIEW, {
                     experimentId: experiment.id,
                     variationId: variation.id,
