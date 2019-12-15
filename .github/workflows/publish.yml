@@ -6,7 +6,7 @@ on:
       - '*'
 
 jobs:
-  publish-npm:
+  publish:
     name: "Build, lint, test & publish"
     runs-on: ubuntu-latest
     steps:
