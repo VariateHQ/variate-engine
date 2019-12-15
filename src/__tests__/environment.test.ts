@@ -4,14 +4,13 @@ describe('Environment', function () {
     let variate: any;
 
     const tests = () => {
-        it('Can set and access the environment', () => {
+        it('Can set the environment with defaults', () => {
             expect(variate.env).toEqual(expect.objectContaining({
                 view: expect.objectContaining({
                     path: expect.any(String),
                     query: expect.any(Object),
                 }),
                 viewport: expect.objectContaining({
-                    mainBucket: expect.any(Number),
                     doNotTrack: expect.any(Boolean),
                     width: expect.any(Number),
                     height: expect.any(Number),
@@ -19,6 +18,34 @@ describe('Environment', function () {
                 }),
                 targeting: expect.any(Object),
             }))
+        });
+
+        it('Can set and access a custom environment', () => {
+            variate.initialize({
+                view: {
+                    path: '/',
+                    query: {
+                        force: true
+                    }
+                }
+            });
+            expect(variate.env).toEqual(expect.objectContaining({
+                view: expect.objectContaining({
+                    path: expect.any(String),
+                    query: expect.any(Object),
+                }),
+                viewport: expect.objectContaining({
+                    doNotTrack: expect.any(Boolean),
+                    width: expect.any(Number),
+                    height: expect.any(Number),
+                    userAgent: expect.any(String),
+                }),
+                targeting: expect.any(Object),
+            }));
+            expect(variate.env.view.path).toBeDefined();
+            expect(variate.env.view.path).toEqual('/');
+            expect(variate.env.view.query.force).toBeDefined();
+            expect(variate.env.view.query.force).toBeTruthy();
         });
 
         it('Environment can support Firefox edge case for do not track', () => {
@@ -34,7 +61,6 @@ describe('Environment', function () {
                     query: expect.any(Object),
                 }),
                 viewport: expect.objectContaining({
-                    mainBucket: expect.any(Number),
                     doNotTrack: expect.any(Boolean),
                     width: expect.any(Number),
                     height: expect.any(Number),
@@ -44,7 +70,7 @@ describe('Environment', function () {
             }))
         });
 
-        it('Environment can contain custom view info', () => {
+        it('Environment cannot contain custom view info', () => {
             variate.env = {
                 view: {
                     href: 'bonzai',
@@ -54,10 +80,8 @@ describe('Environment', function () {
 
             expect(variate.env).toBeDefined();
             expect(variate.env.view).toBeDefined();
-            expect(variate.env.view).toEqual(expect.objectContaining({
-                href: 'bonzai',
-                search: '?force=true'
-            }));
+            expect(variate.env.view.href).toBeUndefined();
+            expect(variate.env.view.search).toBeUndefined();
         });
 
         it('Environment can contain custom targeting info', () => {

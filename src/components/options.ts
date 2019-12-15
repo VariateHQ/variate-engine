@@ -1,27 +1,23 @@
 import get from 'get-value';
 import Config from './config';
-import Event from './event';
+import Tracking from './tracking';
 
 export class Options {
-    public debug?: boolean;
-    public tracking?: boolean;
-    public reporter?: (event: Event) => boolean;
-    public pageview?: boolean;
+    public debug: boolean;
+    public pageview: boolean;
+    public tracking: Tracking;
     public config: Config;
 
     constructor(options: Partial<Options>) {
         this.debug = get(options, 'debug', {
             default: false,
         });
-        this.tracking = get(options, 'tracking', {
-            default: true,
-        });
-        this.reporter = get(options, 'reporter', {
-            default: null,
-        });
         this.pageview = get(options, 'pageview', {
             default: true,
         });
+        this.tracking = Object.assign({ enabled: true, default: true }, get(options, 'tracking', {
+            default: {},
+        }));
         this.config = get(options, 'config', {
             default: {},
         });

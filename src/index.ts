@@ -13,7 +13,6 @@ import * as errors from './lang/errors';
 import env from './utilities/env';
 
 const LOCAL_STORAGE_UUID_KEY = 'variate-uuid';
-const LOCAL_STORAGE_MAIN_TRAFFIC_BUCKET_KEY = 'variate-main-bucket';
 const LOCAL_STORAGE_TRAFFIC_BUCKETS_KEY = 'variate-buckets';
 
 class Variate {
@@ -26,9 +25,9 @@ class Variate {
     /**
      * @param {object} options
      */
-    constructor(options: Options) {
+    constructor(options: Partial<Options>) {
         options.debug && version.show();
-        this.options = options;
+        this.options = new Options(options);
     }
 
     /**
@@ -44,11 +43,11 @@ class Variate {
      * @param options
      */
     set options(options: Options) {
-        this._options = new Options(Object.assign({}, this._options, options));
+        this._options = options;
 
         if (this._options.debug) {
             console.groupCollapsed(debug.SETUP_OPTIONS);
-            console.log(options);
+            console.log(this._options);
             console.groupEnd();
         }
     }
@@ -83,18 +82,17 @@ class Variate {
      */
     set env(value: Environment) {
         // View information
-        const view = Object.assign(
-            {
-                path: get(value, 'path', env.href()),
-                query: get(value, 'query', {default: Variate.extractQueryParams(env.search())})
-            },
-            get(value, 'view', {default: {}})
-        );
+        const { path, query } = get(value, 'view', {
+            default: {
+                path:  env.href(),
+                query: Variate.extractQueryParams(env.search())
+            }
+        });
+        const view = { path, query };
 
         // Viewport information
         const viewport = {
             visitorId: this.getUUID(),
-            mainBucket: this.getMainTrafficBucket(),
             doNotTrack: env.doNotTrack(),
             width: env.width(),
             height: env.height(),
@@ -155,13 +153,7 @@ class Variate {
 
         for (let component of Object.values(variation.components)) {
             // components.shift();
-            component.experiments = [];
-            component.experiments.push({
-                experiment: variation.experimentId,
-                variation: variation.id,
-                bucket: bucket,
-                variables: component.variables
-            });
+            component.bucket = bucket;
         }
 
         return variation.components;
@@ -238,18 +230,18 @@ class Variate {
         experiments = experiments.filter((experiment) => this.filterWithView(experiment));
 
         // 3. Check audience targeting
-        experiments = experiments.filter((experiment) => this.filterWithAudience(experiment));
+        experiments = experiments.filter((experiment) => this.filterWithSegment(experiment));
 
         // 3. Reduce to 1 variation per experiment to prepare for display
         experiments = experiments.map((experiment) => this.filterVariationsWithBucket(experiment));
 
         // 4. Send pageview event if enabled
         experiments.forEach((experiment) => {
-            const [variation] = get(experiment, 'variations', {
+            const [variation] = Object.values(get(experiment, 'variations', {
                 default: {}
-            });
+            }));
 
-            if (this._options.pageview) {
+            if (this._options.tracking.enabled && this._options.pageview) {
                 this.track('Pageview', EventTypes.PAGEVIEW, {
                     experimentId: experiment.id,
                     variationId: variation.id,
@@ -266,73 +258,22 @@ class Variate {
      * based on visitor main bucket and if query params are present
      * @returns {Array}
      */
-    loadExperiments() {
-        let experiments = [];
-
-        // Load live main experiments
-        experiments.push(...get(this.config, 'live.experiments', {
+    loadExperiments(): Experiment[] {
+        let experiments: Experiment[] = Object.values(get(this.config, 'experiments', {
             default: []
         }));
 
-        // Load live bucketed experiments if relevant
-        experiments.push(
-            ...this.getBucketedExperiments(
-                get(
-                    this.config,
-                    'live',
-                    {
-                        default: {}
-                    }
-                )
-            )
-        );
-
-        // Load draft experiments if query params forced
-        if (this.shouldForceQueryParams()) {
-            // Load draft main experiments
-            experiments.push(...get(this.config, 'draft.experiments', {
-                default: []
-            }));
-
-            // Load draft bucketed experiments if relevant
-            experiments.push(
-                ...this.getBucketedExperiments(
-                    get(
-                        this.config,
-                        'draft',
-                        {
-                            default: {}
-                        }
-                    )
-                )
-            );
-        }
-
         if (this._options.debug) {
             console.groupCollapsed(debug.LOADING_EXPERIMENTS);
-            console.log(experiments);
+            experiments.forEach((experiment) => {
+                console.groupCollapsed(`${experiment.name} (${experiment.id})`);
+                console.log(`URL: https://variate.ca/sites/${experiment.siteId}/experiments/${experiment.id}`);
+                console.groupEnd();
+            });
             console.groupEnd();
         }
 
         return experiments;
-    }
-
-    /**
-     * Retrieve bucketed experiments
-     * @param group
-     * @returns {array}
-     */
-    getBucketedExperiments(group: Object) {
-        if (this.getMainTrafficBucket() <= get(group, 'bucketed.max')) {
-            for (let bucket of get(group, 'bucketed.buckets')) {
-                const max = get(bucket, 'max');
-                if (this.getMainTrafficBucket() <= max && this.getMainTrafficBucket() <= max) {
-                    return get(bucket, 'experiments');
-                }
-            }
-        }
-
-        return [];
     }
 
     /**
@@ -344,7 +285,7 @@ class Variate {
     filterVariationsWithBucket(experiment: Experiment) {
         // // @TODO Assign bucket to visitor for experiment and filter variation
         const bucket = this.getExperimentBucket(experiment);
-        let variations = get(experiment, 'variations');
+        let variations: Variation[] = Object.values(get(experiment, 'variations'));
 
         variations = variations.filter((variation: Variation) => {
             return bucket >= get(variation, 'trafficAllocation.min')
@@ -374,6 +315,7 @@ class Variate {
                 isQualifiedForView ? debug.VIEW_QUALIFIED : debug.VIEW_NOT_QUALIFIED
             );
             console.log(`Experiment: #${experiment.id} - ${experiment.name}`);
+            console.log(`Experiment URL: https://variate.ca/sites/${experiment.siteId}/experiments/${experiment.id}`);
             console.log(`Current URL: ${get(this.env, 'view.path')}`);
             console.log(`Current Query Params: `, get(this.env, 'view.query'));
             console.log(experiment);
@@ -388,16 +330,17 @@ class Variate {
      * @param experiment
      * @returns {boolean}
      */
-    filterWithAudience(experiment: Experiment) {
-        let isQualifiedForAudience = this.qualifyAudience(experiment);
+    filterWithSegment(experiment: Experiment) {
+        let isQualifiedForAudience = this.qualifySegment(experiment);
 
         if (this._options.debug) {
             console.groupCollapsed(
-                isQualifiedForAudience ? debug.AUDIENCE_QUALIFIED : debug.AUDIENCE_NOT_QUALIFIED
+                isQualifiedForAudience ? debug.SEGMENT_QUALIFIED : debug.SEGMENT_NOT_QUALIFIED
             );
 
             console.log(`Experiment: #${experiment.id} - ${experiment.name}`);
-            console.log('Rules: ', get(experiment, 'targeting.audiences'));
+            console.log(`Experiment URL: https://variate.ca/sites/${experiment.siteId}/experiments/${experiment.id}`);
+            console.log('Rules: ', get(experiment, 'targeting.segments'));
             console.log('Data: ', get(this.env, 'targeting'));
 
             console.groupEnd();
@@ -443,8 +386,8 @@ class Variate {
      * @param experiment
      * @returns {boolean}
      */
-    qualifyAudience(experiment: Object) {
-        const rules = get(experiment, 'targeting.audiences', {
+    qualifySegment(experiment: Object) {
+        const rules = get(experiment, 'targeting.segments', {
             default: true
         });
         const data = get(this.env, 'targeting', {});
@@ -464,21 +407,6 @@ class Variate {
         }
 
         return uuid;
-    }
-
-    /**
-     * Retrieve or generate main traffic bucket for visitor
-     * @returns {number}
-     */
-    getMainTrafficBucket(): number {
-        let bucket = env.inBrowser && parseInt(localStorage.getItem(LOCAL_STORAGE_MAIN_TRAFFIC_BUCKET_KEY) || '');
-
-        if (!bucket) {
-            bucket = Variate.generateTrafficBucket();
-            env.inBrowser && localStorage.setItem(LOCAL_STORAGE_MAIN_TRAFFIC_BUCKET_KEY, bucket.toString());
-        }
-
-        return bucket;
     }
 
     /**
@@ -529,37 +457,48 @@ class Variate {
      * @returns {boolean}
      */
     track(...args: any): boolean {
-        let reporter = this.report;
         let event = this.extractTrackingArguments(args);
 
-        if (!this._options.tracking) {
-            this._options.debug && console.info(debug.REPORTING_DISABLED);
+        if (!this._options.tracking.enabled) {
+            this._options.debug && console.info(debug.TRACKING_DISABLED);
             return false;
         }
 
-        if (this._options.reporter !== null) {
-            if (typeof this._options.reporter !== 'function') {
-                throw new Error(errors.REPORTING_INVALID_REPORTER);
-            }
-
-            this._options.debug && console.info(debug.REPORTING_CUSTOM_REPORTER);
-            reporter = this._options.reporter;
-        }
-
         try {
-            const wasTracked = reporter(event);
-            
-            if (this._options.debug) {
-                console.groupCollapsed(wasTracked ? debug.REPORTING_EVENT_TRACKED : debug.REPORTING_EVENT_NOT_TRACKED);
-                console.log(event);
-                console.groupEnd();
+            let trackers = [];
+
+            if (this._options.tracking.default) {
+                trackers.push(this.report(event));
             }
 
-            return wasTracked;
+            if (this._options.tracking.reporter) {
+                if (typeof this._options.tracking.reporter !== 'function') {
+                    throw new Error(errors.TRACKING_INVALID_REPORTER);
+                }
+
+                trackers.push(this._options.tracking.reporter(event));
+            }
+
+            Promise.all(trackers).then((response) => {
+                let wasTracked = response.every(item => item);
+
+                if (this._options.debug) {
+                    console.groupCollapsed(wasTracked ? debug.TRACKING_EVENT_TRACKED : debug.TRACKING_EVENT_NOT_TRACKED);
+                    console.log(response);
+                    console.log(event);
+                    console.groupEnd();
+                }
+
+                return wasTracked;
+            }).catch(() => {
+                return false;
+            });
         } catch(e) {
             this._options.debug && console.error(e);
             return false;
         }
+        
+        return false;
     }
 
     extractTrackingArguments(args?: any[]) {
