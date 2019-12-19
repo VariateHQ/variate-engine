@@ -1,4 +1,5 @@
-[![Actions Status](https://github.com/VariateApp/variate-engine/workflows/{workflow_name}/badge.svg)](https://github.com/{owner}/{repo}/actions)
+[![Actions Status](https://github.com/VariateApp/variate-engine/workflows/Build/badge.svg)](https://github.com/VariateApp/variate-engine/actions)
+[![Actions Status](https://github.com/VariateApp/variate-engine/workflows/Publish/badge.svg)](https://github.com/VariateApp/variate-engine/actions)
 
 # Variate Engine
 
