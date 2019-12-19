@@ -1,3 +1,5 @@
+[![Actions Status](https://github.com/VariateApp/variate-engine/workflows/{workflow_name}/badge.svg)](https://github.com/{owner}/{repo}/actions)
+
 # Variate Engine
 
 Variate AB testing engine for modern applications. 
