@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0](https://github.com/variateapp/variate-engine/compare/v2.0.3...v3.0.0) (2019-12-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* **core:** Engine configuration schema changed (for tracking), supported schema changed
+
+### Features
+
+* **core:** allow override of automatic tracking at experiment-level ([44622ff](https://github.com/variateapp/variate-engine/commit/44622ffe7eabbbd83ce769ee923c99a0d696a379)), closes [#8](https://github.com/variateapp/variate-engine/issues/8)
+* **core:** new schema support, refactoring audiences, enhanced tracking ([463f8ca](https://github.com/variateapp/variate-engine/commit/463f8cac83087e9aff102031ac5ea2548b9cd249)), closes [#11](https://github.com/variateapp/variate-engine/issues/11)
+
 ### [2.0.3](https://github.com/variateapp/variate-engine/compare/v2.0.2...v2.0.3) (2019-12-09)
 
 ### [2.0.2](https://github.com/variateapp/variate-engine/compare/v2.0.1...v2.0.2) (2019-12-09)
