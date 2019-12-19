@@ -52,31 +52,30 @@ describe('Global', function () {
 
         it('Does not track if tracking is disabled', () => {
             variate.options = {
-                tracking: false,
-                reporter: () => true,
+                tracking: {
+                    enabled: false,
+                    reporter: () => true,
+                },
             };
             const response = variate.track('Pageview', EventTypes.PAGEVIEW);
             expect(response).toBeFalsy();
         });
 
-        it('Throws an error if reporter is not a function', () => {
-            variate.options = {
-                reporter: 'nope',
-            };
-            expect(() => variate.track('Pageview', EventTypes.PAGEVIEW)).toThrowError();
-        });
-
         it('Can track an event', () => {
             variate.options = {
-                reporter: () => true,
+                tracking: {
+                    reporter: () => true,
+                }
             };
-            const response = variate.track('Pageview', EventTypes.PAGEVIEW);
-            expect(response).toBeTruthy();
+
+            expect(() => variate.track('Pageview', EventTypes.PAGEVIEW)).toBeTruthy();
         });
 
         it('Can fail gracefully if event fails', () => {
             variate.options = {
-                reporter: () => false,
+                tracking: {
+                    reporter: () => false,
+                }
             };
             const response = variate.track('Pageview', EventTypes.PAGEVIEW);
             expect(response).toBeFalsy();

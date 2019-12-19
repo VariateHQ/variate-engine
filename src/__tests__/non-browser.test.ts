@@ -17,7 +17,6 @@ it('Environment can degrade gracefully if window is undefined', () => {
             query: expect.any(Object),
         }),
         viewport: expect.objectContaining({
-            mainBucket: expect.any(Number),
             doNotTrack: expect.any(Boolean),
             width: expect.any(Number),
             height: expect.any(Number),

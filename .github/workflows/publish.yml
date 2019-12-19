@@ -1,4 +1,4 @@
-name: Node.js Package
+name: Publish to npm
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - '*'
 
 jobs:
-  publish-npm:
+  publish:
     name: "Build, lint, test & publish"
     runs-on: ubuntu-latest
     steps:

@@ -13,11 +13,10 @@ export const VIEW_QUALIFIED = `[VIEW] Qualified 👍`;
 export const VIEW_NOT_QUALIFIED = `[VIEW] Not qualified 👎`;
 
 // Segmenting
-export const AUDIENCE_QUALIFIED = `[AUDIENCE] Qualified 👍`;
-export const AUDIENCE_NOT_QUALIFIED = `[AUDIENCE] Not qualified 👎`;
+export const SEGMENT_QUALIFIED = `[SEGMENT] Qualified 👍`;
+export const SEGMENT_NOT_QUALIFIED = `[SEGMENT] Not qualified 👎`;
 
 // Reporting
-export const REPORTING_DISABLED = '[REPORTING] Reporting is disabled.';
-export const REPORTING_CUSTOM_REPORTER = '[REPORTING] Using a custom reporter.';
-export const REPORTING_EVENT_TRACKED = '[REPORTING] Event tracked 👍';
-export const REPORTING_EVENT_NOT_TRACKED = '[REPORTING] Event not tracked 👎';
+export const TRACKING_DISABLED = '[TRACKING] Reporting is disabled.';
+export const TRACKING_EVENT_TRACKED = '[TRACKING] Event tracked 👍';
+export const TRACKING_EVENT_NOT_TRACKED = '[TRACKING] Event not tracked 👎';

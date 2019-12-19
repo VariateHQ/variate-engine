@@ -1,104 +1,158 @@
 {
-    "live": {
-        "experiments": [
-            {
-                "id": 16,
-                "name": "Homepage - Hero Banner",
-                "status": "live",
-                "targeting": {
-                    "views": {
-                        "include": [
-                            "/$"
-                        ],
-                        "exclude": []
-                    },
-                    "segments": {
-                        "exclude": [],
-                        "include": []
-                    }
+    "experiments": {
+        "nM3ntXmMj2dX86xnrvVK": {
+            "id": "nM3ntXmMj2dX86xnrvVK",
+            "siteId": "djGYAl2Dx0JDGuAm5mph",
+            "name": "Homepage - Hero Banner",
+            "environment": "production",
+            "manualPageview": false,
+            "targeting": {
+                "views": {
+                    "include": [
+                        "/$"
+                    ],
+                    "exclude": []
                 },
-                "variations": [
-                    {
-                        "id": 22,
-                        "trafficAllocation": {
-                            "max": 50,
-                            "min": 0
+                "segments": {
+                    "and": [
+                        {
+                            "==": [
+                                {
+                                    "var": "country"
+                                },
+                                "Canada"
+                            ]
                         },
-                        "components": {
-                            "Hero": {
-                                "id": 25,
-                                "variables": {
-                                    "backgroundImage": "https://placeimg.com/1000/500/animals"
-                                }
-                            }
+                        {
+                            "==": [
+                                {
+                                    "var": "state"
+                                },
+                                "BC"
+                            ]
                         }
-                    },
-                    {
-                        "id": 23,
-                        "trafficAllocation": {
-                            "max": 100,
-                            "min": 51
-                        },
-                        "components": {
-                            "Hero": {
-                                "id": 25,
-                                "variables": {
-                                    "backgroundImage": "https://placeimg.com/1000/500/arch"
-                                }
-                            }
-                        }
-                    }
-                ]
+                    ]
+                }
             },
-            {
-                "id": 17,
-                "name": "Homepage - Hero Headline",
-                "status": "live",
-                "targeting": {
-                    "views": {
-                        "include": [
-                            "/$"
-                        ],
-                        "exclude": []
+            "variations": {
+                "GhPz7J72ABIQvOqdTtnm": {
+                    "id": "GhPz7J72ABIQvOqdTtnm",
+                    "experimentId": "nM3ntXmMj2dX86xnrvVK",
+                    "siteId": "djGYAl2Dx0JDGuAm5mph",
+                    "trafficAllocation": {
+                        "max": 50,
+                        "min": 0
                     },
-                    "segments": {
-                        "exclude": [],
-                        "include": []
+                    "components": {
+                        "Hero": {
+                            "id": "PjaBNzyQYP2W8zESoELs",
+                            "variationId": "GhPz7J72ABIQvOqdTtnm",
+                            "experimentId": "nM3ntXmMj2dX86xnrvVK",
+                            "siteId": "djGYAl2Dx0JDGuAm5mph",
+                            "variables": {
+                                "backgroundImage": "https://placeimg.com/1000/500/animals"
+                            }
+                        }
                     }
                 },
-                "variations": [
-                    {
-                        "id": 24,
-                        "trafficAllocation": {
-                            "max": 50,
-                            "min": 0
-                        },
-                        "components": {
-                            "Hero": {
-                                "id": 25,
-                                "variables": {
-                                    "headline": "Awesome control variation!"
-                                }
-                            }
-                        }
+                "RyQqWxnWqumQ7WpjvLr6": {
+                    "id": "RyQqWxnWqumQ7WpjvLr6",
+                    "experimentId": "nM3ntXmMj2dX86xnrvVK",
+                    "siteId": "djGYAl2Dx0JDGuAm5mph",
+                    "trafficAllocation": {
+                        "max": 100,
+                        "min": 51
                     },
-                    {
-                        "id": 25,
-                        "trafficAllocation": {
-                            "max": 100,
-                            "min": 51
-                        },
-                        "components": {
-                            "Hero": {
-                                "id": 25,
-                                "variables": {
-                                    "headline": "Awesome variation 1!"
-                                }
+                    "components": {
+                        "Hero": {
+                            "id": "PjaBNzyQYP2W8zESoELs",
+                            "variationId": "RyQqWxnWqumQ7WpjvLr6",
+                            "experimentId": "nM3ntXmMj2dX86xnrvVK",
+                            "siteId": "djGYAl2Dx0JDGuAm5mph",
+                            "variables": {
+                                "backgroundImage": "https://placeimg.com/1000/500/arch"
                             }
                         }
                     }
-                ]
+                }
             }
-        ]
+        },
+        "C74lbTFFVUk6Zj76ysMK": {
+            "id": "C74lbTFFVUk6Zj76ysMK",
+            "siteId": "djGYAl2Dx0JDGuAm5mph",
+            "name": "Homepage - Hero Headline",
+            "environment": "development",
+            "manualPageview": true,
+            "targeting": {
+                "views": {
+                    "include": [
+                        "/$"
+                    ],
+                    "exclude": []
+                },
+                "segments": {
+                    "and": [
+                        {
+                            "==": [
+                                {
+                                    "var": "country"
+                                },
+                                "France"
+                            ]
+                        },
+                        {
+                            "==": [
+                                {
+                                    "var": "state"
+                                },
+                                "BC"
+                            ]
+                        }
+                    ]
+                }
+            },
+            "variations": {
+                "HmXushDwr8vroLEIYGdc": {
+                    "id": "HmXushDwr8vroLEIYGdc",
+                    "experimentId": "C74lbTFFVUk6Zj76ysMK",
+                    "siteId": "djGYAl2Dx0JDGuAm5mph",
+                    "trafficAllocation": {
+                        "max": 50,
+                        "min": 0
+                    },
+                    "components": {
+                        "Hero": {
+                            "id": "PjaBNzyQYP2W8zESoELs",
+                            "variationId": "HmXushDwr8vroLEIYGdc",
+                            "experimentId": "C74lbTFFVUk6Zj76ysMK",
+                            "siteId": "djGYAl2Dx0JDGuAm5mph",
+                            "variables": {
+                                "headline": "Awesome control variation!"
+                            }
+                        }
+                    }
+                },
+                "RHImVSAalXTbKoNtYdGM": {
+                    "id": "RHImVSAalXTbKoNtYdGM",
+                    "experimentId": "C74lbTFFVUk6Zj76ysMK",
+                    "siteId": "djGYAl2Dx0JDGuAm5mph",
+                    "trafficAllocation": {
+                        "max": 100,
+                        "min": 51
+                    },
+                    "components": {
+                        "Hero": {
+                            "id": "PjaBNzyQYP2W8zESoELs",
+                            "variationId": "RHImVSAalXTbKoNtYdGM",
+                            "experimentId": "C74lbTFFVUk6Zj76ysMK",
+                            "siteId": "djGYAl2Dx0JDGuAm5mph",
+                            "variables": {
+                                "headline": "Awesome variation 1!"
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
