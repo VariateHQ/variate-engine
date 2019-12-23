@@ -18,5 +18,5 @@ export const SEGMENT_NOT_QUALIFIED = `[SEGMENT] Not qualified 👎`;
 
 // Reporting
 export const TRACKING_DISABLED = '[TRACKING] Reporting is disabled.';
-export const TRACKING_EVENT_TRACKED = '[TRACKING] Event tracked 👍';
-export const TRACKING_EVENT_NOT_TRACKED = '[TRACKING] Event not tracked 👎';
+export const TRACKING_EVENT_TRACKED = '[TRACKING] %s event tracked 👍';
+export const TRACKING_EVENT_NOT_TRACKED = '[TRACKING] %s event not tracked 👎';

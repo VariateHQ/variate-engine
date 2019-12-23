@@ -283,7 +283,6 @@ class Variate {
      * @returns {boolean}
      */
     filterVariationsWithBucket(experiment: Experiment) {
-        // // @TODO Assign bucket to visitor for experiment and filter variation
         const bucket = this.getExperimentBucket(experiment);
         let variations: Variation[] = Object.values(get(experiment, 'variations'));
 
@@ -423,6 +422,19 @@ class Variate {
             if (!bucket[experiment.id]) {
                 bucket[experiment.id] = Variate.generateTrafficBucket();
                 env.inBrowser && localStorage.setItem(LOCAL_STORAGE_TRAFFIC_BUCKETS_KEY, JSON.stringify(bucket));
+
+                const variationId = get(experiment, 'variations.0.id', {
+                    default: null,
+                });
+
+                this.track({
+                    name: 'Qualify',
+                    type: 'qualify',
+                    value: {
+                        experimentId: experiment.id,
+                        variationId: variationId
+                    }
+                })
             }
 
             return bucket[experiment.id];
@@ -483,7 +495,7 @@ class Variate {
                 let wasTracked = response.every(item => item);
 
                 if (this._options.debug) {
-                    console.groupCollapsed(wasTracked ? debug.TRACKING_EVENT_TRACKED : debug.TRACKING_EVENT_NOT_TRACKED);
+                    console.groupCollapsed(wasTracked ? debug.TRACKING_EVENT_TRACKED : debug.TRACKING_EVENT_NOT_TRACKED, event.type);
                     console.log(response);
                     console.log(event);
                     console.groupEnd();
