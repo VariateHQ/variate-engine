@@ -516,13 +516,26 @@ class Variate {
     }
 
     report(event: Event) {
-        const xhr = new XMLHttpRequest();
+        return new Promise((resolve, reject) => {
+            const xhr = new XMLHttpRequest();
 
-        xhr.open('POST', 'https://reporting.variate.ca/track', true);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.send(event.toJson());
+            xhr.open('POST', 'https://reporting.variate.ca/track', true);
 
-        return xhr.readyState === 4;
+            xhr.setRequestHeader('Content-Type', 'application/json');
+
+            xhr.onload = function() {
+                if (this.status >= 200 && this.status < 300) {
+                    resolve(true);
+                } else {
+                    reject(false);
+                }
+            };
+            xhr.onerror = function () {
+                reject(false);
+            };
+
+            xhr.send(event.toJson());
+        });
     }
 }
 
