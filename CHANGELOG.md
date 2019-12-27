@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.1.0](https://github.com/variateapp/variate-engine/compare/v3.0.1...v3.1.0) (2019-12-27)
+
+
+### Features
+
+* **tracking:** send qualify event when first qualifying for experiment ([3ed291d](https://github.com/variateapp/variate-engine/commit/3ed291d674dbf3a8b8e7dbbf7f75aa169f2e2ef3)), closes [#14](https://github.com/variateapp/variate-engine/issues/14)
+
+
+### Bug Fixes
+
+* **core:** fix event reporting bug ([fae2b6a](https://github.com/variateapp/variate-engine/commit/fae2b6ac29a190ced127f4deb000c0eb725e8700)), closes [#15](https://github.com/variateapp/variate-engine/issues/15)
+
 ### [3.0.1](https://github.com/variateapp/variate-engine/compare/v3.0.0...v3.0.1) (2019-12-19)
 
 ## [3.0.0](https://github.com/variateapp/variate-engine/compare/v2.0.3...v3.0.0) (2019-12-19)
