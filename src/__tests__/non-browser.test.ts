@@ -14,6 +14,7 @@ it('Environment can degrade gracefully if window is undefined', () => {
     expect(variate.env).toEqual(expect.objectContaining({
         view: expect.objectContaining({
             path: expect.any(String),
+            url: expect.any(String),
             query: expect.any(Object),
         }),
         viewport: expect.objectContaining({
