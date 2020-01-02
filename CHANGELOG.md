@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.1.1](https://github.com/variateapp/variate-engine/compare/v3.1.0...v3.1.1) (2020-01-02)
+
+
+### Bug Fixes
+
+* pass variation id to qualify event, move pageview event ([6e82c31](https://github.com/variateapp/variate-engine/commit/6e82c3144ed50bf11602a8b524e35f214ed80918))
+
 ## [3.1.0](https://github.com/variateapp/variate-engine/compare/v3.0.1...v3.1.0) (2019-12-27)
 
 
