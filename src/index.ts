@@ -84,11 +84,15 @@ class Variate {
         // View information
         const { path, query } = get(value, 'view', {
             default: {
-                path:  env.href(),
+                path: env.inBrowser ? env.href() : '',
                 query: Variate.extractQueryParams(env.search())
             }
         });
-        const view = { path, query };
+        const view = {
+            url: env.inBrowser ? env.href() : '',
+            path,
+            query
+        };
 
         // Viewport information
         const viewport = {
@@ -132,7 +136,8 @@ class Variate {
      * @returns {Array<Variation>}
      */
     get variations(): Array<Variation> {
-        return this.experiments.map((experiment) => experiment.variations).reduce((acc, val) => acc.concat(val), []);
+        return this.experiments.map((experiment) => experiment.variations)
+            .reduce((acc, val) => acc.concat(val), []);
     }
 
     /**
@@ -149,10 +154,16 @@ class Variate {
      * @returns {array}
      */
     extractVariationComponents(variation: Variation) {
-        const bucket = this.getExperimentBucket({ id: variation.experimentId });
+        const experiment = this.experiments.find(item => item.id === variation.experimentId);
+
+        if(!experiment) {
+            console.error(errors.QUALIFICATION_EXPERIMENT_NOT_FOUND);
+            return [];
+        }
+
+        const bucket = this.getExperimentBucket(experiment);
 
         for (let component of Object.values(variation.components)) {
-            // components.shift();
             component.bucket = bucket;
         }
 
@@ -214,6 +225,12 @@ class Variate {
         this.isReady = true;
         this._options.debug && console.timeEnd('[BENCHMARK] Variate Initialization');
 
+        console.log('NAH', this._options.tracking.enabled, this._options.pageview);
+
+        if (this._options.tracking.enabled && this._options.pageview) {
+            this.track('Pageview', EventTypes.PAGEVIEW);
+        }
+
         if (typeof callback == 'function') {
             callback();
         }
@@ -234,20 +251,6 @@ class Variate {
 
         // 3. Reduce to 1 variation per experiment to prepare for display
         experiments = experiments.map((experiment) => this.filterVariationsWithBucket(experiment));
-
-        // 4. Send pageview event if enabled
-        experiments.forEach((experiment) => {
-            const [variation] = Object.values(get(experiment, 'variations', {
-                default: {}
-            }));
-
-            if (this._options.tracking.enabled && (this._options.pageview || !experiment.manualPageview)) {
-                this.track('Pageview', EventTypes.PAGEVIEW, {
-                    experimentId: experiment.id,
-                    variationId: variation.id,
-                });
-            }
-        });
 
         this.experiments = experiments;
         this.isQualified = true;
@@ -283,7 +286,7 @@ class Variate {
      * @returns {boolean}
      */
     filterVariationsWithBucket(experiment: Experiment) {
-        const bucket = this.getExperimentBucket(experiment);
+        const bucket = this.getExperimentBucket(experiment, true);
         let variations: Variation[] = Object.values(get(experiment, 'variations'));
 
         variations = variations.filter((variation: Variation) => {
@@ -355,10 +358,11 @@ class Variate {
      */
     qualifyView(experiment: Object) {
         const path = get(this.env, 'view.path');
+        const url = get(this.env, 'view.url');
         const excludes = get(experiment, 'targeting.views.exclude');
 
         for (let i = 0; i < excludes.length; i++) {
-            if (path.match(excludes[i])) {
+            if (path.match(excludes[i]) || url.match(excludes[i])) {
                 return false;
             }
         }
@@ -371,7 +375,7 @@ class Variate {
             }
 
             for (let i = 0; i < includes.length; i++) {
-                if (path.match(includes[i])) {
+                if (path.match(includes[i]) || url.match(includes[i])) {
                     return true;
                 }
             }
@@ -411,36 +415,40 @@ class Variate {
     /**
      * Get a traffic bucket for a given experiment
      * @param experiment
+     * @param qualify
      * @returns {number}
      */
-    getExperimentBucket(experiment: Pick<Experiment, 'id'>) {
-        if (env.inBrowser) {
+    getExperimentBucket(experiment: Experiment, qualify = false) {
+        try {
             let bucket = localStorage.getItem(LOCAL_STORAGE_TRAFFIC_BUCKETS_KEY)
                 ? JSON.parse(localStorage.getItem(LOCAL_STORAGE_TRAFFIC_BUCKETS_KEY) || '')
                 : {};
 
             if (!bucket[experiment.id]) {
                 bucket[experiment.id] = Variate.generateTrafficBucket();
-                env.inBrowser && localStorage.setItem(LOCAL_STORAGE_TRAFFIC_BUCKETS_KEY, JSON.stringify(bucket));
+                localStorage.setItem(LOCAL_STORAGE_TRAFFIC_BUCKETS_KEY, JSON.stringify(bucket));
 
-                const variationId = get(experiment, 'variations.0.id', {
-                    default: null,
-                });
+                if (this._options.tracking.enabled && qualify && !experiment.manualQualification) {
+                    const [variation] = Object.values(get(experiment, 'variations', {
+                        default: {}
+                    }));
 
-                this.track({
-                    name: 'Qualify',
-                    type: 'qualify',
-                    value: {
-                        experimentId: experiment.id,
-                        variationId: variationId
-                    }
-                })
+                    this.track({
+                        name: 'Qualify',
+                        type: EventTypes.QUALIFY,
+                        value: {
+                            experimentId: experiment.id,
+                            variationId: variation.id
+                        }
+                    });
+                }
             }
 
             return bucket[experiment.id];
+        } catch(error) {
+            console.error(error);
+            return 0;
         }
-
-        return 0;
     }
 
     /**
