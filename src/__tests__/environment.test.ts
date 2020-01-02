@@ -10,13 +10,12 @@ describe('Environment', function () {
                     path: expect.any(String),
                     query: expect.any(Object),
                 }),
-                viewport: expect.objectContaining({
+                targeting: expect.objectContaining({
                     doNotTrack: expect.any(Boolean),
                     width: expect.any(Number),
                     height: expect.any(Number),
                     userAgent: expect.any(String),
                 }),
-                targeting: expect.any(Object),
             }))
         });
 
@@ -34,13 +33,12 @@ describe('Environment', function () {
                     path: expect.any(String),
                     query: expect.any(Object),
                 }),
-                viewport: expect.objectContaining({
+                targeting: expect.objectContaining({
                     doNotTrack: expect.any(Boolean),
                     width: expect.any(Number),
                     height: expect.any(Number),
                     userAgent: expect.any(String),
                 }),
-                targeting: expect.any(Object),
             }));
             expect(variate.env.view.path).toBeDefined();
             expect(variate.env.view.path).toEqual('/');
@@ -60,13 +58,12 @@ describe('Environment', function () {
                     path: expect.any(String),
                     query: expect.any(Object),
                 }),
-                viewport: expect.objectContaining({
+                targeting: expect.objectContaining({
                     doNotTrack: expect.any(Boolean),
                     width: expect.any(Number),
                     height: expect.any(Number),
                     userAgent: expect.any(String),
                 }),
-                targeting: expect.any(Object),
             }))
         });
 
