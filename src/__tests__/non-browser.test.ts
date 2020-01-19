@@ -17,12 +17,11 @@ it('Environment can degrade gracefully if window is undefined', () => {
             url: expect.any(String),
             query: expect.any(Object),
         }),
-        viewport: expect.objectContaining({
+        targeting: expect.objectContaining({
             doNotTrack: expect.any(Boolean),
             width: expect.any(Number),
             height: expect.any(Number),
             userAgent: expect.any(Boolean),
         }),
-        targeting: expect.any(Object),
     }))
 });

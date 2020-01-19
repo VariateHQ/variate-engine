@@ -95,7 +95,7 @@ class Variate {
         };
 
         // Viewport information
-        const viewport = {
+        const targeting = {
             visitorId: this.getUUID(),
             doNotTrack: env.doNotTrack(),
             width: env.width(),
@@ -104,9 +104,16 @@ class Variate {
         };
 
         // Targeting information
-        const targeting = get(value, 'targeting', {default: {}});
+        const customTargeting = get(value, 'targeting', {default: {}});
 
-        this._env = Object.assign({}, this._env, {view, viewport, targeting});
+        this._env = {
+            ...this._env,
+            view,
+            targeting: {
+                ...targeting,
+                ...customTargeting
+            }
+        };
 
         if (this._options.debug) {
             console.groupCollapsed(debug.SETUP_ENVIRONMENT);
@@ -224,8 +231,6 @@ class Variate {
         this.qualify();
         this.isReady = true;
         this._options.debug && console.timeEnd('[BENCHMARK] Variate Initialization');
-
-        console.log('NAH', this._options.tracking.enabled, this._options.pageview);
 
         if (this._options.tracking.enabled && this._options.pageview) {
             this.track('Pageview', EventTypes.PAGEVIEW);
