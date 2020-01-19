@@ -106,13 +106,14 @@ class Variate {
         // Targeting information
         const customTargeting = get(value, 'targeting', {default: {}});
 
-        this._env = Object.assign({}, this._env, {
+        this._env = {
+            ...this._env,
             view,
             targeting: {
                 ...targeting,
                 ...customTargeting
             }
-        });
+        };
 
         if (this._options.debug) {
             console.groupCollapsed(debug.SETUP_ENVIRONMENT);
