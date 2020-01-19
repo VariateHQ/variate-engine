@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.1.2](https://github.com/variateapp/variate-engine/compare/v3.1.1...v3.1.2) (2020-01-19)
+
+
+### Bug Fixes
+
+* use destructuring ([d85c1f7](https://github.com/variateapp/variate-engine/commit/d85c1f7fa3d77740b90ad505f7c80a55a8ce0cb6))
+
 ### [3.1.1](https://github.com/variateapp/variate-engine/compare/v3.1.0...v3.1.1) (2020-01-02)
 
 
