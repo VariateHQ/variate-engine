@@ -434,7 +434,7 @@ class Variate {
                 localStorage.setItem(LOCAL_STORAGE_TRAFFIC_BUCKETS_KEY, JSON.stringify(bucket));
 
                 if (this._options.tracking.enabled && qualify && !experiment.manualQualification) {
-                    const [variation] = Object.values(get(experiment, 'variations', {
+                    const [variation]: Variation[] = Object.values(get(experiment, 'variations', {
                         default: {}
                     }));
 
@@ -522,7 +522,7 @@ class Variate {
             this._options.debug && console.error(e);
             return false;
         }
-        
+
         return false;
     }
 
