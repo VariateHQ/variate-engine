@@ -1,5 +1,4 @@
 import Variate from '../';
-import Event from "../components/event";
 import {EventTypes} from "../config/event-types";
 
 
@@ -50,34 +49,36 @@ describe('Global', function () {
             expect(event2.value).toEqual(5000);
         });
 
-        it('Does not track if tracking is disabled', () => {
+        it('Does not track if tracking is disabled', async () => {
             variate.options = {
                 tracking: {
                     enabled: false,
-                    reporter: () => true,
                 },
             };
-            const response = variate.track('Pageview', EventTypes.PAGEVIEW);
+            const response = await variate.track('Pageview', EventTypes.PAGEVIEW);
             expect(response).toBeFalsy();
         });
 
-        it('Can track an event', () => {
+        it('Can track an event', async () => {
             variate.options = {
                 tracking: {
+                    default: false,
                     reporter: () => true,
                 }
             };
 
-            expect(() => variate.track('Pageview', EventTypes.PAGEVIEW)).toBeTruthy();
+            const response = await variate.track('Pageview', EventTypes.PAGEVIEW);
+            expect(response).toBe(true);
         });
 
-        it('Can fail gracefully if event fails', () => {
+        it('Can fail gracefully if event fails', async () => {
             variate.options = {
                 tracking: {
+                    default: false,
                     reporter: () => false,
                 }
             };
-            const response = variate.track('Pageview', EventTypes.PAGEVIEW);
+            const response = await variate.track('Pageview', EventTypes.PAGEVIEW);
             expect(response).toBeFalsy();
         });
     };
@@ -86,6 +87,7 @@ describe('Global', function () {
         beforeEach(() => {
             variate = new Variate({
                 debug: true,
+                pageview: false,
                 config: {},
             });
             variate.initialize();
@@ -100,6 +102,7 @@ describe('Global', function () {
         beforeEach(() => {
             variate = new Variate({
                 debug: false,
+                pageview: false,
                 config: {},
             });
             variate.initialize();

@@ -6,6 +6,7 @@ import Variate from '../';
 it('Environment can degrade gracefully if window is undefined', () => {
     const variate = new Variate({
         debug: false,
+        pageview: false,
         config: {}
     });
 

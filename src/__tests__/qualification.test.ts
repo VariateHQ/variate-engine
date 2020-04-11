@@ -4,6 +4,7 @@ describe('Qualification', function() {
     it("Can run qualification", function() {
         const variate = new Variate({
             debug: false,
+            pageview: false,
             config: {}
         });
 

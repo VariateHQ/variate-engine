@@ -15,7 +15,7 @@ export class Options {
         this.pageview = get(options, 'pageview', {
             default: true,
         });
-        this.tracking = Object.assign({ enabled: true, default: true }, get(options, 'tracking', {
+        this.tracking = new Tracking(get(options, 'tracking', {
             default: {},
         }));
         this.config = get(options, 'config', {

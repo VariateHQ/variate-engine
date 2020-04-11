@@ -5,6 +5,7 @@ describe('Experiments', function () {
     it('Can set and access the active experiments', function () {
         const variate = new Variate({
             debug: false,
+            pageview: false,
             config
         });
         variate.initialize();

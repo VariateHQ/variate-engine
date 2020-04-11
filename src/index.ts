@@ -43,7 +43,7 @@ class Variate {
      * @param options
      */
     set options(options: Options) {
-        this._options = options;
+        this._options = new Options(options);
 
         if (this._options.debug) {
             console.groupCollapsed(debug.SETUP_OPTIONS);
@@ -225,7 +225,7 @@ class Variate {
      * Initialize testing:
      * use this when loading the page for the first time
      */
-    initialize(config?: Partial<Environment>, callback?: Function) {
+    async initialize(config?: Partial<Environment>, callback?: Function) {
         this._options.debug && console.time('[BENCHMARK] Variate Initialization');
         this.env = config || new Environment;
         this.qualify();
@@ -233,7 +233,7 @@ class Variate {
         this._options.debug && console.timeEnd('[BENCHMARK] Variate Initialization');
 
         if (this._options.tracking.enabled && this._options.pageview) {
-            this.track('Pageview', EventTypes.PAGEVIEW);
+            await this.track('Pageview', EventTypes.PAGEVIEW);
         }
 
         if (typeof callback == 'function') {
@@ -481,7 +481,7 @@ class Variate {
      * @param args
      * @returns {boolean}
      */
-    track(...args: any): boolean {
+    async track(...args: any): Promise<boolean> {
         let event = this.extractTrackingArguments(args);
 
         if (!this._options.tracking.enabled) {
@@ -504,8 +504,8 @@ class Variate {
                 trackers.push(this._options.tracking.reporter(event));
             }
 
-            Promise.all(trackers).then((response) => {
-                let wasTracked = response.every(item => item);
+            return await Promise.all(trackers).then((response) => {
+                let wasTracked: boolean = response.every(item => item);
 
                 if (this._options.debug) {
                     console.groupCollapsed(wasTracked ? debug.TRACKING_EVENT_TRACKED : debug.TRACKING_EVENT_NOT_TRACKED, event.type);
@@ -515,15 +515,11 @@ class Variate {
                 }
 
                 return wasTracked;
-            }).catch(() => {
-                return false;
-            });
+            }).catch(() => false);
         } catch(e) {
             this._options.debug && console.error(e);
             return false;
         }
-
-        return false;
     }
 
     extractTrackingArguments(args?: any[]) {

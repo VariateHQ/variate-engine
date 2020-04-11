@@ -7,6 +7,7 @@ describe('Config', function () {
     beforeEach(() => {
         variate = new Variate({
             debug: false,
+            pageview: false,
             config
         });
         variate.initialize({
@@ -41,7 +42,7 @@ describe('Config', function () {
             siteId: expect.any(String),
             name: expect.any(String),
             environment: expect.any(String),
-            manualPageview: expect.any(Boolean),
+            manualQualification: expect.any(Boolean),
             targeting: expect.objectContaining({
                 views: expect.objectContaining({
                     include: expect.any(Array),

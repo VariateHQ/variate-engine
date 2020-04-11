@@ -119,6 +119,7 @@ describe('Environment', function () {
         beforeEach(() => {
             variate = new Variate({
                 debug: true,
+                pageview: false,
                 config: {}
             });
 
@@ -134,6 +135,7 @@ describe('Environment', function () {
         beforeEach(() => {
             variate = new Variate({
                 debug: false,
+                pageview: false,
                 config: {}
             });
 

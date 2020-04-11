@@ -5,7 +5,7 @@
             "siteId": "djGYAl2Dx0JDGuAm5mph",
             "name": "Homepage - Hero Banner",
             "environment": "production",
-            "manualPageview": false,
+            "manualQualification": false,
             "targeting": {
                 "views": {
                     "include": [
@@ -82,7 +82,7 @@
             "siteId": "djGYAl2Dx0JDGuAm5mph",
             "name": "Homepage - Hero Headline",
             "environment": "development",
-            "manualPageview": true,
+            "manualQualification": true,
             "targeting": {
                 "views": {
                     "include": [

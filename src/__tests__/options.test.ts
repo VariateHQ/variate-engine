@@ -7,6 +7,7 @@ describe('Options', function() {
         };
         const variate = new Variate({
             debug: false,
+            pageview: false,
             config
         });
         expect(variate).toBeDefined();
