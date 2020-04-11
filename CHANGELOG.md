@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.2.0](https://github.com/variateapp/variate-engine/compare/v3.1.3...v3.2.0) (2020-04-11)
+
+
+### Features
+
+* better promise handling ([c87d754](https://github.com/variateapp/variate-engine/commit/c87d754ab048fad675ce4ac0f896affb7da7b3c8))
+
+
+### Bug Fixes
+
+* add variation type ([d26c95d](https://github.com/variateapp/variate-engine/commit/d26c95dda0ed1282085431ad418c87a1fa223cee))
+
 ### [3.1.3](https://github.com/variateapp/variate-engine/compare/v3.1.2...v3.1.3) (2020-03-14)
 
 ### [3.1.2](https://github.com/variateapp/variate-engine/compare/v3.1.1...v3.1.2) (2020-01-19)
