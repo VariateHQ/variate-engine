@@ -10,7 +10,8 @@
     "dist"
   ],
   "scripts": {
-    "docs": "typedoc --out docs src --mode modules --exclude '**/__tests__/**/*.+(ts|tsx|js)' --name Variate",
+    "docs": "typedoc --out docs src --mode modules --exclude '**/__tests__/**/*.+(ts|tsx|js)' --name Variate && npm run postdocs",
+    "postdocs": "cp jekyll.config.yml docs/config.yml",
     "build": "npm run clean && rollup -c rollup.config.js",
     "dev": "npm run clean && rollup -w -c rollup.config.js",
     "clean": "rimraf dist/",
