@@ -25,13 +25,13 @@ Pull requests are the best way to propose changes to the codebase (we use [Githu
 5. Make sure your code lints.
 6. Issue that pull request!
 
-## Report bugs or request features using Github [Issues](https://github.com/VariateApp/variate-engine/issues)
+## Report bugs or request features using Github [Issues](https://github.com/VariateHQ/variate-engine/issues)
 
 We use GitHub issues to track public bugs. Report a bug by [opening a new issue]().
 
 ## Use a consistent coding style
 
-This repository is using `tslint` to ensure code styling guidelines. You can find the rules by looking at the [`tslint.json`](https://github.com/VariateApp/variate-engine/blob/master/tslint.json) file.
+This repository is using `tslint` to ensure code styling guidelines. You can find the rules by looking at the [`tslint.json`](https://github.com/VariateHQ/variate-engine/blob/master/tslint.json) file.
 
 ## License
-By contributing, you agree that your contributions will be licensed under its [BSL 1.1 License](https://github.com/VariateApp/variate-engine/blob/master/LICENSE).
+By contributing, you agree that your contributions will be licensed under its [BSL 1.1 License](https://github.com/VariateHQ/variate-engine/blob/master/LICENSE).
