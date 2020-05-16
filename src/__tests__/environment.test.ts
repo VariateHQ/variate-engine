@@ -120,7 +120,10 @@ describe('Environment', function () {
             variate = new Variate({
                 debug: true,
                 pageview: false,
-                config: {}
+                config: {
+                    siteId: '',
+                    experiments: {},
+                }
             });
 
             variate.initialize();
@@ -136,7 +139,10 @@ describe('Environment', function () {
             variate = new Variate({
                 debug: false,
                 pageview: false,
-                config: {}
+                config: {
+                    siteId: '',
+                    experiments: {},
+                }
             });
 
             variate.initialize();

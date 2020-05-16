@@ -2,7 +2,7 @@ import get from 'get-value';
 import Config from './config';
 import Tracking from './tracking';
 
-export class Options {
+export default class Options {
     public debug: boolean;
     public pageview: boolean;
     public tracking: Tracking;
@@ -23,5 +23,3 @@ export class Options {
         });
     }
 }
-
-export default Options;

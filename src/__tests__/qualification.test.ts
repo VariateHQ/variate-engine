@@ -1,11 +1,14 @@
-import Variate from '../';
+import Variate from '../../src';
 
 describe('Qualification', function() {
     it("Can run qualification", function() {
         const variate = new Variate({
             debug: false,
             pageview: false,
-            config: {}
+            config: {
+                siteId: '',
+                experiments: {},
+            }
         });
 
         variate.initialize();

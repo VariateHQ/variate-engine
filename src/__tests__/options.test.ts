@@ -1,9 +1,10 @@
-import Variate from '../';
+import Variate from '../../src';
 
 describe('Options', function() {
     it("Can set and access the options", function() {
         const config = {
-            hello: 'world'
+            siteId: 'test',
+            experiments: {},
         };
         const variate = new Variate({
             debug: false,
