@@ -1,13 +1,16 @@
 /**
  * @jest-environment node
  */
-import Variate from '../';
+import Variate from '../../src';
 
 it('Environment can degrade gracefully if window is undefined', () => {
     const variate = new Variate({
         debug: false,
         pageview: false,
-        config: {}
+        config: {
+            siteId: '',
+            experiments: {},
+        }
     });
 
     variate.initialize();

@@ -1,14 +1,22 @@
 import get from 'get-value';
 
 export class Event {
+    public siteId: string;
     public name: string;
     public type: string;
     public value: any;
     public context: object;
 
     constructor(event: any) {
-        this.name = get(event, 'name', 'Pageview');
-        this.type = get(event, 'type', 'pageview');
+        this.siteId = get(event, 'siteId', {
+            default: ''
+        });
+        this.name = get(event, 'name', {
+            default: 'Pageview'
+        });
+        this.type = get(event, 'type', {
+            default: 'pageview'
+        });
         this.value = get(event, 'value', {
             default: null,
         });

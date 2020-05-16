@@ -2,11 +2,13 @@ import jsonLogic from 'json-logic-js';
 import deepmerge from 'deepmerge';
 import get from 'get-value';
 import version from './lang/version';
+import Config from './components/config';
 import Options from './components/options';
 import Environment from './components/environment';
 import Event from './components/event';
 import Experiment from './components/experiment';
 import Variation from './components/variation';
+import Component from './components/component';
 import { EventTypes } from './config/event-types';
 import * as debug from './lang/debug';
 import * as errors from './lang/errors';
@@ -64,7 +66,7 @@ class Variate {
      * Set testing configuration
      * @param config
      */
-    set config(config: Object) {
+    set config(config: Config) {
         this._options.config = config;
     }
 
@@ -515,7 +517,7 @@ class Variate {
                 }
 
                 return wasTracked;
-            }).catch(() => false);
+            });
         } catch(e) {
             this._options.debug && console.error(e);
             return false;
@@ -527,13 +529,17 @@ class Variate {
             throw new Error(errors.REQUIRED_PARAMETERS.replace('%s', 'track()'));
         }
 
+        const siteId = get(this.options, 'config.siteId', {
+            default: ''
+        });
+
         if (typeof args[0] === 'string') {
             const [name, type, value] = args;
-            return new Event({name, type, value, context: this.env});
+            return new Event({siteId, name, type, value, context: this.env});
         }
 
         const {name, type, value} = args[0];
-        return new Event({name, type, value, context: this.env});
+        return new Event({siteId, name, type, value, context: this.env});
     }
 
     report(event: Event) {
@@ -545,6 +551,7 @@ class Variate {
             xhr.setRequestHeader('Content-Type', 'application/json');
 
             xhr.onload = function() {
+                /* istanbul ignore next */
                 if (this.status >= 200 && this.status < 300) {
                     resolve(true);
                 } else {
@@ -552,6 +559,7 @@ class Variate {
                 }
             };
             xhr.onerror = function () {
+                /* istanbul ignore next */
                 reject(false);
             };
 

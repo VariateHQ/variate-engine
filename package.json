@@ -20,7 +20,7 @@
     "release": "standard-version -a",
     "release:alpha": "npm run release -- --prerelease alpha",
     "release:beta": "npm run release -- --prerelease beta",
-    "test": "jest --coverage"
+    "test": "jest --coverage --silent"
   },
   "repository": {
     "type": "git",
@@ -37,21 +37,21 @@
   "devDependencies": {
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-conventional": "^8.3.4",
-    "@types/jest": "^25.2.1",
-    "cz-conventional-changelog": "^3.1.0",
+    "@types/jest": "^25.2.2",
+    "cz-conventional-changelog": "^3.2.0",
     "husky": "^4.2.5",
-    "jest": "^25.3.0",
+    "jest": "^26.0.1",
     "rimraf": "^3.0.2",
-    "rollup": "^2.6.0",
+    "rollup": "^2.10.2",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-typescript": "^1.0.1",
-    "standard-version": "^7.1.0",
-    "ts-jest": "^25.3.1",
-    "tslib": "^1.11.1",
-    "tslint": "^6.1.1",
-    "typedoc": "^0.17.4",
-    "typescript": "^3.8.3"
+    "standard-version": "^8.0.0",
+    "ts-jest": "^26.0.0",
+    "tslib": "^2.0.0",
+    "tslint": "^6.1.2",
+    "typedoc": "^0.17.6",
+    "typescript": "^3.9.2"
   },
   "dependencies": {
     "@types/get-value": "^3.0.1",
