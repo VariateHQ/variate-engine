@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.3.0](https://github.com/variateapp/variate-engine/compare/v3.2.2...v3.3.0) (2020-05-16)
+
+
+### Features
+
+* record site ID from config when tracking ([e0df8f6](https://github.com/variateapp/variate-engine/commit/e0df8f61e760d8e5cf60694e8d24587d752a7b2c))
+
 ### [3.2.2](https://github.com/variateapp/variate-engine/compare/v3.2.1...v3.2.2) (2020-04-11)
 
 ### [3.2.1](https://github.com/variateapp/variate-engine/compare/v3.2.0...v3.2.1) (2020-04-11)
