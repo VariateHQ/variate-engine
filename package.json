@@ -57,7 +57,7 @@
     "@types/get-value": "^3.0.1",
     "deepmerge": "^4.2.2",
     "get-value": "^3.0.1",
-    "json-logic-js": "^1.2.2"
+    "json-logic-js": "^2.0.0"
   },
   "config": {
     "commitizen": {
